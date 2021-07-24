@@ -1,10 +1,10 @@
 import React from "react";
+import AuthPage from "../../pages/Auth/AuthPage";
+
 
 const App = () => {
     return(
-        <div>
-        <h1>finally</h1>
-        </div>
+        <AuthPage/>
     )
 }
 
