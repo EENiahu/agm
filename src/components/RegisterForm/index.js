@@ -1,7 +1,7 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
 
-const Register = (props) => {
+const RegisterForm = (props) => {
     const [user, setUser] = React.useState({
         FullName: "",
         Email: "",
@@ -93,33 +93,76 @@ const Register = (props) => {
         formData.append('ConfirmPassword', user.ConfirmPassword);
 
         postData('http://31.131.21.188:7300/v1/Authentication/registration', formData)
-        .then((data) => {
-            console.log(data);
-            //TODO
-        }).catch(exception => {
+            .then((data) => {
+                console.log(data);
+                //TODO
+            }).catch(exception => {
             console.error(exception);
             //TODO
         });
     }
 
     return(
-        <div>
-            <h1>Register</h1>
-            <div>
-                <input type="text" name={"FullName"} value={user.FullName} onChange={handleField} placeholder='Full Name'/>
-                <span className={"error"}>{userError.FullName}</span>
-                <input type="text" name={"Email"} value={user.Email} onChange={handleField} placeholder='Email Address'/>
-                <span className={"error"}>{userError.Email}</span>
-                <input type="text" name={"Password"} value={user.Password} onChange={handleField} placeholder='Password'/>
-                <span className={"error"}>{userError.Password}</span>
-                <input type="text" name={"ConfirmPassword"} value={user.ConfirmPassword} onChange={handleField} placeholder='Re-enter Password'/>
-                <span className={"error"}>{userError.ConfirmPassword}</span>
-                <a onClick={handleSubmit}>Submit</a>
+        <section className="auth-page__section section-right">
+            <div className="section-right__inner">
+                <div className="section-right__content">
+                    <div className="section-right__title-wrap">
+                        <div className="section-right__title">
+                            <div className="section-right__title section-right__title--primary">Register</div>
+                            <div>Condo Corporation</div>
+                        </div>
+                    </div>
 
-                <NavLink to={"/login"}>Login</NavLink>
+                    <form action="" className="section-right__form form">
+                        <div className="form__row">
+                            <div className="form__col">
+                                <div className="input">
+                                    <input type="text" placeholder="Full Name" className="input__inner"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form__row">
+                            <div className="form__col">
+                                <div className="input">
+                                    <input type="text" placeholder="Email Address" className="input__inner"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form__row">
+                            <div className="form__col">
+                                <div className="input">
+                                    <input type="password" placeholder="Password" className="input__inner"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form__row">
+                            <div className="form__col">
+                                <div className="input">
+                                    <input type="password" placeholder="Re-enter Password" className="input__inner"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form__row">
+                            <div className="form__col">
+                                <button type="button" className="btn btn--primary is-plain">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div className="section-right__message">
+                        Already have an account? Go back to <a href="/" className="section-right__message-link">Log
+                        In</a> page.
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     )
 }
 
-export default Register;
+export default RegisterForm;
