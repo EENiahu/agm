@@ -23,9 +23,7 @@
     <section class="footer__section section-secondary">
       <div class="container">
         <div class="section-secondary__inner">
-          <div class="section-secondary__copyright">
-            ©2021 AGM ONLINE. ALL RIGHTS RESERVED.
-          </div>
+          <div class="section-secondary__copyright">©2021 AGM ONLINE. ALL RIGHTS RESERVED.</div>
 
           <div class="section-secondary__btns">
             <button class="section-secondary__btn" type="button">Privacy Policy</button>

@@ -1,33 +1,38 @@
 const axios = require('axios');
+
+const origin = 'http://31.131.21.188:7300'; // dev
 const apiVersion = 'v1';
 const routes = {
     get: {
-        generateNewVerificationCode: `${apiVersion}/authentication/generate-new-verification-code`,
-        checkRefreshToken: `${apiVersion}/authentication/check-refresh-token`,
+        generateNewVerificationCode: `${origin}/${apiVersion}/authentication/generate-new-verification-code`,
+        checkRefreshToken: `${origin}/${apiVersion}/authentication/check-refresh-token`,
     },
 
     post: {
-        registration: `${apiVersion}/authentication/registration`,
-        login: `${apiVersion}/authentication/login`,
-        checkVerificationCode: `${apiVersion}/authentication/check-verification-code`,
-        passwordReset: `${apiVersion}/authentication/password-reset`,
-        passwordRecovery: `${apiVersion}/authentication/password-recovery`,
+        registration: `${origin}/${apiVersion}/authentication/registration`,
+        login: `${origin}/${apiVersion}/authentication/login`,
+        checkVerificationCode: `${origin}/${apiVersion}/authentication/check-verification-code`,
+        passwordReset: `${origin}/${apiVersion}/authentication/password-reset`,
+        passwordRecovery: `${origin}/${apiVersion}/authentication/password-recovery`,
     },
 };
 
-const origin = 'http://31.131.21.188:7300/'; // dev
+
+exports.getRoutes = () => {
+    return routes;
+};
 
 exports.register = (credentials) => {
-    const url = origin + routes.post.registration;
+    const url = routes.post.registration;
     return axios.post(url, credentials);
 };
 
 exports.checkVerificationCode = (credentials) => {
-    const url = origin + routes.checkVerificationCode;
+    const url = routes.post.checkVerificationCode;
     return axios.post(url, credentials);
 };
 
 exports.login = (credentials) => {
-    const url = origin + routes.login;
+    const url = routes.post.login;
     return axios.post(url, credentials);
 };

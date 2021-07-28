@@ -8,12 +8,13 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue')
+    component: () => import('../views/Dashboard.vue'),
+    meta: { requiresAuth: true }
   },
     //Guest
   {
     path: '/',
-    component: Auth,
+    component: () => import('../views/Auth.vue'),
     children: [
       {
         path: 'login',
@@ -43,6 +44,20 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (false) { //isAuthenticated
+      next({ name: 'Dashboard' });
+    }
+    else {
+      next({ path: '/' });
+    }
+  }
+  else {
+    next();
+  }
 })
 
 export default router
