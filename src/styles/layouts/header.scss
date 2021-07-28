@@ -1,0 +1,51 @@
+.header {
+  padding: 1.5rem 0;
+
+  .container {
+    max-width: unset;
+    padding: 0 3rem;
+  }
+
+  &__section {
+
+    &.section-main {}
+  }
+
+  //Sections
+  .section-main {
+    &__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &__left {}
+    &__right {}
+
+    &__links-list {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 -0.5rem;
+    }
+
+    &__links-item {
+      padding: 0 0.5rem;
+    }
+
+    &__link {
+      color: $secondary;
+      text-transform: uppercase;
+      font-weight: 600;
+      font-size: 14px;
+
+      &:hover {
+        color: $primary;
+      }
+
+      &:active {
+        color: $primary;
+      }
+    }
+  }
+}

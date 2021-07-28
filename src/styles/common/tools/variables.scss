@@ -1,0 +1,13 @@
+//Colors
+$primary: #fc6000;
+$secondary: #002E3D;
+
+//Media
+$breakpoints: (
+    'ess': ( max-width: 414px ),
+    'es': ( max-width: 575px ),
+    'xs': ( max-width: 767px ),
+    'sm': ( max-width: 991px ),
+    'md': ( max-width: 1199px ),
+    'lg': ( min-width: 1200px )
+);

@@ -1,0 +1,89 @@
+.footer {
+
+  &__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  //Sections
+  .section-main {
+    background: $secondary;
+    display: flex;
+    justify-content: space-between;
+
+    &__inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    &__links-list {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &__links-item {
+      border-right: 1px solid #707070;
+
+      &:last-child {
+        border-right: 0;
+      }
+    }
+
+    &__link {
+      padding: 2rem 3.5rem;
+      text-transform: unset;
+      font-size: 1.5rem;
+      text-align: center;
+      color: white;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+
+  .section-secondary {
+    padding: 1.5rem 0;
+
+    .container {
+      max-width: unset;
+      padding: 0 3rem;
+    }
+
+    &__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &__copyright {
+      color: $secondary;
+    }
+
+    &__btns {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    &__btn {
+      color: $secondary;
+      text-transform: uppercase;
+
+      &:hover {
+        color: $primary;
+      }
+
+      &:active {
+        color: $primary;
+      }
+    }
+
+    &__divider {
+      color: $secondary;
+      margin: 0 0.5rem;
+    }
+  }
+}
