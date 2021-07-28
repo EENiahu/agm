@@ -66,6 +66,9 @@
 
     methods: {
       login(e) {
+        this.$store.dispatch('auth/set_token', {token: 'p1p1'})
+        .then(res => this.$router.push({name: 'Dashboard'}))
+
         apiAuth.login(new FormData(e.target))
             .then(res => {
               console.log(res);

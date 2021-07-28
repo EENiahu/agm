@@ -1,6 +1,7 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import VueRouter from 'vue-router'
 import Auth from '../views/Auth.vue'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -9,9 +10,15 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
-    meta: { requiresAuth: true }
+    beforeEnter: ((to, from, next) => {
+      if (store.getters['auth/isAuthorized']) {
+        next();
+      } else {
+        next({path: '/'});
+      }
+    })
   },
-    //Guest
+  //Guest
   {
     path: '/',
     component: () => import('../views/Auth.vue'),
@@ -44,20 +51,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
-})
-
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    if (false) { //isAuthenticated
-      next({ name: 'Dashboard' });
-    }
-    else {
-      next({ path: '/' });
-    }
-  }
-  else {
-    next();
-  }
 })
 
 export default router

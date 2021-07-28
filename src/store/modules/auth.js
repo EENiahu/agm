@@ -8,7 +8,12 @@ const state = {
 
 const getters = {
   token(state) {
-    return state.token
+    return state.token;
+  },
+
+  isAuthorized(state) {
+    return state.token.length > 0 ;
+    // return state.token.length > 0 && Object.keys(state.user).length > 0;
   }
 };
 
