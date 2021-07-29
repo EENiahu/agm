@@ -70,9 +70,7 @@
               })
             })
             .catch(err => {
-              if (err.response && err.response.data.errors) {
-                this.errors.record(err.response.data.errors)
-              }
+              if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
             })
       },
 

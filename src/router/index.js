@@ -9,7 +9,7 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('../views/Dashboard.vue'),
+    component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
     beforeEnter: ((to, from, next) => {
       if (store.getters['auth/isAuthorized'] && store.getters['auth/isVerified']) {
         next();
@@ -21,7 +21,7 @@ const routes = [
   //Guest
   {
     path: '/',
-    component: () => import('../views/Auth.vue'),
+    component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue'),
     children: [
       {
         path: 'login',
