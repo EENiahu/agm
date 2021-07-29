@@ -9,26 +9,19 @@
           </div>
         </div>
 
-        <form action="" class="section-right__form form">
+        <form @submit.prevent="activate" :action="formAction" method="POST" class="section-right__form form">
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input defaultValue={props.email} type="email"  placeholder="Email Address" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('VerificationCode')}">
+                <input @input="handleInput" :value="inputs.VerificationCode" type="text" name="VerificationCode" placeholder="Enter Verification Code" class="input__inner"/>
+                <span v-if="errors.has('VerificationCode')" v-text="errors.get('VerificationCode')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input type="text"  placeholder="Enter Verification Code" class="input__inner"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="form__row">
-            <div class="form__col">
-              <button type="button" class="btn btn--primary is-plain">
+              <button type="submit" class="btn btn--primary is-plain">
                 Activate Account
               </button>
             </div>
@@ -45,7 +38,50 @@
 </template>
 
 <script>
+  import errorHandler from "@/lib/ErrorHandler";
+  import apiAuth from "@/api/auth";
+
   export default {
-    name: "ActiveAccountForm"
+    name: "ActiveAccountForm",
+    data() {
+      return {
+        errors: new errorHandler(),
+        formAction: apiAuth.getRoutes().post.checkVerificationCode,
+        inputs: {
+          VerificationCode: ''
+        }
+      }
+    },
+
+    methods: {
+      activate(e) {
+        let formData = new FormData();
+
+        formData.append('Email', this.$store.getters["auth/user"].email);
+        formData.append('VerificationCode', this.inputs.VerificationCode);
+
+        apiAuth.checkVerificationCode(formData)
+            .then(res => {
+              this.$store.dispatch('auth/mutate_user', {
+                propName: 'emailVerification',
+                propValue: true
+              }).then(() => {
+                this.$router.push({name: 'Dashboard'});
+              })
+            })
+            .catch(err => {
+              if (err.response && err.response.data.errors) {
+                this.errors.record(err.response.data.errors)
+              }
+            })
+      },
+
+      handleInput(e) {
+        this.inputs[e.currentTarget.name] = e.currentTarget.value;
+        if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
+        if (this.errors.has('message')) this.errors.clear('message');
+      }
+    }
+
   }
 </script>

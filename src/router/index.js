@@ -11,7 +11,7 @@ const routes = [
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
     beforeEnter: ((to, from, next) => {
-      if (store.getters['auth/isAuthorized']) {
+      if (store.getters['auth/isAuthorized'] && store.getters['auth/isVerified']) {
         next();
       } else {
         next({path: '/'});
@@ -30,6 +30,17 @@ const routes = [
       {
         path: 'register',
         component: () => import('../components/RegisterForm.vue')
+      },
+      {
+        path: 'activate',
+        component: () => import('../components/ActiveAccountForm.vue'),
+        beforeEnter: ((to, from, next) => {
+          if (store.getters['auth/isAuthorized'] && !store.getters['auth/isVerified']) {
+            next();
+          } else {
+            next({path: '/'});
+          }
+        })
       },
       {
         path: 'reset-password',

@@ -51,7 +51,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -60,7 +59,8 @@ export default {
 
   methods: {
     logout() {
-      window.localStorage.removeItem('token');
+      this.$store.dispatch('auth/remove_token');
+      this.$store.dispatch('auth/remove_user');
       this.$router.push('/');
     }
   }
