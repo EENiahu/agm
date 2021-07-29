@@ -21,9 +21,12 @@
 
           <div class="form__row">
             <div class="form__col">
-              <button type="submit" class="btn btn--primary is-plain">
-                Activate Account
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loader"
+                          type="submit"
+                          btn-text="Activate Account"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -40,12 +43,19 @@
 <script>
   import errorHandler from "@/lib/ErrorHandler";
   import apiAuth from "@/api/auth";
+  import BtnLoader from '@/components/common/BtnLoader';
 
   export default {
     name: "ActiveAccountForm",
+    components: {
+      BtnLoader
+    },
     data() {
       return {
         errors: new errorHandler(),
+        disabled: false,
+        loader: false,
+
         formAction: apiAuth.getRoutes().post.checkVerificationCode,
         inputs: {
           VerificationCode: ''
@@ -54,7 +64,20 @@
     },
 
     methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loader = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loader = false;
+      },
+
       activate(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
         let formData = new FormData();
 
         formData.append('Email', this.$store.getters["auth/user"].email);
@@ -70,6 +93,7 @@
               })
             })
             .catch(err => {
+              this.activateSubmit();
               if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
             })
       },

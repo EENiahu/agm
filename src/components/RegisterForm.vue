@@ -49,9 +49,12 @@
 
           <div class="form__row">
             <div class="form__col">
-              <button type="submit" class="btn btn--primary is-plain">
-                Submit
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loader"
+                          type="submit"
+                          btn-text="Submit"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -68,12 +71,19 @@
   import errorHandler from '@/lib/ErrorHandler';
   import apiAuth from '@/api/auth';
   const axios = require('axios');
+  import BtnLoader from '@/components/common/BtnLoader';
 
   export default {
     name: "RegisterForm",
+    components: {
+      BtnLoader
+    },
     data() {
       return {
         errors: new errorHandler(),
+        disabled: false,
+        loader: false,
+
         formAction: apiAuth.getRoutes().post.registration,
         inputs: {
           FullName: "",
@@ -85,7 +95,20 @@
     },
 
     methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loader = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loader = false;
+      },
+
       register(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
         apiAuth.register(new FormData(e.target))
             .then(res => {
               this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
@@ -98,18 +121,22 @@
                                 else {this.$router.push({path: '/activate'});}
                               })
                               .catch(err => {
+                                this.activateSubmit();
                                 console.error(err);
                               })
                         })
                         .catch(err => {
+                          this.activateSubmit();
                           console.error(err)
                         })
                   })
                   .catch(err => {
+                    this.activateSubmit();
                     console.error(err)
                   })
             })
             .catch(err => {
+              this.activateSubmit();
               if (err.response && err.response.data.errors) {
                 this.errors.record(err.response.data.errors)
               }

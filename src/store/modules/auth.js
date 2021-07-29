@@ -37,6 +37,7 @@ const mutations = {
 
   MUTATE_USER(state, { propName, propValue }) {
     Vue.set(state.user, propName, propValue);
+    window.localStorage.setItem('user', JSON.stringify(state.user));
   },
 
   GET_TOKEN(state, { task }) {

@@ -29,9 +29,12 @@
 
           <div class="form__row">
             <div class="form__col">
-              <button type="submit" class="btn btn--primary is-plain">
-                Submit
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loader"
+                          type="submit"
+                          btn-text="Submit"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -47,12 +50,19 @@
 <script>
   import apiAuth from "@/api/auth";
   import errorHandler from "@/lib/ErrorHandler";
+  import BtnLoader from '@/components/common/BtnLoader';
 
   export default {
     name: "ForgotPasswordForm",
+    components: {
+      BtnLoader
+    },
     data() {
       return {
         errors: new errorHandler(),
+        disabled: false,
+        loader: false,
+
         formAction: apiAuth.getRoutes().post.passwordReset,
         successMessages: false,
         inputs: {
@@ -62,12 +72,27 @@
     },
 
     methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loader = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loader = false;
+      },
+
       resetPassword(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
         apiAuth.resetPassword(new FormData(e.target))
           .then(res => {
+            this.activateSubmit();
             this.successMessages = true;
           })
           .catch(err => {
+            this.activateSubmit();
             if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
           })
       },
