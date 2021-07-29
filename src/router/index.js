@@ -22,6 +22,13 @@ const routes = [
   {
     path: '/',
     component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue'),
+    beforeEnter: ((to, from, next) => {
+      if (store.getters['auth/isAuthorized'] && store.getters['auth/isVerified']) {
+        next({name: 'Dashboard'});
+      } else {
+        next();
+      }
+    }),
     children: [
       {
         path: 'login',
