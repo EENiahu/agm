@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const origin = 'http://31.131.21.188:7300';
+const origin = 'http://31.131.21.188:7400';
 const apiVersion = 'v1';
 const routes = {
     get: {
@@ -16,7 +16,6 @@ const routes = {
         passwordRecovery: `${origin}/${apiVersion}/authentication/password-recovery`,
     },
 };
-
 
 exports.getRoutes = () => {
     return routes;

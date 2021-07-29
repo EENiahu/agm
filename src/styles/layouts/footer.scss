@@ -13,10 +13,6 @@
     display: flex;
     justify-content: space-between;
 
-    .container {
-      max-width: 1080px;
-    }
-
     &__inner {
       display: flex;
       flex-wrap: wrap;
@@ -37,7 +33,7 @@
     }
 
     &__link {
-      padding: 2rem 3rem;
+      padding: 2rem 3.75rem;
       text-transform: unset;
       font-size: 1.5rem;
       text-align: center;
@@ -45,6 +41,11 @@
 
       &:hover {
         color: $primary;
+      }
+
+      @include respond-to(md) {
+        font-size: 1.25rem;
+        padding: 2rem 3rem;
       }
     }
   }

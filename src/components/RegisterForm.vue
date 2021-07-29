@@ -67,6 +67,7 @@
 <script>
   import errorHandler from '@/lib/ErrorHandler';
   import apiAuth from '@/api/auth';
+  const axios = require('axios');
 
   export default {
     name: "RegisterForm",
@@ -87,13 +88,29 @@
       register(e) {
         apiAuth.register(new FormData(e.target))
             .then(res => {
-              console.log(res);
-              this.$router.push({ path: '/activate' });
+              this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
+                  .then(() => {
+                    axios.get('http://31.131.21.188:7400/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
+                        .then(res => {
+                          this.$store.dispatch('auth/set_user', {user: res.data})
+                              .then(() => {
+                                if (this.$store.getters['auth/isVerified']) {this.$router.push({name: 'Dashboard'});}
+                                else {this.$router.push({path: '/activate'});}
+                              })
+                              .catch(err => {
+                                console.error(err);
+                              })
+                        })
+                        .catch(err => {
+                          console.error(err)
+                        })
+                  })
+                  .catch(err => {
+                    console.error(err)
+                  })
             })
             .catch(err => {
               if (err.response && err.response.data.errors) {
-                console.log('pew');
-                console.log(err.response);
                 this.errors.record(err.response.data.errors)
               }
             })

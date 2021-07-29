@@ -35,7 +35,7 @@ const mutations = {
     state.user = user;
   },
 
-  MUTATE_USER(state, propName, propValue) {
+  MUTATE_USER(state, { propName, propValue }) {
     Vue.set(state.user, propName, propValue);
   },
 
@@ -57,7 +57,7 @@ const mutations = {
 const actions = {
   set_token({ commit }, { token }) {commit('SET_TOKEN', token)},
   set_user({ commit }, { user }) {commit('SET_USER', user)},
-  mutate_user({ commit }, { propName, propValue }) {commit('MUTATE_USER', propName, propValue)},
+  mutate_user({ commit }, { propName, propValue }) {commit('MUTATE_USER', {propName, propValue})},
   get_token({ commit }, payload) {
     // apiAuth
     commit('GET_TOKEN', payload)

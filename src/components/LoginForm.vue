@@ -51,7 +51,6 @@
 <script>
   import errorHandler from '@/lib/ErrorHandler';
   import apiAuth from '@/api/auth';
-  import store from "@/store";
   const axios = require('axios');
 
   export default {
@@ -73,32 +72,32 @@
             .then(res => {
               this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
                   .then(() => {
-                    console.log(this.$store.getters["auth/token"]);
                     axios.get('http://31.131.21.188:7300/v1/account', {
                       headers: {
                         'Authorization': `Bearer ${this.$store.getters["auth/token"]}`
                       }
                     })
-                        .then(res => {
-                          console.log(res.data);
-                          this.$store.dispatch('auth/set_user', {user: res.data})
-                        })
-                        .then(res => {
-                          if (this.$store.getters['auth/isVerified']) {
-                            this.$router.push({name: 'Dashboard'});
-                          }
-                          else {
-                            this.$router.push({path: '/activate'});
-                          }
-                        })
-                        .catch(err => {
-                          console.error(err);
-                        })
+                    .then(res => {
+                      this.$store.dispatch('auth/set_user', {user: res.data})
+                          .then(() => {
+                            if (this.$store.getters['auth/isVerified']) {
+                              this.$router.push({name: 'Dashboard'});
+                            }
+                            else {
+                              this.$router.push({path: '/activate'});
+                            }
+                          })
+                          .catch(err => {
+                            console.error(err);
+                          })
+                    })
+                    .catch(err => {
+                      console.error(err);
+                    })
                   })
                   .catch(err => {
                     console.error(err);
                   })
-              console.log(res);
             })
             .catch(err => {
               if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);

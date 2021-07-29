@@ -65,7 +65,6 @@
       resetPassword(e) {
         apiAuth.resetPassword(new FormData(e.target))
           .then(res => {
-            console.log(res);
             this.successMessages = true;
           })
           .catch(err => {
