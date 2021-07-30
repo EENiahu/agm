@@ -8,7 +8,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/dashboard',
-    name: 'Dashboard',
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
     beforeEnter: ((to, from, next) => {
       if (store.getters['auth/isAuthorized'] && store.getters['auth/isVerified']) {
@@ -16,7 +15,25 @@ const routes = [
       } else {
         next({path: '/'});
       }
-    })
+    }),
+    children: [
+      {
+        path: '/dashboard/profile',
+        component: () => import('../views/pages/ProfilePage.vue')
+      },
+      {
+        path: '/dashboard/account-members',
+        component: () => import('../views/pages/AccountMembers.vue')
+      },
+      {
+        path: '',
+        component: () => import('../views/pages/ProfilePage.vue')
+      },
+      {
+        path: '*',
+        component: () => import('../views/pages/ProfilePage.vue')
+      },
+    ]
   },
   //Guest
   {
@@ -24,7 +41,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue'),
     beforeEnter: ((to, from, next) => {
       if (store.getters['auth/isAuthorized'] && store.getters['auth/isVerified']) {
-        next({name: 'Dashboard'});
+        next({path: '/dashboard/profile'});
       } else {
         next();
       }

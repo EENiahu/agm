@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar class="white">
-      <div class="d-flex align-center">
+    <v-app-bar app clipped-left class="white">
+      <router-link to="/dashboard" class="d-flex align-center">
         <v-img
             alt="Vuetify Logo"
             class="shrink mr-2"
@@ -9,7 +9,7 @@
             :src="require('../assets/logo.png')"
             transition="scale-transition"
         />
-      </div>
+      </router-link>
 
       <v-spacer></v-spacer>
 
@@ -25,6 +25,9 @@
     </v-app-bar>
 
     <v-navigation-drawer
+        app
+        clipped
+        left
         color="blue-grey darken-4"
     >
       <v-list nav>
@@ -47,22 +50,32 @@
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
+
+    <v-main>
+      <v-container fluid class="pa-12">
+        <router-view></router-view>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-    }
-  },
+  import vuetify from '@/plugins/vuetify';
 
-  methods: {
-    logout() {
-      this.$store.dispatch('auth/remove_token');
-      this.$store.dispatch('auth/remove_user');
-      this.$router.push('/');
+  export default {
+    vuetify,
+    data() {
+      return {
+      }
+    },
+
+    methods: {
+      logout() {
+        this.$store.dispatch('auth/remove_token');
+        this.$store.dispatch('auth/remove_user');
+        this.$router.push('/');
+        location.href = '/';
+      }
     }
   }
-}
 </script>

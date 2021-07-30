@@ -104,7 +104,8 @@
                       this.$store.dispatch('auth/set_user', {user: res.data})
                           .then(() => {
                             if (this.$store.getters['auth/isVerified']) {
-                              this.$router.push({name: 'Dashboard'});
+                              this.$router.push({path: '/dashboard/profile'});
+                              location.href = '/dashboard/profile';
                             }
                             else {
                               this.$router.push({path: '/activate'});

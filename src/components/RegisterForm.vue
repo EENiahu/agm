@@ -117,7 +117,7 @@
                         .then(res => {
                           this.$store.dispatch('auth/set_user', {user: res.data})
                               .then(() => {
-                                if (this.$store.getters['auth/isVerified']) {this.$router.push({name: 'Dashboard'});}
+                                if (this.$store.getters['auth/isVerified']) {this.$router.push({path: '/dashboard/profile'});}
                                 else {this.$router.push({path: '/activate'});}
                               })
                               .catch(err => {

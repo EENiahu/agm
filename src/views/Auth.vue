@@ -26,8 +26,9 @@
 </template>
 
 <script>
-import Header from '@/components/layouts/Header.vue'
-import Footer from '@/components/layouts/Footer.vue'
+import '@/styles/index.scss';
+import Header from '@/components/layouts/Header.vue';
+import Footer from '@/components/layouts/Footer.vue';
 
   export default {
     name: 'Auth',
