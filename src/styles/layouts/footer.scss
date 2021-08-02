@@ -1,4 +1,5 @@
 .footer {
+  border-top: 1px solid #707070;
 
   &__inner {
     display: flex;
@@ -15,7 +16,7 @@
     &__inner {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
     }
 
     &__links-list {
@@ -32,7 +33,7 @@
     }
 
     &__link {
-      padding: 2rem 3.5rem;
+      padding: 2rem 3.75rem;
       text-transform: unset;
       font-size: 1.5rem;
       text-align: center;
@@ -40,6 +41,11 @@
 
       &:hover {
         color: $primary;
+      }
+
+      @include respond-to(md) {
+        font-size: 1.25rem;
+        padding: 2rem 3rem;
       }
     }
   }

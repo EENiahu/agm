@@ -9,44 +9,52 @@
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} action="" class="section-right__form form">
+        <form @submit.prevent="register" :action="formAction" method="POST" class="section-right__form form">
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input v-model="inputs.FullName" type="text" placeholder="Full Name" name="FullName" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('FullName')}">
+                <input @input="handleInput" :value="inputs.FullName" type="text" name="FullName" placeholder="Full Name" class="input__inner"/>
+                <span v-if="errors.has('FullName')" v-text="errors.get('FullName')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input v-model="inputs.Email" type="email" placeholder="Email Address" name="Email" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('Email')}">
+                <input @input="handleInput" :value="inputs.Email" type="email" name="Email" placeholder="Email Address" class="input__inner"/>
+                <span v-if="errors.has('Email')" v-text="errors.get('Email')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input v-model="inputs.Password" type="password" placeholder="Password" name="Password" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('Password')}">
+                <input @input="handleInput" :value="inputs.Password" type="password" name="Password" placeholder="Password" class="input__inner"/>
+                <span v-if="errors.has('Password')" v-text="errors.get('Password')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input v-model="inputs.ConfirmPassword" type="password" placeholder="Re-enter Password" name="ConfirmPassword" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('ConfirmPassword')}">
+                <input @input="handleInput" :value="inputs.ConfirmPassword" type="password" name="ConfirmPassword" placeholder="Re-enter Password" class="input__inner"/>
+                <span v-if="errors.has('ConfirmPassword')" v-text="errors.get('ConfirmPassword')" class="input__error-message"></span>
+                <span v-if="errors.has('message')" v-text="errors.get('message')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <button type="submit" class="btn btn--primary is-plain">
-                Submit
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loader"
+                          type="submit"
+                          btn-text="Submit"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -60,16 +68,85 @@
 </template>
 
 <script>
+  import errorHandler from '@/lib/ErrorHandler';
+  import apiAuth from '@/api/auth';
+  const axios = require('axios');
+  import BtnLoader from '@/components/common/BtnLoader';
+
   export default {
     name: "RegisterForm",
+    components: {
+      BtnLoader
+    },
     data() {
       return {
+        errors: new errorHandler(),
+        disabled: false,
+        loader: false,
+
+        formAction: apiAuth.getRoutes().post.registration,
         inputs: {
           FullName: "",
           Email: "",
           Password: "",
           ConfirmPassword: "",
         }
+      }
+    },
+
+    methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loader = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loader = false;
+      },
+
+      register(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
+        apiAuth.register(new FormData(e.target))
+            .then(res => {
+              this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
+                  .then(() => {
+                    axios.get('http://31.131.21.188:7400/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
+                        .then(res => {
+                          this.$store.dispatch('auth/set_user', {user: res.data})
+                              .then(() => {
+                                if (this.$store.getters['auth/isVerified']) {this.$router.push({path: '/dashboard/profile'});}
+                                else {this.$router.push({path: '/activate'});}
+                              })
+                              .catch(err => {
+                                this.activateSubmit();
+                                console.error(err);
+                              })
+                        })
+                        .catch(err => {
+                          this.activateSubmit();
+                          console.error(err)
+                        })
+                  })
+                  .catch(err => {
+                    this.activateSubmit();
+                    console.error(err)
+                  })
+            })
+            .catch(err => {
+              this.activateSubmit();
+              if (err.response && err.response.data.errors) {
+                this.errors.record(err.response.data.errors)
+              }
+            })
+      },
+
+      handleInput(e) {
+        this.inputs[e.currentTarget.name] = e.currentTarget.value;
+        if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
+        if (this.errors.has('message')) this.errors.clear('message');
       }
     }
   }

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const origin = 'http://31.131.21.188:7300'; // dev
+const origin = 'http://31.131.21.188:7400';
 const apiVersion = 'v1';
 const routes = {
     get: {
@@ -17,7 +17,6 @@ const routes = {
     },
 };
 
-
 exports.getRoutes = () => {
     return routes;
 };
@@ -27,12 +26,17 @@ exports.register = (credentials) => {
     return axios.post(url, credentials);
 };
 
+exports.login = (credentials) => {
+    const url = routes.post.login;
+    return axios.post(url, credentials);
+};
+
 exports.checkVerificationCode = (credentials) => {
     const url = routes.post.checkVerificationCode;
     return axios.post(url, credentials);
 };
 
-exports.login = (credentials) => {
-    const url = routes.post.login;
+exports.resetPassword = (credentials) => {
+    const url = routes.post.passwordReset;
     return axios.post(url, credentials);
 };

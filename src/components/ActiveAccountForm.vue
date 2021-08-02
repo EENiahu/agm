@@ -9,28 +9,24 @@
           </div>
         </div>
 
-        <form action="" class="section-right__form form">
+        <form @submit.prevent="activate" :action="formAction" method="POST" class="section-right__form form">
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input defaultValue={props.email} type="email"  placeholder="Email Address" class="input__inner"/>
+              <div class="input" :class="{'input__is-invalid': errors.has('VerificationCode')}">
+                <input @input="handleInput" :value="inputs.VerificationCode" type="text" name="VerificationCode" placeholder="Enter Verification Code" class="input__inner"/>
+                <span v-if="errors.has('VerificationCode')" v-text="errors.get('VerificationCode')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <div class="input">
-                <input type="text"  placeholder="Enter Verification Code" class="input__inner"/>
-              </div>
-            </div>
-          </div>
-
-          <div class="form__row">
-            <div class="form__col">
-              <button type="button" class="btn btn--primary is-plain">
-                Activate Account
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loader"
+                          type="submit"
+                          btn-text="Activate Account"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -45,7 +41,69 @@
 </template>
 
 <script>
+  import errorHandler from "@/lib/ErrorHandler";
+  import apiAuth from "@/api/auth";
+  import BtnLoader from '@/components/common/BtnLoader';
+
   export default {
-    name: "ActiveAccountForm"
+    name: "ActiveAccountForm",
+    components: {
+      BtnLoader
+    },
+    data() {
+      return {
+        errors: new errorHandler(),
+        disabled: false,
+        loader: false,
+
+        formAction: apiAuth.getRoutes().post.checkVerificationCode,
+        inputs: {
+          VerificationCode: ''
+        }
+      }
+    },
+
+    methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loader = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loader = false;
+      },
+
+      activate(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
+        let formData = new FormData();
+
+        formData.append('Email', this.$store.getters["auth/user"].email);
+        formData.append('VerificationCode', this.inputs.VerificationCode);
+
+        apiAuth.checkVerificationCode(formData)
+            .then(res => {
+              this.$store.dispatch('auth/mutate_user', {
+                propName: 'emailVerification',
+                propValue: true
+              }).then(() => {
+                this.$router.push({path: '/dashboard/profile'});
+              })
+            })
+            .catch(err => {
+              this.activateSubmit();
+              if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+            })
+      },
+
+      handleInput(e) {
+        this.inputs[e.currentTarget.name] = e.currentTarget.value;
+        if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
+        if (this.errors.has('message')) this.errors.clear('message');
+      }
+    }
+
   }
 </script>
