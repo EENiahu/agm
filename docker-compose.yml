@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  agm_vue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7500:80"
+
+networks:
+    am-dev-network:
+        driver: bridge
