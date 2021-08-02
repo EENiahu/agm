@@ -26,6 +26,10 @@ const routes = [
         component: () => import('../views/pages/AccountMembers.vue')
       },
       {
+        path: '/dashboard/invite-property-manager',
+        component: () => import('../views/pages/InvitePropertyManager.vue')
+      },
+      {
         path: '',
         component: () => import('../views/pages/ProfilePage.vue')
       },

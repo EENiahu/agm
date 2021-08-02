@@ -50,6 +50,16 @@
             <v-col cols="8">
               <v-text-field
                   color="orange"
+                  label="Work Telephone (optional)"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="8">
+              <v-text-field
+                  color="orange"
                   label="Title"
                   hide-details="auto"
               ></v-text-field>
@@ -172,6 +182,11 @@
 
 <script>
   export default {
-    name: "ProfilePage"
+    name: "ProfilePage",
+    data () {
+      return {
+        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      }
+    },
   }
 </script>
