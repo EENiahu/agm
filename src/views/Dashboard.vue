@@ -73,7 +73,7 @@
       logout() {
         this.$store.dispatch('auth/remove_token');
         this.$store.dispatch('auth/remove_user');
-        this.$router.push('/');
+        // this.$router.push('/');
         location.href = '/';
       }
     }
