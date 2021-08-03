@@ -7,34 +7,33 @@
             <div class="section-right__title section-right__title--primary">Reset Password</div>
             <div>Condo Corporation</div>
           </div>
-
-          <div v-if="successMessages" class="section-right__subtitle">
-            An email will be sent with further instructions on how to reset your password if our records match an account with <strong>email@email.com</strong>. If you do not hear from us within 15 minutes, please double check that you entered the correct email address and check your spam folder.
-          </div>
-
-          <div v-else class="section-right__subtitle">
-            Please enter the email address you`d like your password reset information sent to.
-          </div>
         </div>
 
-        <form v-if="!successMessages" @submit.prevent="resetPassword" :action="formAction" method="POST" class="section-right__form form">
+        <form action="" class="section-right__form form">
           <div class="form__row">
             <div class="form__col">
-              <div class="input" :class="{'input__is-invalid': errors.has('Email')}">
-                <input @input="handleInput" :value="inputs.Email" type="email" name="Email" placeholder="Email Address" class="input__inner"/>
-                <span v-if="errors.has('Email')" v-text="errors.get('Email')" class="input__error-message"></span>
+                <div class="input" :class="{'input__is-invalid': errors.has('Password')}">
+                  <input @input="handleInput" :value="inputs.Password" type="password" name="Password" placeholder="Create Password" class="input__inner"/>
+                  <span v-if="errors.has('Password')" v-text="errors.get('Password')" class="input__error-message"></span>
+                </div>
+            </div>
+          </div>
+
+          <div class="form__row">
+            <div class="form__col">
+              <div class="input" :class="{'input__is-invalid': errors.has('ConfirmPassword')}">
+                <input @input="handleInput" :value="inputs.ConfirmPassword" type="password" name="ConfirmPassword" placeholder="Re-enter Password" class="input__inner"/>
+                <span v-if="errors.has('ConfirmPassword')" v-text="errors.get('ConfirmPassword')" class="input__error-message"></span>
+                <span v-if="errors.has('message')" v-text="errors.get('message')" class="input__error-message"></span>
               </div>
             </div>
           </div>
 
           <div class="form__row">
             <div class="form__col">
-              <btn-loader :disabled="disabled"
-                          :show-loader="loader"
-                          type="submit"
-                          btn-text="Submit"
-                          class="btn--primary is-plain">
-              </btn-loader>
+              <button type="button" class="btn btn--primary is-plain">
+                Submit
+              </button>
             </div>
           </div>
         </form>
@@ -48,25 +47,26 @@
 </template>
 
 <script>
-  import apiAuth from "@/api/auth";
+  import BtnLoader from "@/components/common/BtnLoader";
   import errorHandler from "@/lib/ErrorHandler";
-  import BtnLoader from '@/components/common/BtnLoader';
+  import apiAuth from "@/api/auth";
 
   export default {
-    name: "ForgotPasswordForm",
+    name: "ResetPasswordForm",
     components: {
       BtnLoader
     },
+
     data() {
       return {
         errors: new errorHandler(),
         disabled: false,
         loader: false,
 
-        formAction: apiAuth.getRoutes().post.passwordReset,
-        successMessages: false,
+        formAction: apiAuth.getRoutes().post.login,
         inputs: {
-          Email: ""
+          Password: "",
+          ConfirmPassword: "",
         }
       }
     },
@@ -83,18 +83,7 @@
       },
 
       resetPassword(e) {
-        if (this.disabled) return;
-        this.deactivateSubmit();
 
-        apiAuth.resetPassword(new FormData(e.target))
-          .then(res => {
-            this.activateSubmit();
-            this.successMessages = true;
-          })
-          .catch(err => {
-            this.activateSubmit();
-            if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
-          })
       },
 
       handleInput(e) {
