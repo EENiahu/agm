@@ -40,7 +40,7 @@
             </div>
 
             <div class="form__col">
-              <router-link to="/reset-password" class="section-right__message-link">Forgot Password?</router-link>
+              <router-link to="/forgot-password" class="section-right__message-link">Forgot Password?</router-link>
             </div>
           </div>
         </form>

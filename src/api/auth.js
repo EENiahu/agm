@@ -40,3 +40,8 @@ exports.resetPassword = (credentials) => {
     const url = routes.post.passwordReset;
     return axios.post(url, credentials);
 };
+
+exports.recoverPassword = (credentials) => {
+    const url = routes.post.passwordRecovery;
+    return axios.post(url, credentials);
+};
