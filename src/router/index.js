@@ -38,6 +38,10 @@ const routes = [
         component: () => import('../views/pages/properties/PropertyCreatePage.vue')
       },
       {
+        path: '/dashboard/properties-edit/:id',
+        component: () => import('../views/pages/properties/PropertyEditPage.vue')
+      },
+      {
         path: '',
         component: () => import('../views/pages/ProfilePage.vue')
       },

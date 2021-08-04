@@ -1,6 +1,14 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left class="white">
+<!--      <v-progress-linear-->
+<!--          fixed-->
+<!--          top-->
+<!--          color="orange darken-2"-->
+<!--          rounded-->
+<!--          value="40"-->
+<!--      ></v-progress-linear>-->
+
       <router-link to="/dashboard" class="d-flex align-center">
         <v-img
             alt="Vuetify Logo"
