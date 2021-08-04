@@ -158,7 +158,6 @@
 
 <script>
 import apiStates from "@/api/states";
-import apiUsers from "@/api/users";
 import apiProperties from "@/api/properties";
 
 export default {
@@ -172,12 +171,11 @@ export default {
       organization: this.$store.getters["auth/user"].organization || {},
       states: [],
 
-      UserId: this.$store.getters["auth/user"].id,
       OrganizationId: this.$store.getters["auth/user"].organization.id,
 
       inputs: {
         property: {
-          Title: '',
+          Name: '',
           FirstAddress: '',
           SecondAddress: '',
           Country: '',
@@ -211,16 +209,18 @@ export default {
       this.loading = false;
     },
 
-    sendSave() {
+    sendSave(e) {
       if (this.disabled) return;
       this.deactivateSubmit();
 
-      apiProperties.create()
+      const propertyParams = {...this.inputs.property, OrganizationId: this.OrganizationId};
+
+      apiProperties.create(propertyParams)
         .then(res => {
-          console.log(res);
+          this.activateSubmit();
         })
         .catch(err => {
-
+          this.activateSubmit();
         })
     },
 
