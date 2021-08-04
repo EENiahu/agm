@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const origin = 'http://31.131.21.188:7400';
+const origin = 'http://31.131.21.188:7300';
 const headers = {
     headers: {
         'Authorization': `Bearer ${window.localStorage.getItem('token')}`
@@ -51,7 +51,7 @@ exports.updateByEmail = (params) => {
     let formData = new FormData();
 
     Object.keys(params).forEach(param => {
-        formData.append(param, params[param]);
+        if (params[param]) formData.append(param, params[param]);
     });
 
     return axios.put(url, formData, headers);
@@ -62,7 +62,7 @@ exports.updateById = (id, params) => {
     let formData = new FormData();
 
     Object.keys(params).forEach(param => {
-        formData.append(param, params[param]);
+        if (params[param]) formData.append(param, params[param]);
     });
 
     return axios.put(url, formData, headers);

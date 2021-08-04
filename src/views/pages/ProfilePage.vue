@@ -226,8 +226,8 @@
           user: {
             FullName: this.$store.getters["auth/user"].fullName,
             Email: this.$store.getters["auth/user"].email,
-            Phone: '',
-            Title: '',
+            Phone: this.$store.getters["auth/user"].phone,
+            Title: this.$store.getters["auth/user"].title || '',
           },
 
           organization: {
@@ -276,7 +276,7 @@
           UserStatusId: this.UserStatusId
         };
         const organizationParams = {...this.inputs.organization, UserId: this.UserId};
-        const hasOrganization = Object.keys(this.$store.getters["auth/user"].organizations).length;
+        const hasOrganization = this.$store.getters["auth/user"].organization;
 
         (hasOrganization ? apiOrganizations.update(this.organization.id, organizationParams) : apiOrganizations.create(organizationParams))
             .then(res => {
@@ -315,10 +315,10 @@
       },
 
       getOrganization() {
-        const hasOrganization = Object.keys(this.$store.getters["auth/user"].organizations).length;
+        const hasOrganization = this.$store.getters["auth/user"].organization;
         if (!hasOrganization) return;
 
-        apiOrganizations.getOne(this.$store.getters["auth/user"].organizations[0].id)
+        apiOrganizations.getOne(this.$store.getters["auth/user"].organization.id)
             .then(res => {
               this.organization = res.data;
               this.setOrganizationInputs();

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const origin = 'http://31.131.21.188:7400';
+const origin = 'http://31.131.21.188:7300';
 const headers = {
     headers: {
         'Authorization': `Bearer ${window.localStorage.getItem('token')}`

@@ -113,7 +113,7 @@
             .then(res => {
               this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
                   .then(() => {
-                    axios.get('http://31.131.21.188:7400/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
+                    axios.get('http://31.131.21.188:7300/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
                         .then(res => {
                           this.$store.dispatch('auth/set_user', {user: res.data})
                               .then(() => {
