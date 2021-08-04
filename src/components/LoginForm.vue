@@ -32,7 +32,7 @@
           <div class="form__row">
             <div class="form__col">
               <btn-loader :disabled="disabled"
-                          :show-loader="loader"
+                          :show-loader="loading"
                           type="submit"
                           btn-text="Submit"
                           class="btn--primary is-plain">
@@ -66,7 +66,7 @@
       return {
         errors: new errorHandler(),
         disabled: false,
-        loader: false,
+        loading: false,
 
         formAction: apiAuth.getRoutes().post.login,
         inputs: {
@@ -79,12 +79,12 @@
     methods: {
       deactivateSubmit() {
         this.disabled = true;
-        this.loader = true;
+        this.loading = true;
       },
 
       activateSubmit() {
         this.disabled = false;
-        this.loader = false;
+        this.loading = false;
       },
 
       login(e) {

@@ -61,7 +61,7 @@
       return {
         errors: new errorHandler(),
         disabled: false,
-        loader: false,
+        loading: false,
 
         formAction: apiAuth.getRoutes().post.login,
         inputs: {
@@ -74,12 +74,12 @@
     methods: {
       deactivateSubmit() {
         this.disabled = true;
-        this.loader = true;
+        this.loading = true;
       },
 
       activateSubmit() {
         this.disabled = false;
-        this.loader = false;
+        this.loading = false;
       },
 
       resetPassword(e) {

@@ -50,7 +50,7 @@
           <div class="form__row">
             <div class="form__col">
               <btn-loader :disabled="disabled"
-                          :show-loader="loader"
+                          :show-loader="loading"
                           type="submit"
                           btn-text="Submit"
                           class="btn--primary is-plain">
@@ -82,7 +82,7 @@
       return {
         errors: new errorHandler(),
         disabled: false,
-        loader: false,
+        loading: false,
 
         formAction: apiAuth.getRoutes().post.registration,
         inputs: {
@@ -97,12 +97,12 @@
     methods: {
       deactivateSubmit() {
         this.disabled = true;
-        this.loader = true;
+        this.loading = true;
       },
 
       activateSubmit() {
         this.disabled = false;
-        this.loader = false;
+        this.loading = false;
       },
 
       register(e) {
@@ -113,7 +113,7 @@
             .then(res => {
               this.$store.dispatch('auth/set_token', {token: res.data.accessToken})
                   .then(() => {
-                    axios.get('http://31.131.21.188:7400/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
+                    axios.get('http://31.131.21.188:7300/v1/account', {headers: {'Authorization': `Bearer ${this.$store.getters["auth/token"]}`}})
                         .then(res => {
                           this.$store.dispatch('auth/set_user', {user: res.data})
                               .then(() => {

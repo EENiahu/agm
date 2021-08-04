@@ -1,12 +1,14 @@
 <template>
-  <form action="">
+  <form @submit.prevent="sendSave" :action="formAction" method="PUT">
     <v-row class="mb-6">
       <v-col cols="6">
-        <h1>YOUR PROFILE / MEMBER</h1>
+        <h1>YOUR PROFILE / OWNER</h1>
       </v-col>
 
       <v-col cols="6" align="end">
         <v-btn
+            type="submit"
+            :loading="loading"
             class="px-10"
             color="orange darken-2 white--text"
             depressed
@@ -27,6 +29,7 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-model="inputs.user.FullName"
                   color="orange"
                   label="Name"
                   hide-details="auto"
@@ -37,6 +40,7 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-model="inputs.user.Email"
                   name="Email"
                   type="email"
                   color="orange"
@@ -49,6 +53,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-mask="'+1-###-###-####'"
+                  v-model="inputs.user.Phone"
                   color="orange"
                   label="Work Telephone (optional)"
                   hide-details="auto"
@@ -59,6 +65,7 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-model="inputs.user.Title"
                   color="orange"
                   label="Title"
                   hide-details="auto"
@@ -77,6 +84,7 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-model="inputs.auth.Password"
                   name="Password"
                   type="password"
                   color="orange"
@@ -89,6 +97,7 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  v-model="inputs.auth.ConfirmPassword"
                   name="ConfirmPassword"
                   type="password"
                   color="orange"
@@ -112,6 +121,7 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+                v-model="inputs.organization.OrganizationName"
                 color="orange"
                 label="Property Management Company"
                 hide-details="auto"
@@ -122,7 +132,8 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-                name="Email"
+                v-model="inputs.organization.FirstAddress"
+                name="FirstAddress"
                 color="orange"
                 label="Address 1"
                 hide-details="auto"
@@ -133,6 +144,8 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+                v-model="inputs.organization.SecondAddress"
+                name="SecondAddress"
                 color="orange"
                 label="Address 2"
                 hide-details="auto"
@@ -143,6 +156,8 @@
         <v-row>
           <v-col cols="2">
             <v-text-field
+                v-model="inputs.organization.City"
+                name="City"
                 color="orange"
                 label="City"
                 hide-details="auto"
@@ -151,9 +166,12 @@
 
           <v-col cols="2">
             <v-select
-                :items="items"
+                v-model="inputs.organization.StateId"
+                :items="states"
+                item-text="name"
+                item-value="id"
                 color="orange"
-                label="Province"
+                label="State"
             ></v-select>
           </v-col>
         </v-row>
@@ -161,6 +179,8 @@
         <v-row>
           <v-col cols="2">
             <v-text-field
+                v-model="inputs.organization.Country"
+                name="Country"
                 color="orange"
                 label="Country"
                 hide-details="auto"
@@ -169,8 +189,10 @@
 
           <v-col cols="2">
             <v-text-field
+                v-model="inputs.organization.PostalCode"
+                name="Postal Code"
                 color="orange"
-                label="Postal COde"
+                label="Postal Code"
                 hide-details="auto"
             ></v-text-field>
           </v-col>
@@ -181,12 +203,142 @@
 </template>
 
 <script>
+  import apiStates from "@/api/states";
+  import apiUsers from "@/api/users";
+  import apiOrganizations from "@/api/organizations";
+
   export default {
     name: "ProfilePage",
     data () {
       return {
-        items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+        disabled: false,
+        loading: false,
+        formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
+
+        organization: {},
+        states: [],
+
+        UserId: this.$store.getters["auth/user"].id,
+        UserRoleId: this.$store.getters["auth/user"].role.id,
+        UserStatusId: this.$store.getters["auth/user"].userStatus,
+
+        inputs: {
+          user: {
+            FullName: this.$store.getters["auth/user"].fullName,
+            Email: this.$store.getters["auth/user"].email,
+            Phone: this.$store.getters["auth/user"].phone,
+            Title: this.$store.getters["auth/user"].title || '',
+          },
+
+          organization: {
+            OrganizationName: '',
+            FirstAddress: '',
+            SecondAddress: '',
+            Country: '',
+            City: '',
+            PostalCode: '',
+            StateId: '',
+          },
+
+          auth: {
+            Password: '',
+            ConfirmPassword: '',
+          }
+        },
       }
     },
+
+    created() {
+      this.getStates();
+      this.getOrganization();
+    },
+
+    methods: {
+      deactivateSubmit() {
+        this.disabled = true;
+        this.loading = true;
+      },
+
+      activateSubmit() {
+        this.disabled = false;
+        this.loading = false;
+      },
+
+      sendSave() {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
+        const changedPassword = this.inputs.auth.Password && this.inputs.auth.ConfirmPassword;
+        const userParams = {
+          ...this.inputs.user,
+          ...(changedPassword ? this.inputs.auth : {}),
+          UserRoleId: this.UserRoleId,
+          UserStatusId: this.UserStatusId
+        };
+        const organizationParams = {...this.inputs.organization, UserId: this.UserId};
+        const hasOrganization = this.$store.getters["auth/user"].organization;
+
+        (hasOrganization ? apiOrganizations.update(this.organization.id, organizationParams) : apiOrganizations.create(organizationParams))
+            .then(res => {
+              apiUsers.updateById(this.UserId, userParams)
+                .then(res => {
+                  this.activateSubmit();
+
+                  if (changedPassword) {
+                    this.$store.dispatch('auth/remove_token');
+                    this.$store.dispatch('auth/remove_user');
+                    location.href = '/';
+                  }
+                  else {
+                    this.$store.dispatch('auth/set_user', {user: res.data});
+                  }
+                })
+                .catch(err => {
+                  this.activateSubmit();
+                  console.error(err);
+                })
+            })
+            .catch(err => {
+              this.activateSubmit();
+              console.error(err);
+            })
+      },
+
+      getStates() {
+        apiStates.getAll()
+          .then(res => {
+            this.states = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      },
+
+      getOrganization() {
+        const hasOrganization = this.$store.getters["auth/user"].organization;
+        if (!hasOrganization) return;
+
+        apiOrganizations.getOne(this.$store.getters["auth/user"].organization.id)
+            .then(res => {
+              this.organization = res.data;
+              this.setOrganizationInputs();
+            })
+            .catch(err => {
+              console.error(err);
+            })
+      },
+
+      setOrganizationInputs() {
+        this.inputs.organization = {
+          OrganizationName: this.organization.name,
+          FirstAddress: this.organization.address.firstAddress,
+          SecondAddress: this.organization.address.secondAddress,
+          Country: this.organization.address.country,
+          City: this.organization.address.city,
+          PostalCode: this.organization.address.postalCode,
+          StateId: this.organization.address.state.id,
+        }
+      },
+    }
   }
 </script>
