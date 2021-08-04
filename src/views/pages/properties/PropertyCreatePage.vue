@@ -6,6 +6,16 @@
       </v-col>
 
       <v-col cols="6" align="end">
+        <router-link to="/dashboard/properties" class="mr-4">
+          <v-btn
+              type="button"
+              class="px-10"
+              color="blue-grey darken-4 white--text"
+              depressed
+              rounded
+          >Back</v-btn>
+        </router-link>
+
         <v-btn
             type="submit"
             :loading="loading"
@@ -218,6 +228,7 @@ export default {
       apiProperties.create(propertyParams)
         .then(res => {
           this.activateSubmit();
+          this.$router.push({path: '/dashboard/properties'});
         })
         .catch(err => {
           this.activateSubmit();

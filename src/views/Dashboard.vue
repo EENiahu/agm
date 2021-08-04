@@ -41,7 +41,9 @@
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">Properties</v-list-item-title>
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
+              <router-link to="/dashboard/properties" class="white--text">Properties</router-link>
+            </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
