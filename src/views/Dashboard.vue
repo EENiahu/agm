@@ -14,7 +14,7 @@
       <v-spacer></v-spacer>
 
       <div class="px-4 text-uppercase grey--text text--darken-1 font-weight-bold">
-        Welcome Anne
+        Welcome {{ name }}
       </div>
 
       <v-divider vertical inset class="orange"></v-divider>
@@ -66,6 +66,7 @@
     vuetify,
     data() {
       return {
+        name: this.$store.getters["auth/user"].fullName.split(' ')[0]
       }
     },
 

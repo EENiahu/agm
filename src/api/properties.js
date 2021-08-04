@@ -40,9 +40,9 @@ exports.getOne = (id) => {
     return axios.get(url, headers);
 };
 
-exports.create = () => {
+exports.create = (params) => {
     const url = routes.post.create;
-    return axios.post(url, headers);
+    return axios.post(url, params, headers);
 };
 
 exports.updateById = (id) => {

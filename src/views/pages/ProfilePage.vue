@@ -122,6 +122,7 @@
           <v-col cols="4">
             <v-text-field
                 v-model="inputs.organization.OrganizationName"
+                name="OrganizationName"
                 color="orange"
                 label="Property Management Company"
                 hide-details="auto"
@@ -167,6 +168,8 @@
           <v-col cols="2">
             <v-select
                 v-model="inputs.organization.StateId"
+                name="StateId"
+                hide-details="auto"
                 :items="states"
                 item-text="name"
                 item-value="id"
@@ -190,7 +193,7 @@
           <v-col cols="2">
             <v-text-field
                 v-model="inputs.organization.PostalCode"
-                name="Postal Code"
+                name="PostalCode"
                 color="orange"
                 label="Postal Code"
                 hide-details="auto"

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="sendSave" :action="formAction" method="PUT">
+  <form @submit.prevent="sendSave" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
         <h1>CREATE NEW PROPERTY</h1>
@@ -22,16 +22,17 @@
         <v-col>
           <v-row>
             <v-col cols="8">
-              <h3>Change profile details</h3>
+              <h3>{{ organization.name }}</h3>
             </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="8">
               <v-text-field
-                  v-model="inputs.user.FullName"
+                  v-model="inputs.property.Name"
+                  name="Name"
                   color="orange"
-                  label="Name"
+                  label="Property Title"
                   hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -40,11 +41,10 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
-                  v-model="inputs.user.Email"
-                  name="Email"
-                  type="email"
+                  v-model="inputs.property.FirstAddress"
+                  name="FirstAddress"
                   color="orange"
-                  label="Email"
+                  label="Address 1"
                   hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -53,10 +53,57 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
-                  v-mask="'+1-###-###-####'"
-                  v-model="inputs.user.Phone"
+                  v-model="inputs.property.SecondAddress"
+                  name="SecondAddress"
                   color="orange"
-                  label="Work Telephone (optional)"
+                  label="Address 2"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                  v-model="inputs.property.City"
+                  name="City"
+                  color="orange"
+                  label="City"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="4">
+              <v-select
+                  v-model="inputs.property.StateId"
+                  name="StateId"
+                  hide-details="auto"
+                  :items="states"
+                  item-text="name"
+                  item-value="id"
+                  color="orange"
+                  label="State"
+              ></v-select>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                  v-model="inputs.property.Country"
+                  name="Country"
+                  color="orange"
+                  label="Country"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+
+            <v-col cols="4">
+              <v-text-field
+                  v-model="inputs.property.PostalCode"
+                  name="PostalCode"
+                  color="orange"
+                  label="Postal Code"
                   hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -65,9 +112,23 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
-                  v-model="inputs.user.Title"
+                  v-model="inputs.property.TotalUnits"
+                  name="TotalUnits"
+                  type="number"
                   color="orange"
-                  label="Title"
+                  label="How many units in total?"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col cols="8">
+              <v-text-field
+                  readonly
+                  :value="unitsByQuorum"
+                  color="orange"
+                  label="How many units to meet quorum? (calculated)"
                   hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -77,127 +138,20 @@
         <v-col>
           <v-row>
             <v-col cols="8">
-              <h3>Change your password</h3>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="8">
-              <v-text-field
-                  v-model="inputs.auth.Password"
-                  name="Password"
-                  type="password"
-                  color="orange"
-                  label="Password"
-                  hide-details="auto"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col cols="8">
-              <v-text-field
-                  v-model="inputs.auth.ConfirmPassword"
-                  name="ConfirmPassword"
-                  type="password"
-                  color="orange"
-                  label="Re-Enter Password"
-                  hide-details="auto"
-              ></v-text-field>
+              <h5 class="mb-4 text-h5 orange--text text--darken-2">Have you downloaded the Condo Owner's Excel Template?</h5>
+              <p class="subtitle-1">Please use AGM Online's template before uploading Condo Owners to your profile.</p>
+              <p class="mb-5 subtitle-2 font-weight-regular font-italic">Please indicate in column <strong>Ownership</strong> whether an owner is an Owner Occupant or Offsite Owner.</p>
+              <v-btn
+                  type="button"
+                  class="px-10"
+                  color="blue-grey darken-4 white--text"
+                  depressed
+                  rounded
+              >Download Owner Template</v-btn>
             </v-col>
           </v-row>
         </v-col>
       </v-row>
-    </div>
-
-    <div>
-      <v-row class="mb-6">
-        <v-col cols="6">
-          <h1>COMPANY PROFILE</h1>
-        </v-col>
-      </v-row>
-
-      <div>
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-                v-model="inputs.organization.OrganizationName"
-                color="orange"
-                label="Property Management Company"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-                v-model="inputs.organization.FirstAddress"
-                name="FirstAddress"
-                color="orange"
-                label="Address 1"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="4">
-            <v-text-field
-                v-model="inputs.organization.SecondAddress"
-                name="SecondAddress"
-                color="orange"
-                label="Address 2"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="2">
-            <v-text-field
-                v-model="inputs.organization.City"
-                name="City"
-                color="orange"
-                label="City"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="2">
-            <v-select
-                v-model="inputs.organization.StateId"
-                :items="states"
-                item-text="name"
-                item-value="id"
-                color="orange"
-                label="State"
-            ></v-select>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="2">
-            <v-text-field
-                v-model="inputs.organization.Country"
-                name="Country"
-                color="orange"
-                label="Country"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="2">
-            <v-text-field
-                v-model="inputs.organization.PostalCode"
-                name="Postal Code"
-                color="orange"
-                label="Postal Code"
-                hide-details="auto"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </div>
     </div>
   </form>
 </template>
@@ -205,7 +159,7 @@
 <script>
 import apiStates from "@/api/states";
 import apiUsers from "@/api/users";
-import apiOrganizations from "@/api/organizations";
+import apiProperties from "@/api/properties";
 
 export default {
   name: "PropertyCreatePage",
@@ -213,30 +167,37 @@ export default {
     return {
       disabled: false,
       loading: false,
-      formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
+      formAction: apiProperties.getRoutes().post.create,
 
-      organization: {},
+      organization: this.$store.getters["auth/user"].organization || {},
       states: [],
 
       UserId: this.$store.getters["auth/user"].id,
-      UserRoleId: this.$store.getters["auth/user"].role.id,
-      UserStatusId: this.$store.getters["auth/user"].userStatus,
-      OrganizationId: this.$store.getters["auth/user"].organizations.id,
+      OrganizationId: this.$store.getters["auth/user"].organization.id,
 
       inputs: {
-        user: {
-          FullName: this.$store.getters["auth/user"].fullName,
-          Email: this.$store.getters["auth/user"].email,
-          Phone: '',
+        property: {
           Title: '',
+          FirstAddress: '',
+          SecondAddress: '',
+          Country: '',
+          City: '',
+          PostalCode: '',
+          StateId: '',
+          TotalUnits: '',
         },
       },
     }
   },
 
+  computed: {
+    unitsByQuorum() {
+      return this.inputs.property.TotalUnits ? `${Math.floor(this.inputs.property.TotalUnits/4)}` : '';
+    }
+  },
+
   created() {
     this.getStates();
-    this.getOrganization();
   },
 
   methods: {
@@ -251,17 +212,26 @@ export default {
     },
 
     sendSave() {
+      if (this.disabled) return;
+      this.deactivateSubmit();
 
+      apiProperties.create()
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+
+        })
     },
 
     getStates() {
       apiStates.getAll()
-          .then(res => {
-            this.states = res.data;
-          })
-          .catch(err => {
-            console.error(err);
-          })
+        .then(res => {
+          this.states = res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
   }
 }
