@@ -41,7 +41,9 @@
       <v-list nav>
         <v-list-item-group>
           <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">Dashboard</v-list-item-title>
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
+              <router-link to="/dashboard/meetings" class="white--text">Dashboard</router-link>
+            </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
@@ -55,7 +57,9 @@
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">My account</v-list-item-title>
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
+              <router-link to="/dashboard/profile" class="white--text">My account</router-link>
+            </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>

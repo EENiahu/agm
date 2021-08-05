@@ -1,15 +1,20 @@
 <template>
   <v-expansion-panel>
     <v-expansion-panel-header>
-      <v-row>
-        <v-col>{{ property.name }}</v-col>
-        <v-col cols="3" class="text-truncate">
-          {{ property.address.secondAddress ? `${property.address.firstAddress} / ${property.address.secondAddress}` : property.address.firstAddress }}
+      <v-row align="center">
+        <v-col>{{ meeting.startDateTime }}</v-col>
+        <v-col class="text-truncate">
+          0{{ new Date(meeting.startDateTime).getHours()}}:0{{ new Date(meeting.startDateTime).getMinutes()}} PM
         </v-col>
-        <v-col>{{ property.totalUnits }}</v-col>
-        <v-col>{{ property.condoOwners.length }}</v-col>
-        <v-col>{{ property.condoOwners.length }}</v-col>
-        <v-col>{{ property.quorumUnits }}</v-col>
+        <v-col>{{ meeting.property.name }}</v-col>
+        <v-col>
+          {{ meeting.property.address.secondAddress ? `${meeting.property.address.firstAddress} / ${meeting.property.address.secondAddress}` : meeting.property.address.firstAddress }}
+        </v-col>
+        <v-col><v-icon color="orange darken-2">mdi-check-circle-outline</v-icon> May 10,21</v-col>
+        <v-col><v-icon color="grey lighten-2">mdi-check-circle-outline</v-icon></v-col>
+        <v-col>{{ 0 }}</v-col>
+        <v-col>{{ 0 }}</v-col>
+        <v-col>{{ 0 }}</v-col>
       </v-row>
     </v-expansion-panel-header>
 
@@ -17,16 +22,25 @@
       <v-row justify="start">
         <v-col class="flex-grow-0">
           <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
-            Host a Meeting
+            Start AGM
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0">
-          <router-link :to="`/dashboard/properties-edit/${property.id}`">
+          <router-link :to="`/dashboard/meetings-edit/${meeting.id}`">
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Update
             </v-btn>
           </router-link>
         </v-col>
+
+        <v-col class="flex-grow-0">
+          <router-link :to="`/dashboard/meetings-edit/${meeting.id}`">
+            <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
+              Poll
+            </v-btn>
+          </router-link>
+        </v-col>
+
         <v-col class="flex-grow-0">
           <v-menu
               v-model="menu"
@@ -63,7 +77,7 @@
                     color="red"
                     text
                     type="button"
-                    @click="removeProperty(property.id)"
+                    @click="removeMeeting(meeting.id)"
                 >
                   Remove
                 </v-btn>
@@ -77,12 +91,12 @@
 </template>
 
 <script>
-  import apiProperties from "@/api/properties";
+  import apiMeetings from "@/api/meetings";
 
   export default {
-    name: "PropertyPanel",
+    name: "MeetingPanel",
     props: {
-      property: {
+      meeting: {
         type: Object,
         required: true
       }
@@ -107,13 +121,13 @@
         this.loading = false;
       },
 
-      removeProperty(id) {
+      removeMeeting(id) {
         if (this.disabled) return;
         this.deactivateSubmit();
 
-        apiProperties.delete(id)
+        apiMeetings.delete(id)
             .then(res => {
-              this.$emit('remove-property', id);
+              this.$emit('remove-meeting', id);
               this.menu = false;
               this.activateSubmit();
             })

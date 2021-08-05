@@ -171,7 +171,7 @@ import apiStates from "@/api/states";
 import apiProperties from "@/api/properties";
 
 export default {
-  name: "PropertyCreatePage",
+  name: "PropertiesCreatePage",
   data () {
     return {
       disabled: false,

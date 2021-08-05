@@ -9,20 +9,20 @@ const headers = {
 const apiVersion = 'v1';
 const routes = {
     get: {
-        properties: `${origin}/${apiVersion}/property`,
-        property: `${origin}/${apiVersion}/property/{id}`,
+        meetings: `${origin}/${apiVersion}/meeting`,
+        meeting: `${origin}/${apiVersion}/meeting/{id}`,
     },
 
     post: {
-        create: `${origin}/${apiVersion}/property`,
+        create: `${origin}/${apiVersion}/meeting`,
     },
 
     put: {
-        updateById: `${origin}/${apiVersion}/property/{id}`,
+        updateById: `${origin}/${apiVersion}/meeting/{id}`,
     },
 
     delete: {
-        property: `${origin}/${apiVersion}/property/{id}`
+        meeting: `${origin}/${apiVersion}/meeting/{id}`
     }
 };
 
@@ -31,12 +31,12 @@ exports.getRoutes = () => {
 };
 
 exports.getAll = () => {
-    const url = routes.get.properties + '?extensions=condoOwners';
+    const url = routes.get.meetings;
     return axios.get(url, headers);
 };
 
 exports.getOne = (id) => {
-    const url = routes.get.property.replace('{id}', id);
+    const url = routes.get.meeting.replace('{id}', id);
     return axios.get(url, headers);
 };
 
@@ -63,6 +63,6 @@ exports.updateById = (id, params) => {
 };
 
 exports.delete = (id) => {
-    const url = routes.delete.property.replace('{id}', id);
+    const url = routes.delete.meeting.replace('{id}', id);
     return axios.delete(url, headers);
 };

@@ -169,14 +169,15 @@
 <script>
 import apiStates from "@/api/states";
 import apiProperties from "@/api/properties";
+import apiMeetings from "@/api/meetings";
 
 export default {
-  name: "PropertyEditPage",
+  name: "PropertiesEditPage",
   data () {
     return {
       disabled: false,
       loading: false,
-      formAction: apiProperties.getRoutes().post.create,
+      formAction: apiProperties.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
 
       organization: this.$store.getters["auth/user"].organization || {},
       property: {},
