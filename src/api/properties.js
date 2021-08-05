@@ -40,17 +40,29 @@ exports.getOne = (id) => {
     return axios.get(url, headers);
 };
 
-exports.create = () => {
+exports.create = (params) => {
     const url = routes.post.create;
-    return axios.post(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param]) formData.append(param, params[param]);
+    });
+
+    return axios.post(url, formData, headers);
 };
 
-exports.updateById = (id) => {
+exports.updateById = (id, params) => {
     const url = routes.put.updateById.replace('{id}', id);
-    return axios.get(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param]) formData.append(param, params[param]);
+    });
+
+    return axios.put(url, formData, headers);
 };
 
 exports.delete = (id) => {
     const url = routes.delete.property.replace('{id}', id);
-    return axios.get(url, headers);
+    return axios.delete(url, headers);
 };

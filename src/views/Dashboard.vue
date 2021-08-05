@@ -1,6 +1,14 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left class="white">
+<!--      <v-progress-linear-->
+<!--          fixed-->
+<!--          top-->
+<!--          color="orange darken-2"-->
+<!--          rounded-->
+<!--          value="40"-->
+<!--      ></v-progress-linear>-->
+
       <router-link to="/dashboard" class="d-flex align-center">
         <v-img
             alt="Vuetify Logo"
@@ -14,7 +22,7 @@
       <v-spacer></v-spacer>
 
       <div class="px-4 text-uppercase grey--text text--darken-1 font-weight-bold">
-        Welcome Anne
+        Welcome {{ name }}
       </div>
 
       <v-divider vertical inset class="orange"></v-divider>
@@ -41,7 +49,9 @@
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">Properties</v-list-item-title>
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
+              <router-link to="/dashboard/properties" class="white--text">Properties</router-link>
+            </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
@@ -66,6 +76,7 @@
     vuetify,
     data() {
       return {
+        name: this.$store.getters["auth/user"].fullName.split(' ')[0]
       }
     },
 
