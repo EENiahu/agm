@@ -90,3 +90,11 @@
     }
   }
 </script>
+
+<style lang="scss">
+//Normalize
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+</style>

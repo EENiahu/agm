@@ -1,7 +1,6 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router'
-import Auth from '../views/Auth.vue'
-import store from '../store'
+import VueRouter from 'vue-router';
+import store from '../store';
 
 Vue.use(VueRouter)
 
