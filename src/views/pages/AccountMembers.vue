@@ -16,7 +16,7 @@
     </v-row>
 
     <div>
-      <v-row style="border-bottom: 2px solid black;" class="mb-2">
+      <v-row style="border-bottom: 2px solid black;" class="mb-4 pb-4 px-6" no-gutters>
         <v-col cols="2">
           <div class="font-weight-bold">FULL NAME</div>
         </v-col>
@@ -34,7 +34,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="align-center">
+      <v-row class="align-center mb-4 px-6" no-gutters>
         <v-col cols="2">
           <div>Amela Unsworth</div>
         </v-col>
@@ -61,7 +61,7 @@
         </v-col>
       </v-row>
 
-      <v-row class="align-center">
+      <v-row class="align-center mb-4 px-6" no-gutters>
         <v-col cols="2">
           <div>Eduard</div>
         </v-col>
