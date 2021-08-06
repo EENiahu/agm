@@ -46,9 +46,9 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">Host a meeting</v-list-item-title>
-          </v-list-item>
+<!--          <v-list-item>-->
+<!--            <v-list-item-title class="grey&#45;&#45;text text&#45;&#45;lighten-4 text-uppercase">Host a meeting</v-list-item-title>-->
+<!--          </v-list-item>-->
 
           <v-list-item>
             <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
@@ -59,6 +59,12 @@
           <v-list-item>
             <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
               <router-link to="/dashboard/profile" class="white--text">My account</router-link>
+            </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
+              <router-link to="/dashboard/account-members" class="white--text">Account Members</router-link>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>

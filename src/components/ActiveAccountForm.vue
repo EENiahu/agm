@@ -89,7 +89,7 @@
                 propName: 'emailVerification',
                 propValue: true
               }).then(() => {
-                this.$router.push({path: '/dashboard/profile'});
+                this.$router.push({path: '/dashboard/meetings'});
               })
             })
             .catch(err => {

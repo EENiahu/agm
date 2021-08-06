@@ -2,7 +2,7 @@
   <form @submit.prevent="sendSave" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
-        <h1>VIRTUAL MEETING</h1>
+        <h1>UPDATE VIRTUAL MEETING</h1>
       </v-col>
 
       <v-col cols="6" align="end">
@@ -255,7 +255,7 @@
 
         const meetingParams = {...this.inputs.meeting, StartDateTime: this.StartDateTime, EndDateTime: this.EndDateTime};
 
-        apiMeetings.updateById(this.meetings.id, meetingParams)
+        apiMeetings.updateById(this.meeting.id, meetingParams)
           .then(res => {
             this.activateSubmit();
             this.$router.push({path: '/dashboard/meetings'});
@@ -315,12 +315,38 @@
           MeetingRegistrationLink: this.meeting.meetingRegistrationLink,
         };
 
-        const date = new Date(this.meeting.startDateTime);
+        const startDate = new Date(this.meeting.startDateTime);
+        const endDate = new Date(this.meeting.endDateTime);
 
-        this.inputs.dateFrom = `${date.getFullYear()}-0${date.getMonth()}-0${date.getDay()}`;
-        this.inputs.dateTo = '';
-        this.inputs.timeFrom = '';
-        this.inputs.timeTo = '';
+        this.inputs.dateFrom = this.formatDate(startDate);
+        this.inputs.dateTo = this.formatDate(endDate);
+        this.inputs.timeFrom = this.formatTime(startDate);
+        this.inputs.timeTo = this.formatTime(endDate);
+      },
+
+      formatDate(date) {
+        if (date.length <= 0) return '';
+
+        let fullDate = new Date(Date.parse(date)),
+            d = fullDate.getDate().toString(),
+            m = (fullDate.getMonth()+1).toString(),
+            y = fullDate.getFullYear().toString();
+        d = d.length === 1 ? `0${d}` : d;
+        m = m.length === 1 ? `0${m}` : m;
+
+        return `${y}-${m}-${d}`;
+      },
+
+      formatTime(date) {
+        if (date.length <= 0) return '';
+
+        let fullDate = new Date(Date.parse(date)),
+            h = fullDate.getHours().toString(),
+            m = fullDate.getMinutes().toString();
+        h = h.length === 1 ? `0${h}` : h;
+        m = m.length === 1 ? `0${m}` : m;
+
+        return `${h}:${m}`;
       },
     }
   }

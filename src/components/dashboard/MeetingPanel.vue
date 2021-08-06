@@ -2,7 +2,7 @@
   <v-expansion-panel>
     <v-expansion-panel-header>
       <v-row align="center">
-        <v-col>{{ meeting.startDateTime }}</v-col>
+        <v-col>{{ dateTitleFormat(meeting.startDateTime) }}</v-col>
         <v-col class="text-truncate">
           0{{ new Date(meeting.startDateTime).getHours()}}:0{{ new Date(meeting.startDateTime).getMinutes()}} PM
         </v-col>
@@ -126,14 +126,28 @@
         this.deactivateSubmit();
 
         apiMeetings.delete(id)
-            .then(res => {
-              this.$emit('remove-meeting', id);
-              this.menu = false;
-              this.activateSubmit();
-            })
-            .catch(err => {
-              console.error(err);
-            })
+          .then(res => {
+            this.$emit('remove-meeting', id);
+            this.menu = false;
+            this.activateSubmit();
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      },
+
+      dateTitleFormat(date = '') {
+        let fullDate = new Date(Date.parse(date));
+        const monthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+        const weekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+        const weekDay = fullDate.getDay();
+        const year = fullDate.getFullYear();
+        const month = fullDate.getMonth();
+        let day = fullDate.getDate().toString();
+
+        day = day.length === 1 ? `0${day}` : day;
+
+        return `${weekdaysShort[weekDay]}, ${monthsShort[month]} ${day}, ${year}`;
       },
     }
   }

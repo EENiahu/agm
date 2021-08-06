@@ -54,11 +54,11 @@ const routes = [
       },
       {
         path: '',
-        component: () => import('../views/pages/ProfilePage.vue')
+        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },
       {
         path: '*',
-        component: () => import('../views/pages/ProfilePage.vue')
+        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },
     ]
   },

@@ -2,7 +2,7 @@
   <form @submit.prevent="sendSave" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
-        <h1>VIRTUAL MEETING</h1>
+        <h1>CREATE VIRTUAL MEETING</h1>
       </v-col>
 
       <v-col cols="6" align="end">
