@@ -3,8 +3,8 @@
     <v-expansion-panel-header>
       <v-row align="center">
         <v-col>{{ dateTitleFormat(meeting.startDateTime) }}</v-col>
-        <v-col class="text-truncate">
-          0{{ new Date(meeting.startDateTime).getHours()}}:0{{ new Date(meeting.startDateTime).getMinutes()}} PM
+        <v-col class="text-truncate text-uppercase">
+          {{ timeTitleFormat(meeting.startDateTime) }}
         </v-col>
         <v-col>{{ meeting.property.name }}</v-col>
         <v-col>
@@ -149,6 +149,20 @@
 
         return `${weekdaysShort[weekDay]}, ${monthsShort[month]} ${day}, ${year}`;
       },
+
+      timeTitleFormat(date) {
+        let fullDate = new Date(Date.parse(date));
+        let hours = fullDate.getHours();
+        let minutes = fullDate.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        hours = hours < 10 ? `0${hours}` : hours;
+        minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        return `${hours}:${minutes} ${ampm}`;
+      }
     }
   }
 </script>

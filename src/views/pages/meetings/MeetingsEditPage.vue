@@ -127,7 +127,7 @@
                   :nudge-right="40" :return-value.sync="inputs.timeFrom"
                   transition="scale-transition" offset-y max-width="290px" min-width="290px">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field v-model="inputs.timeFrom" @click:append="menuTimeFrom = !menuTimeFrom" readonly color="orange"
+              <v-text-field :value="timeFromTitle" @click:append="menuTimeFrom = !menuTimeFrom" readonly color="orange"
                             label="Start Time" append-icon="mdi-clock-time-four-outline" hide-details="auto"
                             v-bind="attrs" v-on="on">
               </v-text-field>
@@ -146,7 +146,7 @@
                   :nudge-right="40" :return-value.sync="inputs.timeTo"
                   transition="scale-transition" offset-y max-width="290px" min-width="290px">
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field v-model="inputs.timeTo" @click:append="menuTimeTo = !menuTimeTo" readonly color="orange"
+              <v-text-field :value="timeToTitle" @click:append="menuTimeTo = !menuTimeTo" readonly color="orange"
                             label="End Time" append-icon="mdi-clock-time-four-outline" hide-details="auto"
                             v-bind="attrs" v-on="on">
               </v-text-field>
@@ -182,7 +182,6 @@
   import apiTimezones from "@/api/timezones";
   import apiProperties from "@/api/properties";
   import apiMeetings from "@/api/meetings";
-  import apiUsers from "@/api/users";
 
   export default {
     name: "MeetingsEditPage",
@@ -222,12 +221,41 @@
     },
 
     computed: {
+      timeFromTitle() {
+        if (!this.inputs.timeFrom.length) return '';
+        let date = new Date();
+        let hours = this.inputs.timeFrom.split(':')[0];
+        let minutes = this.inputs.timeFrom.split(':')[1];
+
+        date.setHours(hours);
+        date.setMinutes(minutes);
+
+        return this.timeTitleFormat(date);
+      },
+
+      timeToTitle() {
+        if (!this.inputs.timeTo.length) return '';
+
+        let date = new Date();
+        let hours = this.inputs.timeTo.split(':')[0];
+        let minutes = this.inputs.timeTo.split(':')[1];
+
+        date.setHours(hours);
+        date.setMinutes(minutes);
+
+        return this.timeTitleFormat(date);
+      },
+
       StartDateTime() {
         return this.inputs.dateFrom + ' ' + this.inputs.timeFrom + ':00';
       },
 
       EndDateTime() {
         return this.inputs.dateTo + ' ' + this.inputs.timeTo + ':00';
+      },
+
+      hasDateAndTime() {
+        return this.inputs.dateTo && this.inputs.timeTo;
       },
     },
 
@@ -347,6 +375,20 @@
         m = m.length === 1 ? `0${m}` : m;
 
         return `${h}:${m}`;
+      },
+
+      timeTitleFormat(date) {
+        let fullDate = new Date(Date.parse(date));
+        let hours = fullDate.getHours();
+        let minutes = fullDate.getMinutes();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        hours = hours < 10 ? `0${hours}` : hours;
+        minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        return `${hours}:${minutes} ${ampm}`;
       },
     }
   }
