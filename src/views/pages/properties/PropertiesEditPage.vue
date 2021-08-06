@@ -6,16 +6,6 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link to="/dashboard/properties" class="mr-4">
-          <v-btn
-              type="button"
-              class="px-10"
-              color="blue-grey darken-4 white--text"
-              depressed
-              rounded
-          >Back</v-btn>
-        </router-link>
-
         <v-btn
             type="submit"
             :loading="loading"
@@ -169,14 +159,15 @@
 <script>
 import apiStates from "@/api/states";
 import apiProperties from "@/api/properties";
+import apiMeetings from "@/api/meetings";
 
 export default {
-  name: "PropertyEditPage",
+  name: "PropertiesEditPage",
   data () {
     return {
       disabled: false,
       loading: false,
-      formAction: apiProperties.getRoutes().post.create,
+      formAction: apiProperties.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
 
       organization: this.$store.getters["auth/user"].organization || {},
       property: {},

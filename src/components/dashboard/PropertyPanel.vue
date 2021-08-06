@@ -92,7 +92,6 @@
       return {
         disabled: false,
         loading: false,
-
         menu: false,
       }
     },

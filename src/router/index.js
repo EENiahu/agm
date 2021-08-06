@@ -34,19 +34,31 @@ const routes = [
       },
       {
         path: '/dashboard/properties-create',
-        component: () => import('../views/pages/properties/PropertyCreatePage.vue')
+        component: () => import('../views/pages/properties/PropertiesCreatePage.vue')
       },
       {
         path: '/dashboard/properties-edit/:id',
-        component: () => import('../views/pages/properties/PropertyEditPage.vue')
+        component: () => import('../views/pages/properties/PropertiesEditPage.vue')
+      },
+      {
+        path: '/dashboard/meetings',
+        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
+      },
+      {
+        path: '/dashboard/meetings-create',
+        component: () => import('../views/pages/meetings/MeetingsCreatePage.vue')
+      },
+      {
+        path: '/dashboard/meetings-edit/:id',
+        component: () => import('../views/pages/meetings/MeetingsEditPage.vue')
       },
       {
         path: '',
-        component: () => import('../views/pages/ProfilePage.vue')
+        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },
       {
         path: '*',
-        component: () => import('../views/pages/ProfilePage.vue')
+        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },
     ]
   },
