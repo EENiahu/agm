@@ -89,8 +89,8 @@
                 propName: 'emailVerification',
                 propValue: true
               }).then(() => {
-                this.$router.push({path: '/dashboard/meetings'});
-                location.href = '/dashboard/meetings';
+                this.$router.push({path: '/dashboard/profile'});
+                location.href = '/dashboard/profile';
               })
             })
             .catch(err => {

@@ -40,32 +40,8 @@
     >
       <v-list nav>
         <v-list-item-group>
-          <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
-              <router-link to="/dashboard/meetings" class="white--text">Dashboard</router-link>
-            </v-list-item-title>
-          </v-list-item>
-
-<!--          <v-list-item>-->
-<!--            <v-list-item-title class="grey&#45;&#45;text text&#45;&#45;lighten-4 text-uppercase">Host a meeting</v-list-item-title>-->
-<!--          </v-list-item>-->
-
-          <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
-              <router-link to="/dashboard/properties" class="white--text">Properties</router-link>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
-              <router-link to="/dashboard/profile" class="white--text">My account</router-link>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">
-              <router-link to="/dashboard/account-members" class="white--text">Account Members</router-link>
-            </v-list-item-title>
+          <v-list-item v-for="(navLink, i) in navLinks" :key="i" :to="navLink.link">
+            <v-list-item-title class="grey--text text--lighten-4 text-uppercase">{{ navLink.title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -86,7 +62,28 @@
     vuetify,
     data() {
       return {
-        name: this.$store.getters["auth/user"].fullName.split(' ')[0]
+        name: this.$store.getters["auth/user"].fullName.split(' ')[0],
+        navLinks: [
+          {
+            title: 'Dashboard',
+            link: '/dashboard/meetings'
+          },
+
+          {
+            title: 'Properties',
+            link: '/dashboard/properties'
+          },
+
+          {
+            title: 'My account',
+            link: '/dashboard/profile'
+          },
+
+          {
+            title: 'Account Members',
+            link: '/dashboard/account-members'
+          },
+        ]
       }
     },
 
