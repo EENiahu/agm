@@ -90,6 +90,7 @@
                 propValue: true
               }).then(() => {
                 this.$router.push({path: '/dashboard/meetings'});
+                location.href = '/dashboard/meetings';
               })
             })
             .catch(err => {
