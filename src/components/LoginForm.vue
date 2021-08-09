@@ -24,7 +24,7 @@
               <div class="input" :class="{'input__is-invalid': errors.has('Password')}">
                 <input @input="handleInput" :value="inputs.Password" type="password" name="Password" placeholder="Password" class="input__inner"/>
                 <span v-if="errors.has('Password')" v-text="errors.get('Password')" class="input__error-message"></span>
-                <span v-if="errors.has('message')" v-text="errors.get('message')" class="input__error-message"></span>
+                <span v-if="errors.has('Message')" v-text="errors.get('Message')" class="input__error-message"></span>
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
       handleInput(e) {
         this.inputs[e.currentTarget.name] = e.currentTarget.value;
         if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
-        if (this.errors.has('message')) this.errors.clear('message');
+        if (this.errors.has('Message')) this.errors.clear('Message');
       }
     }
   }
