@@ -268,6 +268,13 @@
       }
     },
 
+    watch: {
+      'inputs.dateFrom'() {this.handleDateTimeErrors()},
+      'inputs.timeFrom'() {this.handleDateTimeErrors()},
+      'inputs.dateTo'() {this.handleDateTimeErrors()},
+      'inputs.timeTo'() {this.handleDateTimeErrors()},
+    },
+
     computed: {
       timeFromTitle() {
         if (!this.inputs.timeFrom.length) return '';
@@ -315,6 +322,15 @@
     },
 
     methods: {
+      handleDateTimeErrors() {
+        if (this.errors.has('StartDateTime') ||this.errors.has('EndDateTime')) {
+          this.errors.clear('StartDateTime');
+          this.errors.clear('EndDateTime');
+        }
+
+        if (this.errors.has('Message')) this.errors.clear('Message');
+      },
+
       handleInput(name) {
         if (this.errors.has(name)) this.errors.clear(name);
         if (this.errors.has('Message')) this.errors.clear('Message');

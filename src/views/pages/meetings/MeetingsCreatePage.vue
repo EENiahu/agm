@@ -255,21 +255,10 @@ export default {
   },
 
   watch: {
-    'inputs.dateFrom'() {
-      this.errors.clear('StartDateTime');
-    },
-
-    'inputs.timeFrom'() {
-      this.errors.clear('StartDateTime');
-    },
-
-    'inputs.dateTo'() {
-      this.errors.clear('EndDateTime');
-    },
-
-    'inputs.timeTo'() {
-      this.errors.clear('EndDateTime');
-    },
+    'inputs.dateFrom'() {this.handleDateTimeErrors()},
+    'inputs.timeFrom'() {this.handleDateTimeErrors()},
+    'inputs.dateTo'() {this.handleDateTimeErrors()},
+    'inputs.timeTo'() {this.handleDateTimeErrors()},
   },
 
   computed: {
@@ -318,6 +307,15 @@ export default {
   methods: {
     handleInput(name) {
       if (this.errors.has(name)) this.errors.clear(name);
+      if (this.errors.has('Message')) this.errors.clear('Message');
+    },
+
+    handleDateTimeErrors() {
+      if (this.errors.has('StartDateTime') ||this.errors.has('EndDateTime')) {
+        this.errors.clear('StartDateTime');
+        this.errors.clear('EndDateTime');
+      }
+
       if (this.errors.has('Message')) this.errors.clear('Message');
     },
 
