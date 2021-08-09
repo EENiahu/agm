@@ -93,7 +93,7 @@
 
             <v-col cols="4">
               <v-select
-                  @input="handleInput('StateId')"
+                  @change="handleInput('StateId')"
                   :error-messages="errors.get('StateId')"
                   v-model="inputs.property.StateId"
                   name="StateId"
