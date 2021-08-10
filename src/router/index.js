@@ -41,10 +41,6 @@ const routes = [
         component: () => import('../views/pages/properties/PropertiesEditPage.vue')
       },
       {
-        path: '/dashboard/meetings',
-        component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
-      },
-      {
         path: '/dashboard/meetings-create',
         component: () => import('../views/pages/meetings/MeetingsCreatePage.vue')
       },

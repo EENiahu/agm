@@ -228,16 +228,13 @@
   import apiTimezones from "@/api/timezones";
   import apiProperties from "@/api/properties";
   import apiMeetings from "@/api/meetings";
-  import errorHandler from "@/lib/ErrorHandler";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "MeetingsEditPage",
+    mixins: [mixinForm],
     data () {
       return {
-        errors: new errorHandler(),
-        disabled: false,
-        loading: false,
-
         menuDateFrom: false,
         menuDateTo: false,
         menuTimeFrom: false,
@@ -327,23 +324,6 @@
           this.errors.clear('StartDateTime');
           this.errors.clear('EndDateTime');
         }
-
-        if (this.errors.has('Message')) this.errors.clear('Message');
-      },
-
-      handleInput(name) {
-        if (this.errors.has(name)) this.errors.clear(name);
-        if (this.errors.has('Message')) this.errors.clear('Message');
-      },
-
-      deactivateSubmit() {
-        this.disabled = true;
-        this.loading = true;
-      },
-
-      activateSubmit() {
-        this.disabled = false;
-        this.loading = false;
       },
 
       sendSave(e) {
@@ -355,11 +335,11 @@
         apiMeetings.updateById(this.meeting.id, meetingParams)
           .then(res => {
             this.activateSubmit();
-            this.$router.push({path: '/dashboard/meetings'});
+            this.$router.push({path: '/dashboard'});
           })
           .catch(err => {
             this.activateSubmit();
-            if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+            this.handleErrors(err);
           })
       },
 
