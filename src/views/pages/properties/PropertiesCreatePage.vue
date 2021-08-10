@@ -39,6 +39,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('Name')"
+                  :error-messages="errors.get('Name')"
                   v-model="inputs.property.Name"
                   name="Name"
                   color="orange"
@@ -51,6 +53,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('FirstAddress')"
+                  :error-messages="errors.get('FirstAddress')"
                   v-model="inputs.property.FirstAddress"
                   name="FirstAddress"
                   color="orange"
@@ -63,6 +67,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('SecondAddress')"
+                  :error-messages="errors.get('SecondAddress')"
                   v-model="inputs.property.SecondAddress"
                   name="SecondAddress"
                   color="orange"
@@ -75,6 +81,8 @@
           <v-row>
             <v-col cols="4">
               <v-text-field
+                  @input="handleInput('City')"
+                  :error-messages="errors.get('City')"
                   v-model="inputs.property.City"
                   name="City"
                   color="orange"
@@ -85,6 +93,8 @@
 
             <v-col cols="4">
               <v-select
+                  @change="handleInput('StateId')"
+                  :error-messages="errors.get('StateId')"
                   v-model="inputs.property.StateId"
                   name="StateId"
                   hide-details="auto"
@@ -100,6 +110,8 @@
           <v-row>
             <v-col cols="4">
               <v-text-field
+                  @input="handleInput('Country')"
+                  :error-messages="errors.get('Country')"
                   v-model="inputs.property.Country"
                   name="Country"
                   color="orange"
@@ -110,6 +122,8 @@
 
             <v-col cols="4">
               <v-text-field
+                  @input="handleInput('PostalCode')"
+                  :error-messages="errors.get('PostalCode')"
                   v-model="inputs.property.PostalCode"
                   name="PostalCode"
                   color="orange"
@@ -122,6 +136,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('TotalUnits')"
+                  :error-messages="errors.get('TotalUnits')"
                   v-model="inputs.property.TotalUnits"
                   name="TotalUnits"
                   type="number"
@@ -169,13 +185,13 @@
 <script>
 import apiStates from "@/api/states";
 import apiProperties from "@/api/properties";
+import mixinForm from "@/mixins/form";
 
 export default {
   name: "PropertiesCreatePage",
+  mixins: [mixinForm],
   data () {
     return {
-      disabled: false,
-      loading: false,
       formAction: apiProperties.getRoutes().post.create,
 
       organization: this.$store.getters["auth/user"].organization || {},
@@ -209,16 +225,6 @@ export default {
   },
 
   methods: {
-    deactivateSubmit() {
-      this.disabled = true;
-      this.loading = true;
-    },
-
-    activateSubmit() {
-      this.disabled = false;
-      this.loading = false;
-    },
-
     sendSave(e) {
       if (this.disabled) return;
       this.deactivateSubmit();
@@ -232,6 +238,7 @@ export default {
         })
         .catch(err => {
           this.activateSubmit();
+          this.handleErrors(err);
         })
     },
 

@@ -52,21 +52,27 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+
+    <AlertMessage/>
   </v-app>
 </template>
 
 <script>
   import vuetify from '@/plugins/vuetify';
+  import AlertMessage from "@/components/dashboard/AlertMessage";
 
   export default {
     vuetify,
+    components: {
+      AlertMessage
+    },
     data() {
       return {
         name: this.$store.getters["auth/user"].fullName.split(' ')[0],
         navLinks: [
           {
             title: 'Dashboard',
-            link: '/dashboard/meetings'
+            link: '/dashboard'
           },
 
           {

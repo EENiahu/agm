@@ -100,7 +100,7 @@
       handleInput(e) {
         this.inputs[e.currentTarget.name] = e.currentTarget.value;
         if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
-        if (this.errors.has('message')) this.errors.clear('message');
+        if (this.errors.has('Message')) this.errors.clear('Message');
       }
     }
   }
