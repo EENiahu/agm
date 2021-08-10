@@ -17,9 +17,9 @@
       </v-col>
     </v-row>
 
-    <div class="mb-12">
-      <v-row>
-        <v-col>
+    <v-row>
+      <v-col>
+        <div class="mb-12">
           <v-row>
             <v-col cols="8">
               <h3>{{ organization.name }}</h3>
@@ -149,26 +149,120 @@
               ></v-text-field>
             </v-col>
           </v-row>
-        </v-col>
+        </div>
 
-        <v-col>
-          <v-row>
-            <v-col cols="8">
-              <h5 class="mb-4 text-h5 orange--text text--darken-2">Have you downloaded the Condo Owner's Excel Template?</h5>
-              <p class="subtitle-1">Please use AGM Online's template before uploading Condo Owners to your profile.</p>
-              <p class="mb-5 subtitle-2 font-weight-regular font-italic">Please indicate in column <strong>Ownership</strong> whether an owner is an Owner Occupant or Offsite Owner.</p>
+        <div>
+          <v-row class="mb-6" align="center">
+            <v-col cols="6">
+              <h1>PROPERTY MANAGER(S)</h1>
+            </v-col>
+
+            <v-col cols="6">
               <v-btn
-                  type="button"
+                  type="submit"
+                  :loading="loading"
                   class="px-10"
-                  color="blue-grey darken-4 white--text"
+                  color="orange darken-2 white--text"
                   depressed
                   rounded
-              >Download Owner Template</v-btn>
+              >Invite New Member</v-btn>
             </v-col>
           </v-row>
-        </v-col>
-      </v-row>
-    </div>
+
+          <v-row>
+            <v-col cols="8">
+              <v-row align="baseline" class="mb-6">
+                <v-col cols="10">
+                  <v-select
+                      @change="handleInput('StateId')"
+                      :error-messages="errors.get('StateId')"
+                      v-model="inputs.property.StateId"
+                      name="StateId"
+                      hide-details="auto"
+                      :items="states"
+                      item-text="name"
+                      item-value="id"
+                      color="orange"
+                      label="State"
+                  ></v-select>
+                </v-col>
+
+                <v-col cols="2">
+                  <v-btn icon text color="orange darken-2">
+                    <v-icon large>mdi-plus</v-icon>
+                  </v-btn>
+                </v-col>
+              </v-row>
+
+              <div v-for="(propertyManager, index) in propertyManagers" :key="index" :class="{'mb-12': propertyManagers.length-1 != index}">
+                <v-row align="baseline" justify="end">
+                  <v-col cols="8">
+                    <v-text-field
+                        :value="propertyManager.name"
+                        readonly
+                        color="orange"
+                        label="Name"
+                        hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="2">
+                    <v-btn icon text color="orange darken-2">
+                      <v-icon large>mdi-minus</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+
+                <v-row justify="end">
+                  <v-col cols="8">
+                    <v-text-field
+                        :value="propertyManager.email"
+                        readonly
+                        color="orange"
+                        label="Email"
+                        hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="2"></v-col>
+                </v-row>
+
+                <v-row justify="end">
+                  <v-col cols="8">
+                    <v-text-field
+                        :value="propertyManager.role"
+                        readonly
+                        color="orange"
+                        label="Role"
+                        hide-details="auto"
+                    ></v-text-field>
+                  </v-col>
+
+                  <v-col cols="2"></v-col>
+                </v-row>
+              </div>
+            </v-col>
+          </v-row>
+        </div>
+      </v-col>
+
+      <v-col>
+        <v-row>
+          <v-col cols="8">
+            <h5 class="mb-4 text-h5 orange--text text--darken-2">Have you downloaded the Condo Owner's Excel Template?</h5>
+            <p class="subtitle-1">Please use AGM Online's template before uploading Condo Owners to your profile.</p>
+            <p class="mb-5 subtitle-2 font-weight-regular font-italic">Please indicate in column <strong>Ownership</strong> whether an owner is an Owner Occupant or Offsite Owner.</p>
+            <v-btn
+                type="button"
+                class="px-10"
+                color="blue-grey darken-4 white--text"
+                depressed
+                rounded
+            >Download Owner Template</v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </form>
 </template>
 
@@ -186,6 +280,25 @@ export default {
 
       organization: this.$store.getters["auth/user"].organization || {},
       states: [],
+      propertyManagers: [
+        {
+          name: 'Ann Smith',
+          email: 'annsmit@crossbridgeproperties.com',
+          role: 'Property Manager'
+        },
+
+        {
+          name: 'Peter Smith',
+          email: 'petersmith@crossbridgeproperties.com',
+          role: 'Senior Manager'
+        },
+
+        {
+          name: 'Edik Crossbow',
+          email: 'edikcrossbow@crossbridgeproperties.com',
+          role: 'Senior Manager'
+        },
+      ],
 
       OrganizationId: this.$store.getters["auth/user"].organization.id,
 
