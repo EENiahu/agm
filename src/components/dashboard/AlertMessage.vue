@@ -1,6 +1,6 @@
 <template>
-  <v-snackbar :value="show" tag="button" class="alert-message pa-0" elevation="2" content-class="pa-0" :timeout="alert.timeout" bottom right>
-    <v-alert @click="close" :type="type.name" :color="type.color" class="ma-0" border="right">
+  <v-snackbar :value="show" tag="button" class="alert-message pa-0" elevation="2" content-class="pa-0" :timeout="alert.timeout" bottom>
+    <v-alert @click="close" :type="type.name" :color="type.color" class="ma-0" border="bottom">
       {{ alert.title }}
     </v-alert>
   </v-snackbar>
@@ -52,9 +52,7 @@
     methods: {
       close() {
         this.$store.dispatch('alerts/hide_alert');
-        setTimeout(() => {
-          this.$store.dispatch('alerts/remove_alert');
-          }, 1000);
+        setTimeout(() => { this.$store.dispatch('alerts/remove_alert') }, 1000);
       }
     }
   }

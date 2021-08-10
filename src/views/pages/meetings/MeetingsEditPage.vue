@@ -207,18 +207,6 @@
           ></v-text-field>
         </v-col>
       </v-row>
-
-      <v-row v-if="errors.has('Message')" no-gutters class="mt-2" transition="slide-y-transition">
-        <v-col cols="4" transition="slide-y-transition">
-          <div class="v-text-field__details">
-            <div class="v-messages theme--light error--text" role="alert">
-              <div class="v-messages__wrapper">
-                <div class="v-messages__message">{{ errors.get('Message') }}</div>
-              </div>
-            </div>
-          </div>
-        </v-col>
-      </v-row>
     </div>
   </form>
 </template>

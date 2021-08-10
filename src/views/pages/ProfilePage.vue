@@ -235,15 +235,13 @@
   import apiStates from "@/api/states";
   import apiUsers from "@/api/users";
   import apiOrganizations from "@/api/organizations";
-  import errorHandler from "@/lib/ErrorHandler";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "ProfilePage",
+    mixins: [mixinForm],
     data () {
       return {
-        errors: new errorHandler(),
-        disabled: false,
-        loading: false,
         formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
 
         organization: {},
@@ -285,21 +283,6 @@
     },
 
     methods: {
-      handleInput(name) {
-        if (this.errors.has(name)) this.errors.clear(name);
-        if (this.errors.has('Message')) this.errors.clear('Message');
-      },
-
-      deactivateSubmit() {
-        this.disabled = true;
-        this.loading = true;
-      },
-
-      activateSubmit() {
-        this.disabled = false;
-        this.loading = false;
-      },
-
       sendSave() {
         if (this.disabled) return;
         this.deactivateSubmit();
@@ -331,14 +314,12 @@
                 })
                 .catch(err => {
                   this.activateSubmit();
-                  console.error(err);
-                  if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+                  this.handleErrors(err);
                 })
             })
             .catch(err => {
               this.activateSubmit();
-              console.error(err);
-              if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+              this.handleErrors(err);
             })
       },
 

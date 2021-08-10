@@ -175,15 +175,13 @@
 <script>
 import apiStates from "@/api/states";
 import apiProperties from "@/api/properties";
-import errorHandler from "@/lib/ErrorHandler";
+import mixinForm from "@/mixins/form";
 
 export default {
   name: "PropertiesEditPage",
+  mixins: [mixinForm],
   data () {
     return {
-      errors: new errorHandler(),
-      disabled: false,
-      loading: false,
       formAction: apiProperties.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
 
       organization: this.$store.getters["auth/user"].organization || {},
@@ -220,21 +218,6 @@ export default {
   },
 
   methods: {
-    handleInput(name) {
-      if (this.errors.has(name)) this.errors.clear(name);
-      if (this.errors.has('Message')) this.errors.clear('Message');
-    },
-
-    deactivateSubmit() {
-      this.disabled = true;
-      this.loading = true;
-    },
-
-    activateSubmit() {
-      this.disabled = false;
-      this.loading = false;
-    },
-
     sendSave(e) {
       if (this.disabled) return;
       this.deactivateSubmit();
@@ -248,7 +231,7 @@ export default {
           })
           .catch(err => {
             this.activateSubmit();
-            if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+            this.handleErrors(err);
           })
     },
 
