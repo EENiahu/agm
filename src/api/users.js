@@ -43,7 +43,13 @@ exports.getOne = (id) => {
 
 exports.create = (params) => {
     const url = routes.post.create;
-    return axios.post(url, params, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') formData.append(param, params[param]);
+    });
+
+    return axios.post(url, formData, headers);
 };
 
 exports.updateByEmail = (params) => {

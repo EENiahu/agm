@@ -174,7 +174,7 @@
             <v-row>
               <v-col cols="8">
                 <v-row align="baseline" class="mb-6">
-                  <v-col cols="10">
+                  <v-col cols="12">
                     <v-select
                         @change="handleInput('StateId')"
                         :error-messages="errors.get('StateId')"
@@ -189,11 +189,11 @@
                     ></v-select>
                   </v-col>
 
-                  <v-col cols="2">
-                    <v-btn icon text color="orange darken-2">
-                      <v-icon large>mdi-plus</v-icon>
-                    </v-btn>
-                  </v-col>
+<!--                  <v-col cols="2">-->
+<!--                    <v-btn icon text color="orange darken-2">-->
+<!--                      <v-icon large>mdi-plus</v-icon>-->
+<!--                    </v-btn>-->
+<!--                  </v-col>-->
                 </v-row>
 
                 <div v-for="(propertyManager, index) in propertyManagers" :key="index" :class="{'mb-12': propertyManagers.length-1 != index}">
@@ -267,8 +267,14 @@
       </v-row>
     </form>
 
-    <property-manager-add-dialog :open="dialogs.propertyManagerAddDialog" @close-dialog="dialogs.propertyManagerAddDialog = false"></property-manager-add-dialog>
-    <property-manager-add-success-dialog :open="dialogs.propertyManagerAddSuccessDialog" @close-dialog="dialogs.propertyManagerAddSuccessDialog = false"></property-manager-add-success-dialog>
+    <property-manager-add-dialog :open="dialogs.propertyManagerAddDialog"
+                                 @add-success="handleManagerAdd"
+                                 @close-dialog="dialogs.propertyManagerAddDialog = false">
+    </property-manager-add-dialog>
+    <property-manager-add-success-dialog :open="dialogs.propertyManagerAddSuccessDialog"
+                                         :user="tempPropertyManager"
+                                         @close-dialog="dialogs.propertyManagerAddSuccessDialog = false">
+    </property-manager-add-success-dialog>
   </div>
 </template>
 
@@ -292,11 +298,12 @@
         formAction: apiProperties.getRoutes().post.create,
         dialogs: {
           propertyManagerAddDialog: false,
-          propertyManagerAddSuccessDialog: true,
+          propertyManagerAddSuccessDialog: false,
         },
 
         organization: this.$store.getters["auth/user"].organization || {},
         states: [],
+        tempPropertyManager: {},
         propertyManagers: [
           {
             name: 'Ann Smith',
@@ -345,6 +352,12 @@
     },
 
     methods: {
+      handleManagerAdd(user) {
+        this.dialogs.propertyManagerAddDialog = false;
+        this.tempPropertyManager = user;
+        this.dialogs.propertyManagerAddSuccessDialog = true;
+      },
+
       sendSave(e) {
         if (this.disabled) return;
         this.deactivateSubmit();

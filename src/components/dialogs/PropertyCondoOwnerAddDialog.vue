@@ -83,7 +83,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-grey darken-4" rounded text @click="emitClose">close</v-btn>
+        <v-btn color="blue-grey darken-4" class="px-5" rounded text @click="emitClose">close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

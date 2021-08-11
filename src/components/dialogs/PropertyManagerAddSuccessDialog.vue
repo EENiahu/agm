@@ -4,11 +4,11 @@
       <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite Sent Successfully!</v-card-title>
 
       <v-card-text>
-          <div class="text-center mb-6">
-            <p>An invitation to join AGM Online has been sent to <strong>[email@emial.con]</strong>.</p>
-            <p class="mb-0">Did you enter the correct email?</p>
-            <p class="mb-0">If not, you can enter the correct email address below and re-send the invite.</p>
-          </div>
+        <div class="text-center mb-6">
+          <p>An invitation to join AGM Online has been sent to <strong>{{ user.email }}</strong>.</p>
+          <p class="mb-0">Did you enter the correct email?</p>
+          <p class="mb-0">If not, you can enter the correct email address below and re-send the invite.</p>
+        </div>
 
         <form action="">
           <v-row justify="center" class="mb-6">
@@ -58,7 +58,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-grey darken-4" rounded text @click="emitClose">close</v-btn>
+        <v-btn color="blue-grey darken-4" class="px-5" rounded text @click="emitClose">close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -71,6 +71,12 @@
   export default {
     name: "PropertyManagerAddSuccessDialog",
     mixins: [mixinForm, mixinDialog],
+    props: {
+      user: {
+        type: Object,
+        required: true
+      }
+    },
 
     data() {
       return {

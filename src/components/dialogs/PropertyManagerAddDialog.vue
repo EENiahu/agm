@@ -8,14 +8,14 @@
           An email will be sent to this new member to join AGM Online.
         </div>
 
-        <form action="">
+        <form @submit.prevent="sendInvite" :action="formAction" method="POST">
           <v-row justify="center">
             <v-col cols="10">
               <v-text-field
-                  @input="handleInput('Name')"
-                  :error-messages="errors.get('Name')"
-                  v-model="inputs.Name"
-                  name="Name"
+                  @input="handleInput('FullName')"
+                  :error-messages="errors.get('FullName')"
+                  v-model="inputs.FullName"
+                  name="FullName"
                   color="orange"
                   label="Full Name"
                   hide-details="auto"
@@ -70,7 +70,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue-grey darken-4" rounded text @click="emitClose">close</v-btn>
+        <v-btn color="blue-grey darken-4" class="px-5" rounded text @click="emitClose">close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -79,6 +79,8 @@
 <script>
   import mixinForm from "@/mixins/form";
   import mixinDialog from "@/mixins/dialog";
+  import apiUsers from "@/api/users";
+  import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
     name: "PropertyManagerAddDialog",
@@ -86,12 +88,45 @@
 
     data() {
       return {
+        formAction: apiUsers.getRoutes().post.create,
+
         inputs: {
-          Name: '',
+          FullName: '',
           Email: '',
           Title: ''
         }
       }
     },
+
+    methods: {
+      sendInvite() {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
+        const userParams = {
+          ...this.inputs,
+          UserRoleId: 3, //PropertyManager
+          UserStatusId: 0 //Pending
+        };
+
+        apiUsers.create(userParams)
+          .then(res => {
+            //TODO: fix invite manager after register (pass params)
+            apiPropertyManagers.inviteManagers()
+                .then(res => {
+                  this.activateSubmit();
+                  this.$emit('add-success', res.data);
+                })
+                .catch(err => {
+                  this.activateSubmit();
+                  this.handleErrors(err);
+                })
+          })
+          .catch(err => {
+            this.activateSubmit();
+            this.handleErrors(err);
+          })
+      }
+    }
   }
 </script>
