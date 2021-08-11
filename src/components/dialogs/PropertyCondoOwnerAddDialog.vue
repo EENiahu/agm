@@ -1,13 +1,9 @@
 <template>
-  <v-dialog @click:outside="emitClose" v-model="open" width="500">
+  <v-dialog v-model="open" width="500">
     <v-card>
-      <v-card-title class="text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite a new member to manage this property</v-card-title>
+      <v-card-title class="text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to this Property</v-card-title>
 
       <v-card-text>
-        <div class="text-center">
-          An email will be sent to this new member to join AGM Online.
-        </div>
-
         <form action="">
           <v-row justify="center">
             <v-col cols="10">
@@ -40,14 +36,31 @@
           <v-row justify="center">
             <v-col cols="10">
               <v-text-field
-                  @input="handleInput('Title')"
-                  :error-messages="errors.get('Title')"
-                  v-model="inputs.Title"
-                  name="Name"
+                  @input="handleInput('Unit')"
+                  :error-messages="errors.get('Unit')"
+                  v-model="inputs.Unit"
+                  name="Unit"
                   color="orange"
-                  label="Property Title"
+                  label="Unit"
                   hide-details="auto"
               ></v-text-field>
+            </v-col>
+          </v-row>
+
+          <v-row justify="center">
+            <v-col cols="10">
+              <v-select
+                  @change="handleInput('OwnerStatus')"
+                  :error-messages="errors.get('OwnerStatus')"
+                  v-model="inputs.OwnerStatus"
+                  name="OwnerStatus"
+                  hide-details="auto"
+                  :items="ownerStatuses"
+                  item-text="name"
+                  item-value="id"
+                  color="orange"
+                  label="Choose Owner Status"
+              ></v-select>
             </v-col>
           </v-row>
 
@@ -60,7 +73,7 @@
                   color="blue-grey darken-4 white--text"
                   depressed
                   rounded
-              >Send Invite</v-btn>
+              >Add Condo Owner</v-btn>
             </v-col>
           </v-row>
         </form>
@@ -81,15 +94,17 @@
   import mixinDialog from "@/mixins/dialog";
 
   export default {
-    name: "PropertyManagerAddDialog",
+    name: "PropertyCondoOwnerAddDialog",
     mixins: [mixinForm, mixinDialog],
 
     data() {
       return {
+        ownerStatuses: [],
         inputs: {
           Name: '',
           Email: '',
-          Title: ''
+          Unit: '',
+          OwnerStatus: ''
         }
       }
     },

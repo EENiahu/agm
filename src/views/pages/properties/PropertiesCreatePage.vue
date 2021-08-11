@@ -160,7 +160,7 @@
 
               <v-col cols="6">
                 <v-btn
-                    @click="propertyManagerAddDialog = true"
+                    @click.stop="dialogs.propertyManagerAddDialog = true"
                     type="button"
                     :loading="loading"
                     class="px-10"
@@ -267,7 +267,7 @@
       </v-row>
     </form>
 
-    <property-manager-add-dialog :open="propertyManagerAddDialog" @close-dialog="propertyManagerAddDialog = false"></property-manager-add-dialog>
+    <property-manager-add-dialog :open="dialogs.propertyManagerAddDialog" @close-dialog="dialogs.propertyManagerAddDialog = false"></property-manager-add-dialog>
   </div>
 </template>
 
@@ -277,17 +277,21 @@
   import mixinForm from "@/mixins/form";
 
   import PropertyManagerAddDialog from "@/components/dialogs/PropertyManagerAddDialog";
+  import PropertyCondoOwnerAddDialog from "@/components/dialogs/PropertyCondoOwnerAddDialog";
 
   export default {
     name: "PropertiesCreatePage",
     mixins: [mixinForm],
     components: {
+      PropertyCondoOwnerAddDialog,
       PropertyManagerAddDialog
     },
     data () {
       return {
         formAction: apiProperties.getRoutes().post.create,
-        propertyManagerAddDialog: true,
+        dialogs: {
+          propertyManagerAddDialog: false
+        },
 
         organization: this.$store.getters["auth/user"].organization || {},
         states: [],

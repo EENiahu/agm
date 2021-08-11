@@ -199,7 +199,7 @@
               @change="handleInput('MeetingRegistrationLink')"
               :error-messages="errors.get('MeetingRegistrationLink')"
               v-model="inputs.meeting.MeetingRegistrationLink"
-              name="TotalUnits"
+              name="MeetingRegistrationLink"
               type="text"
               color="orange"
               label="Meeting Registration Link"
