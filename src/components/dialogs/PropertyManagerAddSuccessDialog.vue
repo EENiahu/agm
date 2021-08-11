@@ -1,29 +1,17 @@
 <template>
   <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite a new member to manage this property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite Sent Successfully!</v-card-title>
 
       <v-card-text>
-        <div class="text-center">
-          An email will be sent to this new member to join AGM Online.
-        </div>
+          <div class="text-center mb-6">
+            <p>An invitation to join AGM Online has been sent to <strong>[email@emial.con]</strong>.</p>
+            <p class="mb-0">Did you enter the correct email?</p>
+            <p class="mb-0">If not, you can enter the correct email address below and re-send the invite.</p>
+          </div>
 
         <form action="">
-          <v-row justify="center">
-            <v-col cols="10">
-              <v-text-field
-                  @input="handleInput('Name')"
-                  :error-messages="errors.get('Name')"
-                  v-model="inputs.Name"
-                  name="Name"
-                  color="orange"
-                  label="Full Name"
-                  hide-details="auto"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row justify="center">
+          <v-row justify="center" class="mb-6">
             <v-col cols="10">
               <v-text-field
                   @input="handleInput('Email')"
@@ -32,20 +20,6 @@
                   name="Email"
                   color="orange"
                   label="Email"
-                  hide-details="auto"
-              ></v-text-field>
-            </v-col>
-          </v-row>
-
-          <v-row justify="center">
-            <v-col cols="10">
-              <v-text-field
-                  @input="handleInput('Title')"
-                  :error-messages="errors.get('Title')"
-                  v-model="inputs.Title"
-                  name="Name"
-                  color="orange"
-                  label="Title"
                   hide-details="auto"
               ></v-text-field>
             </v-col>
@@ -60,7 +34,21 @@
                   color="blue-grey darken-4 white--text"
                   depressed
                   rounded
-              >Send Invite</v-btn>
+              >Save & Continue</v-btn>
+            </v-col>
+          </v-row>
+
+          <v-row justify="center" class="text-center mt-0">
+            <v-col cols="10">
+              <v-btn
+                  text
+                  type="submit"
+                  :loading="loading"
+                  class="px-5"
+                  color="blue-grey darken-4 white--text"
+                  depressed
+                  rounded
+              >Re-Send Invite</v-btn>
             </v-col>
           </v-row>
         </form>
@@ -81,15 +69,14 @@
   import mixinDialog from "@/mixins/dialog";
 
   export default {
-    name: "PropertyManagerAddDialog",
+    name: "PropertyManagerAddSuccessDialog",
     mixins: [mixinForm, mixinDialog],
 
     data() {
       return {
+        ownerStatuses: [],
         inputs: {
-          Name: '',
           Email: '',
-          Title: ''
         }
       }
     },

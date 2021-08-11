@@ -268,6 +268,7 @@
     </form>
 
     <property-manager-add-dialog :open="dialogs.propertyManagerAddDialog" @close-dialog="dialogs.propertyManagerAddDialog = false"></property-manager-add-dialog>
+    <property-manager-add-success-dialog :open="dialogs.propertyManagerAddSuccessDialog" @close-dialog="dialogs.propertyManagerAddSuccessDialog = false"></property-manager-add-success-dialog>
   </div>
 </template>
 
@@ -277,20 +278,21 @@
   import mixinForm from "@/mixins/form";
 
   import PropertyManagerAddDialog from "@/components/dialogs/PropertyManagerAddDialog";
-  import PropertyCondoOwnerAddDialog from "@/components/dialogs/PropertyCondoOwnerAddDialog";
+  import PropertyManagerAddSuccessDialog from "@/components/dialogs/PropertyManagerAddSuccessDialog";
 
   export default {
     name: "PropertiesCreatePage",
     mixins: [mixinForm],
     components: {
-      PropertyCondoOwnerAddDialog,
-      PropertyManagerAddDialog
+      PropertyManagerAddDialog,
+      PropertyManagerAddSuccessDialog
     },
     data () {
       return {
         formAction: apiProperties.getRoutes().post.create,
         dialogs: {
-          propertyManagerAddDialog: false
+          propertyManagerAddDialog: false,
+          propertyManagerAddSuccessDialog: true,
         },
 
         organization: this.$store.getters["auth/user"].organization || {},

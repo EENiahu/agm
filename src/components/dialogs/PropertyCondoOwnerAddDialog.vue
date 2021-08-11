@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="open" width="500">
+  <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to this Property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to this Property</v-card-title>
 
       <v-card-text>
         <form action="">
