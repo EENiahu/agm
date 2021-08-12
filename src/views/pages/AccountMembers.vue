@@ -6,12 +6,14 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <v-btn
-            class="px-10"
-            color="orange darken-2 white--text"
-            depressed
-            rounded
-        >Add User</v-btn>
+        <router-link to="/dashboard/account-members/create">
+          <v-btn
+              class="px-10"
+              color="orange darken-2 white--text"
+              depressed
+              rounded
+          >Add User</v-btn>
+        </router-link>
       </v-col>
     </v-row>
 

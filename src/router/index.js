@@ -25,8 +25,8 @@ const routes = [
         component: () => import('../views/pages/AccountMembers.vue')
       },
       {
-        path: '/dashboard/invite-property-manager',
-        component: () => import('../views/pages/InvitePropertyManager.vue')
+        path: '/dashboard/account-members/create',
+        component: () => import('../views/pages/property_managers/PropertyManagersCreatePage.vue')
       },
       {
         path: '/dashboard/properties',

@@ -111,16 +111,8 @@
 
         apiUsers.create(userParams)
           .then(res => {
-            //TODO: fix invite manager after register (pass params)
-            apiPropertyManagers.inviteManagers()
-                .then(res => {
-                  this.activateSubmit();
-                  this.$emit('add-success', res.data);
-                })
-                .catch(err => {
-                  this.activateSubmit();
-                  this.handleErrors(err);
-                })
+            this.activateSubmit();
+            this.$emit('add-success', res.data);
           })
           .catch(err => {
             this.activateSubmit();
