@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="sendSave" :action="formAction" method="POST">
+  <form @submit.prevent="sendInvite" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
         <h1>ADD PROPERTY MANAGER</h1>
@@ -49,18 +49,15 @@
 
       <v-row>
         <v-col cols="4">
-          <v-select
-              @change="handleInput('UserRoleId')"
-              :error-messages="errors.get('UserRoleId')"
-              v-model="inputs.UserRoleId"
-              name="UserRoleId"
-              hide-details="auto"
-              :items="userRoles"
-              item-text="name"
-              item-value="id"
+          <v-text-field
+              @input="handleInput('Title')"
+              :error-messages="errors.get('Title')"
+              v-model="inputs.Title"
+              name="Title"
               color="orange"
-              label="Role"
-          ></v-select>
+              label="Title"
+              hide-details="auto"
+          ></v-text-field>
         </v-col>
       </v-row>
     </div>
@@ -97,100 +94,78 @@
 </template>
 
 <script>
-  import apiStates from "@/api/states";
-  import apiProperties from "@/api/properties";
   import mixinForm from "@/mixins/form";
+  import apiProperties from "@/api/properties";
+  import apiUsers from "@/api/users";
+  import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
     name: "PropertyManagersCreatePage",
     mixins: [mixinForm],
     data () {
       return {
-        formAction: apiProperties.getRoutes().post.create,
+        formAction: apiUsers.getRoutes().post.create,
 
-        properties: [
-          {
-            name: 'FirstProperty',
-            id: 1
-          },
-          {
-            name: 'SecondProperty',
-            id: 2
-          },
-          {
-            name: 'ThirdProperty',
-            id: 3
-          },
-        ],
-
-        userRoles: [
-          {
-            name: 'FirstRole',
-            id: 1
-          },
-          {
-            name: 'SecondRole',
-            id: 2
-          },
-          {
-            name: 'ThirdRole',
-            id: 3
-          },
-        ],
+        properties: [],
 
         OrganizationId: this.$store.getters["auth/user"].organization.id,
 
         inputs: {
           FullName: '',
           Email: '',
-          UserRoleId: '',
+          Title: '',
           PropertyIds: [],
         },
       }
     },
 
-    computed: {
-      unitsByQuorum() {
-        return this.inputs.property.TotalUnits ? `${Math.floor(this.inputs.property.TotalUnits/4)}` : '';
-      }
-    },
-
     created() {
-      this.getStates();
+      this.getProperties();
     },
 
     methods: {
-      handleManagerAdd(user) {
-        this.dialogs.propertyManagerAddDialog = false;
-        this.tempPropertyManager = user;
-        this.dialogs.propertyManagerAddSuccessDialog = true;
-      },
-
-      sendSave(e) {
+      sendInvite() {
         if (this.disabled) return;
         this.deactivateSubmit();
 
-        const propertyParams = {...this.inputs.property, OrganizationId: this.OrganizationId};
+        const userParams = {
+          ...this.inputs,
+          UserRoleId: 3, //PropertyManager
+          UserStatusId: 0 //Pending
+        };
 
-        apiProperties.create(propertyParams)
-          .then(res => {
-            this.activateSubmit();
-            this.$router.push({path: '/dashboard/properties'});
-          })
-          .catch(err => {
-            this.activateSubmit();
-            this.handleErrors(err);
-          })
+        apiUsers.create(userParams)
+            .then(res => {
+              const managerParams = {
+                OrganizationId: this.OrganizationId,
+                PropertyId: this.inputs.PropertyIds[0],
+                UserIds: res.data.id,
+              };
+              console.log(res.data);
+              apiPropertyManagers.inviteManagers(managerParams)
+                  .then(res => {
+                    console.log(res, 'ew');
+                    this.activateSubmit();
+                  })
+                  .catch(err => {
+                    this.activateSubmit();
+                    this.handleErrors(err);
+                  })
+            })
+            .catch(err => {
+              this.activateSubmit();
+              this.handleErrors(err);
+            })
       },
 
-      getStates() {
-        apiStates.getAll()
-          .then(res => {
-            this.states = res.data;
-          })
-          .catch(err => {
-            console.error(err);
-          })
+      getProperties() {
+        apiProperties.getAll()
+            .then(res => {
+              this.properties = res.data;
+            })
+            .catch(err => {
+              console.error(err);
+            })
       },
     }
   }

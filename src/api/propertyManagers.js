@@ -28,14 +28,44 @@ exports.getAll = () => {
     return axios.post(url, headers);
 };
 
-exports.inviteToProperties = () => {
+exports.inviteToProperties = (params) => {
     const url = routes.post.inviteToProperties;
-    return axios.post(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') {
+            if (Array.isArray(params[param])) {
+                params[param].forEach(arrayValue => {
+                    formData.append(`${param}[]`, arrayValue);
+                });
+            }
+            else {
+                formData.append(param, params[param]);
+            }
+        }
+    });
+
+    return axios.post(url, formData, headers);
 };
 
-exports.inviteManagers = () => {
+exports.inviteManagers = (params) => {
     const url = routes.post.inviteManagers;
-    return axios.post(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') {
+            if (Array.isArray(params[param])) {
+                params[param].forEach(arrayValue => {
+                    formData.append(`${param}[]`, arrayValue);
+                });
+            }
+            else {
+                formData.append(param, params[param]);
+            }
+        }
+    });
+
+    return axios.post(url, formData, headers);
 };
 
 exports.acceptInvite = () => {

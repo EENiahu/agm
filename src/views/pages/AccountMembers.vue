@@ -63,21 +63,23 @@
         </v-col>
       </v-row>
 
-      <v-row class="align-center mb-4 px-6" no-gutters>
+      <v-row v-for="(user, index) in users" class="align-center mb-4 px-6" no-gutters>
         <v-col cols="2">
-          <div>Eduard</div>
+          <div>{{ user.fullName }}</div>
         </v-col>
 
         <v-col cols="4">
-          <div>eduard@synchroworks.net</div>
+          <div>{{ user.email }}</div>
         </v-col>
 
         <v-col cols="2">
-          <div>Member</div>
+          <div>{{ isPropertyManager(user) ? 'Member' : 'Owner' }}</div>
         </v-col>
 
         <v-col cols="2">
-          <div>Pending <span class="orange--text text--darken-2">(Resend Invite)</span></div>
+          <div>{{ statuses[user.userStatus] }}
+            <v-btn @click="resendInvite" color="orange darken-2" plain rounded class="px-2 text-capitalize">(Resend Invite)</v-btn>
+          </div>
         </v-col>
 
         <v-col align="end">
@@ -94,7 +96,43 @@
 </template>
 
 <script>
+  import apiUsers from "@/api/users";
+
   export default {
-    name: "AccountMembers"
+    name: "AccountMembers",
+    data() {
+      return {
+        statuses: {
+          "-1": "Blocked",
+          "0": "Pending",
+          "1": "Activated"
+        },
+        users: []
+      }
+    },
+
+    created() {
+      this.getUsers();
+    },
+
+    methods: {
+      isPropertyManager(user) {
+        return user.role.id === 3;
+      },
+
+      resendInvite() {
+
+      },
+
+      getUsers() {
+        apiUsers.getAll()
+          .then(res => {
+            this.users = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      },
+    }
   }
 </script>
