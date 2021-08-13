@@ -24,7 +24,20 @@ export default {
             this.loading = false;
         },
 
+        handleSuccess(message = '') {
+            this.activateSubmit();
+
+            if (message) {
+                this.$store.dispatch('alerts/set_alert', {
+                    title: message,
+                    type: 'success'
+                });
+            }
+        },
+
         handleErrors(err) {
+            this.activateSubmit();
+
             if (err.response) {
                 if (err.response.data.errors['Message']) {
                     this.$store.dispatch('alerts/set_alert', { title: err.response.data.errors['Message'][0] });

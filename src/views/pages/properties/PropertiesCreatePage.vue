@@ -225,13 +225,10 @@
 
         apiProperties.create(propertyParams)
           .then(res => {
-            this.activateSubmit();
+            this.handleSuccess('Property Has Been Created');
             this.$router.push({path: '/dashboard/properties'});
           })
-          .catch(err => {
-            this.activateSubmit();
-            this.handleErrors(err);
-          })
+          .catch(err => this.handleErrors(err))
       },
 
       getStates() {

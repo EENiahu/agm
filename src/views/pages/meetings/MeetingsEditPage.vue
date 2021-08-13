@@ -322,13 +322,10 @@
 
         apiMeetings.updateById(this.meeting.id, meetingParams)
           .then(res => {
-            this.activateSubmit();
+            this.handleSuccess('Meeting Has Been Updated');
             this.$router.push({path: '/dashboard'});
           })
-          .catch(err => {
-            this.activateSubmit();
-            this.handleErrors(err);
-          })
+          .catch(err => this.handleErrors(err))
       },
 
       getStates() {

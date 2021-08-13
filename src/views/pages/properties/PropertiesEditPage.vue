@@ -368,13 +368,10 @@
 
         apiProperties.updateById(this.property.id, propertyParams)
             .then(res => {
-              this.activateSubmit();
+              this.handleSuccess('Property Has Been Updated');
               this.$router.push({path: '/dashboard/properties'});
             })
-            .catch(err => {
-              this.activateSubmit();
-              this.handleErrors(err);
-            })
+            .catch(err => this.handleErrors(err))
       },
 
       getStates() {

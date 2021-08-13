@@ -317,13 +317,10 @@ export default {
 
       apiMeetings.create(meetingParams)
         .then(res => {
-          this.activateSubmit();
+          this.handleSuccess('Meeting Has Been Created');
           this.$router.push({path: '/dashboard'});
         })
-        .catch(err => {
-          this.activateSubmit();
-          this.handleErrors(err);
-        })
+        .catch(err => this.handleErrors(err))
     },
 
     getStates() {

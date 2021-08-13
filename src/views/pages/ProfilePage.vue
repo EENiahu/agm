@@ -312,15 +312,9 @@
                     this.$store.dispatch('auth/set_user', {user: res.data});
                   }
                 })
-                .catch(err => {
-                  this.activateSubmit();
-                  this.handleErrors(err);
-                })
+                .catch(err => this.handleErrors(err))
             })
-            .catch(err => {
-              this.activateSubmit();
-              this.handleErrors(err);
-            })
+            .catch(err => this.handleErrors(err))
       },
 
       getStates() {

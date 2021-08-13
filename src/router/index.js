@@ -22,11 +22,15 @@ const routes = [
       },
       {
         path: '/dashboard/account-members',
-        component: () => import('../views/pages/AccountMembers.vue')
+        component: () => import('../views/pages/account_members/AccountMembersShowPage.vue')
       },
       {
         path: '/dashboard/account-members/create',
-        component: () => import('../views/pages/property_managers/PropertyManagersCreatePage.vue')
+        component: () => import('../views/pages/account_members/AccountMembersCreatePage.vue')
+      },
+      {
+        path: '/dashboard/account-members/edit/:id',
+        component: () => import('../views/pages/account_members/AccountMembersEditPage.vue')
       },
       {
         path: '/dashboard/properties',

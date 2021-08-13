@@ -36,8 +36,9 @@ exports.getAll = () => {
     return axios.get(url, headers);
 };
 
-exports.getOne = (id) => {
-    const url = routes.get.user.replace('{id}', id);
+exports.getOne = (id, extensions = '') => {
+    extensions = extensions ? `?extensions=${extensions}` : '';
+    const url = routes.get.user.replace('{id}', id) + extensions;
     return axios.get(url, headers);
 };
 

@@ -114,10 +114,7 @@
             this.activateSubmit();
             this.$emit('add-success', res.data);
           })
-          .catch(err => {
-            this.activateSubmit();
-            this.handleErrors(err);
-          })
+          .catch(err => this.handleErrors(err))
       }
     }
   }

@@ -2,7 +2,7 @@
   <form @submit.prevent="sendInvite" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
-        <h1>ADD PROPERTY MANAGER</h1>
+        <h1>UPDATE PROPERTY MANAGER</h1>
       </v-col>
 
       <v-col cols="6" align="end">
@@ -13,7 +13,7 @@
             color="orange darken-2 white--text"
             depressed
             rounded
-        >Invite</v-btn>
+        >Save</v-btn>
       </v-col>
     </v-row>
 
@@ -80,6 +80,7 @@
                   item-value="id"
                   label="Properties"
                   placeholder="Properties"
+                  color="orange"
                   chips
                   deletable-chips
                   hide-selected
@@ -100,15 +101,17 @@
   import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
-    name: "PropertyManagersCreatePage",
+    name: "AccountMembersEditPage",
     mixins: [mixinForm],
     data () {
       return {
         formAction: apiUsers.getRoutes().post.create,
 
         properties: [],
+        member: {},
 
         OrganizationId: this.$store.getters["auth/user"].organization.id,
+        MemberId: this.$route.params.id,
 
         inputs: {
           FullName: '',
@@ -121,6 +124,7 @@
 
     created() {
       this.getProperties();
+      this.getMember();
     },
 
     methods: {
@@ -141,21 +145,15 @@
                 PropertyId: this.inputs.PropertyIds[0],
                 UserIds: res.data.id,
               };
-              console.log(res.data);
+
               apiPropertyManagers.inviteManagers(managerParams)
                   .then(res => {
-                    console.log(res, 'ew');
                     this.activateSubmit();
+                    this.$router.push({path: '/dashboard/account-members'});
                   })
-                  .catch(err => {
-                    this.activateSubmit();
-                    this.handleErrors(err);
-                  })
+                  .catch(err => this.handleErrors(err))
             })
-            .catch(err => {
-              this.activateSubmit();
-              this.handleErrors(err);
-            })
+            .catch(err => this.handleErrors(err))
       },
 
       getProperties() {
@@ -166,6 +164,26 @@
             .catch(err => {
               console.error(err);
             })
+      },
+
+      getMember() {
+        apiUsers.getOne(this.MemberId, 'properties')
+            .then(res => {
+              this.member = res.data;
+              this.setMemberInputs();
+            })
+            .catch(err => {
+              console.error(err);
+            })
+      },
+
+      setMemberInputs() {
+        this.inputs = {
+          FullName: this.member.fullName,
+          Email: this.member.email,
+          Title: this.member.title,
+          PropertyIds: this.member.properties.map(property => property.id)
+        }
       },
     }
   }

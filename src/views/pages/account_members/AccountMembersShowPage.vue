@@ -36,33 +36,6 @@
         </v-col>
       </v-row>
 
-      <v-row class="align-center mb-4 px-6" no-gutters>
-        <v-col cols="2">
-          <div>Amela Unsworth</div>
-        </v-col>
-
-        <v-col cols="4">
-          <div>amela@synchroworks.net</div>
-        </v-col>
-
-        <v-col cols="2">
-          <div>Owner</div>
-        </v-col>
-
-        <v-col cols="2">
-          <div>Owner</div>
-        </v-col>
-
-        <v-col align="end">
-          <v-btn
-              icon
-              color="orange darken-2"
-          >
-            <v-icon>mdi-square-edit-outline</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-
       <v-row v-for="(user, index) in users" class="align-center mb-4 px-6" no-gutters>
         <v-col cols="2">
           <div>{{ user.fullName }}</div>
@@ -83,12 +56,9 @@
         </v-col>
 
         <v-col align="end">
-          <v-btn
-              icon
-              color="orange darken-2"
-          >
-            <v-icon>mdi-square-edit-outline</v-icon>
-          </v-btn>
+          <router-link :to="`/dashboard/account-members/edit/${user.id}`">
+            <v-btn icon color="orange darken-2"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
+          </router-link>
         </v-col>
       </v-row>
     </div>
@@ -99,7 +69,7 @@
   import apiUsers from "@/api/users";
 
   export default {
-    name: "AccountMembers",
+    name: "AccountMembersShowPage",
     data() {
       return {
         statuses: {
