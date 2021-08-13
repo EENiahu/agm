@@ -32,7 +32,7 @@ exports.getRoutes = () => {
 };
 
 exports.getAll = () => {
-    const url = routes.get.users;
+    const url = routes.get.users + '?extensions=properties';
     return axios.get(url, headers);
 };
 

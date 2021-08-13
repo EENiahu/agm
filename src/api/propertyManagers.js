@@ -73,7 +73,13 @@ exports.acceptInvite = () => {
     return axios.post(url, headers);
 };
 
-exports.delete = () => {
+exports.cancelInvite = (params) => {
     const url = routes.delete.cancelInvite;
-    return axios.delete(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param]) formData.append(param, params[param]);
+    });
+
+    return axios.delete(url, formData, headers);
 };

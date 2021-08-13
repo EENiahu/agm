@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="sendInvite" :action="formAction" method="POST">
+  <form @submit.prevent="sendSave" :action="formAction" method="POST">
     <v-row class="mb-6">
       <v-col cols="6">
         <h1>UPDATE PROPERTY MANAGER</h1>
@@ -128,30 +128,61 @@
     },
 
     methods: {
-      sendInvite() {
+      sendSave() {
         if (this.disabled) return;
         this.deactivateSubmit();
 
         const userParams = {
-          ...this.inputs,
-          UserRoleId: 3, //PropertyManager
-          UserStatusId: 0 //Pending
+          FullName: this.inputs.FullName,
+          Email: this.inputs.Email,
+          Title: this.inputs.Title,
+          UserRoleId: this.member.role.id,
+          UserStatusId: this.member.userStatus
         };
 
-        apiUsers.create(userParams)
+        apiUsers.updateById(this.MemberId, userParams)
             .then(res => {
-              const managerParams = {
-                OrganizationId: this.OrganizationId,
-                PropertyId: this.inputs.PropertyIds[0],
-                UserIds: res.data.id,
-              };
+              //send invite to new property if user sets new one
+              let memberPropertiesId = this.member.properties.map(x => x.id);
+              let added = this.inputs.PropertyIds.filter(x => memberPropertiesId.indexOf(x) < 0);
+              let removed = memberPropertiesId.filter(x => this.inputs.PropertyIds.indexOf(x) < 0);
 
-              apiPropertyManagers.inviteManagers(managerParams)
-                  .then(res => {
-                    this.activateSubmit();
-                    this.$router.push({path: '/dashboard/account-members'});
-                  })
-                  .catch(err => this.handleErrors(err))
+              console.log(memberPropertiesId, added, removed);
+              if (added.length) {
+                const managerParams = {
+                  OrganizationId: this.OrganizationId,
+                  PropertyIds: added,
+                  UserIds: [this.MemberId],
+                };
+
+                apiPropertyManagers.inviteManagers(managerParams)
+                    .then(res => {
+                      this.handleSuccess('Member Has Been Updated');
+                      this.$router.push({path: '/dashboard/account-members'});
+                    })
+                    .catch(err => this.handleErrors(err))
+              }
+
+              if (removed.length) {
+                // const managerParams = {
+                //   OrganizationId: this.OrganizationId,
+                //   PropertyId: removed[0],
+                //   UserId: this.MemberId,
+                // };
+                //
+                // apiPropertyManagers.cancelInvite(managerParams)
+                //     .then(res => {
+                //       this.handleSuccess('Member Has Been Updated');
+                //       this.$router.push({path: '/dashboard/account-members'});
+                //     })
+                //     .catch(err => this.handleErrors(err))
+              }
+
+              if (!added.length && !removed.length) {
+                console.log('here');
+                this.handleSuccess('Member Has Been Updated');
+                this.$router.push({path: '/dashboard/account-members'});
+              }
             })
             .catch(err => this.handleErrors(err))
       },

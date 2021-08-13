@@ -80,6 +80,7 @@
                   item-value="id"
                   label="Properties"
                   placeholder="Properties"
+                  color="orange"
                   chips
                   deletable-chips
                   hide-selected
@@ -138,8 +139,8 @@
             .then(res => {
               const managerParams = {
                 OrganizationId: this.OrganizationId,
-                PropertyId: this.inputs.PropertyIds[0],
-                UserIds: res.data.id,
+                PropertyIds: this.inputs.PropertyIds,
+                UserIds: [res.data.id],
               };
 
               apiPropertyManagers.inviteManagers(managerParams)
