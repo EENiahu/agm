@@ -89,6 +89,7 @@
     data() {
       return {
         formAction: apiUsers.getRoutes().post.create,
+        OrganizationId: this.$store.getters["auth/user"].organization.id,
 
         inputs: {
           FullName: '',
@@ -106,12 +107,14 @@
         const userParams = {
           ...this.inputs,
           UserRoleId: 3, //PropertyManager
-          UserStatusId: 0 //Pending
+          UserStatusId: 0, //Pending
+          OrganizationId: this.OrganizationId
         };
 
         apiUsers.create(userParams)
           .then(res => {
             this.activateSubmit();
+            this.handleSuccess('Property Manager Has Been Added');
             this.$emit('add-success', res.data);
           })
           .catch(err => this.handleErrors(err))

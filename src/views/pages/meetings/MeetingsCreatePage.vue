@@ -40,6 +40,7 @@
               item-text="name"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Choose a Property"
           ></v-select>
         </v-col>
@@ -86,6 +87,7 @@
               item-text="title"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Time Zone"
           ></v-select>
         </v-col>
@@ -298,7 +300,13 @@ export default {
   created() {
     this.getStates();
     this.getTimezones();
-    this.getProperties();
+    this.getProperties()
+      .then(res => {
+        if (this.$route.query.property) {
+          const property = this.properties.filter(x => x.id == this.$route.query.property);
+          if (property.length) this.inputs.meeting.PropertyId = property[0].id;
+        }
+      })
   },
 
   methods: {
@@ -344,13 +352,13 @@ export default {
     },
 
     getProperties() {
-      apiProperties.getAll()
-          .then(res => {
-            this.properties = res.data;
-          })
-          .catch(err => {
-            console.error(err);
-          })
+      return apiProperties.getAll()
+        .then(res => {
+          this.properties = res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
 
     timeTitleFormat(date) {

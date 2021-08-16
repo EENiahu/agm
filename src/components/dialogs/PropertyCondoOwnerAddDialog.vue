@@ -59,6 +59,7 @@
                   item-text="name"
                   item-value="id"
                   color="orange"
+                  item-color="orange"
                   label="Choose Owner Status"
               ></v-select>
             </v-col>

@@ -196,6 +196,7 @@
                 item-text="name"
                 item-value="id"
                 color="orange"
+                item-color="orange"
                 label="State"
             ></v-select>
           </v-col>

@@ -93,6 +93,7 @@
                     item-text="name"
                     item-value="id"
                     color="orange"
+                    item-color="orange"
                     label="State"
                 ></v-select>
               </v-col>
@@ -162,7 +163,6 @@
                 <v-btn
                     @click.stop="dialogs.propertyManagerAddDialog = true"
                     type="button"
-                    :loading="loading"
                     class="px-10"
                     color="orange darken-2 white--text"
                     depressed
@@ -176,46 +176,51 @@
                 <v-row align="baseline" class="mb-6">
                   <v-col cols="12">
                     <v-select
-                        @change="handleInput('StateId')"
-                        :error-messages="errors.get('StateId')"
-                        v-model="inputs.property.StateId"
-                        name="StateId"
+                        @change="handleInput('UserIds')"
+                        :error-messages="errors.get('UserIds')"
+                        v-model="inputs.managers"
+                        name="UserId"
                         hide-details="auto"
-                        :items="states"
-                        item-text="name"
-                        item-value="id"
+                        :items="managers"
+                        item-text="fullName"
+                        return-object
                         color="orange"
-                        label="State"
-                    ></v-select>
+                        item-color="orange"
+                        label="Managers"
+                        multiple
+                    >
+                      <template v-slot:selection="{ item, index }">
+                        <v-chip v-if="index === 0">
+                          <span>{{ item.fullName }}</span>
+                        </v-chip>
+                        <span v-if="index === 1" class="grey--text text-caption">
+                          (+{{ inputs.managers.length - 1 }} others)
+                        </span>
+                      </template>
+                    </v-select>
                   </v-col>
-
-                  <!--                  <v-col cols="2">-->
-                  <!--                    <v-btn icon text color="orange darken-2">-->
-                  <!--                      <v-icon large>mdi-plus</v-icon>-->
-                  <!--                    </v-btn>-->
-                  <!--                  </v-col>-->
                 </v-row>
 
-                <div v-for="(propertyManager, index) in propertyManagers" :key="index" :class="{'mb-12': propertyManagers.length-1 != index}">
-                  <v-row align="baseline" justify="end">
+                <div v-for="(propertyManager, index) in inputs.managers" :key="index" :class="{'mb-12': inputs.managers.length-1 != index}">
+                  <v-row align="baseline">
                     <v-col cols="8">
                       <v-text-field
-                          :value="propertyManager.name"
+                          :value="propertyManager.fullName"
                           readonly
                           color="orange"
-                          label="Name"
+                          label="Full Name"
                           hide-details="auto"
                       ></v-text-field>
                     </v-col>
 
                     <v-col cols="2">
-                      <v-btn icon text color="orange darken-2">
+                      <v-btn @click="removeManager(propertyManager.id)" icon text color="orange darken-2">
                         <v-icon large>mdi-minus</v-icon>
                       </v-btn>
                     </v-col>
                   </v-row>
 
-                  <v-row justify="end">
+                  <v-row>
                     <v-col cols="8">
                       <v-text-field
                           :value="propertyManager.email"
@@ -225,22 +230,18 @@
                           hide-details="auto"
                       ></v-text-field>
                     </v-col>
-
-                    <v-col cols="2"></v-col>
                   </v-row>
 
-                  <v-row justify="end">
+                  <v-row>
                     <v-col cols="8">
                       <v-text-field
-                          :value="propertyManager.role"
+                          :value="propertyManager.role.name.split(/(?=[A-Z])/).join(' ')"
                           readonly
                           color="orange"
                           label="Role"
                           hide-details="auto"
                       ></v-text-field>
                     </v-col>
-
-                    <v-col cols="2"></v-col>
                   </v-row>
                 </div>
               </v-col>
@@ -268,13 +269,9 @@
     </form>
 
     <property-manager-add-dialog :open="dialogs.propertyManagerAddDialog"
-                                 @add-success="handleManagerAdd"
+                                 @add-success="handleManagerAddDialog"
                                  @close-dialog="dialogs.propertyManagerAddDialog = false">
     </property-manager-add-dialog>
-    <property-manager-add-success-dialog :open="dialogs.propertyManagerAddSuccessDialog"
-                                         :user="tempPropertyManager"
-                                         @close-dialog="dialogs.propertyManagerAddSuccessDialog = false">
-    </property-manager-add-success-dialog>
   </div>
 </template>
 
@@ -283,46 +280,27 @@
   import apiProperties from "@/api/properties";
   import mixinForm from "@/mixins/form";
   import PropertyManagerAddDialog from "@/components/dialogs/PropertyManagerAddDialog";
-  import PropertyManagerAddSuccessDialog from "@/components/dialogs/PropertyManagerAddSuccessDialog";
+  import apiUsers from "@/api/users";
+  import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
     name: "PropertiesEditPage",
     mixins: [mixinForm],
     components: {
       PropertyManagerAddDialog,
-      PropertyManagerAddSuccessDialog
     },
     data () {
       return {
         formAction: apiProperties.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
         dialogs: {
           propertyManagerAddDialog: false,
-          propertyManagerAddSuccessDialog: false,
         },
 
         tempPropertyManager: {},
         organization: this.$store.getters["auth/user"].organization || {},
         property: {},
         states: [],
-        propertyManagers: [
-          {
-            name: 'Ann Smith',
-            email: 'annsmit@crossbridgeproperties.com',
-            role: 'Property Manager'
-          },
-
-          {
-            name: 'Peter Smith',
-            email: 'petersmith@crossbridgeproperties.com',
-            role: 'Senior Manager'
-          },
-
-          {
-            name: 'Edik Crossbow',
-            email: 'edikcrossbow@crossbridgeproperties.com',
-            role: 'Senior Manager'
-          },
-        ],
+        managers: [],
 
         OrganizationId: this.$store.getters["auth/user"].organization.id,
         PropertyId: this.$route.params.id,
@@ -338,6 +316,8 @@
             StateId: '',
             TotalUnits: '',
           },
+
+          managers: []
         },
       }
     },
@@ -351,13 +331,19 @@
     created() {
       this.getStates();
       this.getProperty();
+      this.getUsers();
     },
 
     methods: {
-      handleManagerAdd(user) {
+      handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
         this.tempPropertyManager = user;
-        this.dialogs.propertyManagerAddSuccessDialog = true;
+      },
+
+      removeManager(id) {
+        this.inputs.managers.forEach((x, i) => {
+          if (x.id === id) this.inputs.managers.splice(i, 1);
+        })
       },
 
       sendSave(e) {
@@ -367,32 +353,77 @@
         const propertyParams = {...this.inputs.property, OrganizationId: this.OrganizationId};
 
         apiProperties.updateById(this.property.id, propertyParams)
-            .then(res => {
+          .then(res => {
+            let managerIds = this.property.propertyManagers.map(x => x.id);
+            let inputManagerIds = this.inputs.managers.map(x => x.id);
+            let added = inputManagerIds.filter(x => managerIds.indexOf(x) < 0);
+            let removed = managerIds.filter(x => inputManagerIds.indexOf(x) < 0);
+
+            console.log(this.property.propertyManagers);
+            if (added.length) {
+              const managerParams = {
+                OrganizationId: this.OrganizationId,
+                PropertyIds: [this.PropertyId],
+                UserIds: added,
+              };
+              console.log('tyt1');
+              apiPropertyManagers.inviteManagers(managerParams)
+                .then(res => {
+                  this.handleSuccess('Property Has Been Updated');
+                  this.$router.push({path: '/dashboard/properties'});
+                })
+                .catch(err => this.handleErrors(err))
+            }
+
+            if (removed.length) {
+              const promises = removed.map(removedManager => {
+                const managerParams = {
+                  OrganizationId: this.OrganizationId,
+                  PropertyId: this.PropertyId,
+                  UserId: removedManager,
+                };
+
+                return apiPropertyManagers.cancelInvite(managerParams);
+              });
+
+              Promise.all(promises)
+                .then(res => {
+                  console.log(res);
+                  this.handleSuccess('Member Has Been Updated');
+                  this.$router.push({path: '/dashboard/account-members'});
+                })
+                .catch(err => this.handleErrors(err))
+            }
+
+            if (!added.length && !removed.length) {
+              console.log('here');
               this.handleSuccess('Property Has Been Updated');
               this.$router.push({path: '/dashboard/properties'});
-            })
-            .catch(err => this.handleErrors(err))
+            }
+          })
+          .catch(err => this.handleErrors(err))
       },
 
       getStates() {
         apiStates.getAll()
-            .then(res => {
-              this.states = res.data;
-            })
-            .catch(err => {
-              console.error(err);
-            })
+          .then(res => {
+            this.states = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       getProperty() {
-        apiProperties.getOne(this.PropertyId)
-            .then(res => {
-              this.property = res.data;
-              this.setPropertyInputs();
-            })
-            .catch(err => {
-              console.error(err);
-            })
+        apiProperties.getOne(this.PropertyId, 'propertyManagers')
+          .then(res => {
+            this.property = res.data;
+            this.setPropertyInputs();
+            this.inputs.managers = [...res.data.propertyManagers];
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       setPropertyInputs() {
@@ -405,7 +436,17 @@
           PostalCode: this.property.address.postalCode,
           StateId: this.property.address.state.id,
           TotalUnits: this.property.totalUnits,
-        }
+        };
+      },
+
+      getUsers() {
+        apiUsers.getAll()
+          .then(res => {
+            this.managers = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
     }
   }

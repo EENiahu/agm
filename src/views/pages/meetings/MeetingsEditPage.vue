@@ -40,6 +40,7 @@
               item-text="name"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Choose a Property"
           ></v-select>
         </v-col>
@@ -86,6 +87,7 @@
               item-text="title"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Time Zone"
           ></v-select>
         </v-col>
