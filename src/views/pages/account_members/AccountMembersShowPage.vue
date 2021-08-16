@@ -71,7 +71,6 @@
   import apiPropertyManagers from "@/api/propertyManagers";
   import mixinForm from "@/mixins/form";
 
-
   export default {
     name: "AccountMembersShowPage",
     mixins: [mixinForm],

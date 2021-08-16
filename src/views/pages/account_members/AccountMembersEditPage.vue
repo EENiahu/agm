@@ -163,6 +163,7 @@
                     .catch(err => this.handleErrors(err))
               }
 
+              //TODO: remove property
               if (removed.length) {
                 // const managerParams = {
                 //   OrganizationId: this.OrganizationId,

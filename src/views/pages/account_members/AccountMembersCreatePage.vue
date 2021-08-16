@@ -132,25 +132,26 @@
         const userParams = {
           ...this.inputs,
           UserRoleId: 3, //PropertyManager
-          UserStatusId: 0 //Pending
+          UserStatusId: 0, //Pending
+          OrganizationId: this.OrganizationId,
         };
 
         apiUsers.create(userParams)
-            .then(res => {
-              const managerParams = {
-                OrganizationId: this.OrganizationId,
-                PropertyIds: this.inputs.PropertyIds,
-                UserIds: [res.data.id],
-              };
+          .then(res => {
+            const managerParams = {
+              OrganizationId: this.OrganizationId,
+              PropertyIds: this.inputs.PropertyIds,
+              UserIds: [res.data.id],
+            };
 
-              apiPropertyManagers.inviteManagers(managerParams)
-                .then(res => {
-                  this.handleSuccess('Member Has Been Created');
-                  this.$router.push({path: '/dashboard/account-members'});
-                })
-                .catch(err => this.handleErrors(err))
-            })
-            .catch(err => this.handleErrors(err))
+            apiPropertyManagers.inviteManagers(managerParams)
+              .then(res => {
+                this.handleSuccess('Member Has Been Created');
+                this.$router.push({path: '/dashboard/account-members'});
+              })
+              .catch(err => this.handleErrors(err))
+          })
+          .catch(err => this.handleErrors(err))
       },
 
       getProperties() {
