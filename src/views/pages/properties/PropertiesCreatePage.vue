@@ -183,6 +183,7 @@
                         hide-details="auto"
                         :items="managers"
                         item-text="fullName"
+                        item-value="id"
                         return-object
                         color="orange"
                         item-color="orange"

@@ -49,7 +49,6 @@
   </section>
 </template>
 
-
 <script>
   import BtnLoader from "@/components/common/BtnLoader";
   import errorHandler from "@/lib/ErrorHandler";

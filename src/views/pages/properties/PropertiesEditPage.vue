@@ -183,6 +183,7 @@
                         hide-details="auto"
                         :items="managers"
                         item-text="fullName"
+                        item-value="id"
                         return-object
                         color="orange"
                         item-color="orange"
@@ -296,7 +297,6 @@
           propertyManagerAddDialog: false,
         },
 
-        tempPropertyManager: {},
         organization: this.$store.getters["auth/user"].organization || {},
         property: {},
         states: [],
@@ -337,7 +337,7 @@
     methods: {
       handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
-        this.tempPropertyManager = user;
+        this.managers.push(user);
       },
 
       removeManager(id) {

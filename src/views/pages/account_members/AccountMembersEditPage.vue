@@ -133,6 +133,7 @@
         this.deactivateSubmit();
 
         const userParams = {
+          OrganizationId: this.OrganizationId,
           FullName: this.inputs.FullName,
           Email: this.inputs.Email,
           Title: this.inputs.Title,

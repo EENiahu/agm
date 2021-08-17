@@ -302,7 +302,7 @@
             .then(res => {
               apiUsers.updateById(this.UserId, userParams)
                 .then(res => {
-                  this.activateSubmit();
+                  this.handleSuccess('Profile Has Been Updated');
 
                   if (changedPassword) {
                     this.$store.dispatch('auth/remove_token');
