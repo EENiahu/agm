@@ -375,17 +375,13 @@
             }
 
             if (removed.length) {
-              const promises = removed.map(removedManager => {
-                const managerParams = {
-                  OrganizationId: this.OrganizationId,
-                  PropertyId: this.PropertyId,
-                  UserId: removedManager,
-                };
+              const managerParams = {
+                OrganizationId: this.OrganizationId,
+                PropertyIds: [this.PropertyId],
+                UserIds: removed,
+              };
 
-                return apiPropertyManagers.cancelInvite(managerParams);
-              });
-
-              Promise.all(promises)
+              apiPropertyManagers.cancelInvite(managerParams)
                 .then(res => {
                   this.handleSuccess('Property Has Been Updated');
                   this.$router.push({path: '/dashboard/properties'});

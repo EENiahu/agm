@@ -113,7 +113,6 @@
 
         apiUsers.create(userParams)
           .then(res => {
-            this.activateSubmit();
             this.handleSuccess('Property Manager Has Been Added');
             this.$emit('add-success', res.data);
           })

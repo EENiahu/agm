@@ -116,10 +116,10 @@
         if (this.disabled) return;
         this.deactivateSubmit();
 
+        //to remove manager we should not send PropertyIds
         const memberParams = {
           OrganizationId: this.user.organization.id,
-          PropertyId: [], //to remove manager we should send empty property array
-          UserId: this.user.id,
+          UserIds: [this.user.id],
         };
 
         apiPropertyManagers.cancelInvite(memberParams)

@@ -109,6 +109,17 @@ const routes = [
         })
       },
       {
+        path: 'accept-invite',
+        component: () => import('../components/AcceptInviteForm.vue'),
+        beforeEnter: ((to, from, next) => {
+          if (to.query.userEmail && to.query.organizationInviteId) {
+            next();
+          } else {
+            next({path: '/'});
+          }
+        })
+      },
+      {
         path: '',
         component: () => import('../components/LoginForm.vue')
       },

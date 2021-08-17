@@ -333,11 +333,6 @@
     methods: {
       handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
-        //TODO: remove role
-        user.role = {
-          id: 3,
-          name: "PropertyManager"
-        };
         this.managers.push(user);
       },
 

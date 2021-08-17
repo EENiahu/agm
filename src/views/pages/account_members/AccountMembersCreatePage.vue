@@ -98,7 +98,6 @@
   import mixinForm from "@/mixins/form";
   import apiProperties from "@/api/properties";
   import apiUsers from "@/api/users";
-  import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
     name: "AccountMembersCreatePage",
@@ -138,18 +137,8 @@
 
         apiUsers.create(userParams)
           .then(res => {
-            const managerParams = {
-              OrganizationId: this.OrganizationId,
-              PropertyIds: this.inputs.PropertyIds,
-              UserIds: [res.data.id],
-            };
-
-            apiPropertyManagers.inviteManagers(managerParams)
-              .then(res => {
-                this.handleSuccess('Member Has Been Created');
-                this.$router.push({path: '/dashboard/account-members'});
-              })
-              .catch(err => this.handleErrors(err))
+            this.handleSuccess('Member Has Been Created');
+            this.$router.push({path: '/dashboard/account-members'});
           })
           .catch(err => this.handleErrors(err))
       },

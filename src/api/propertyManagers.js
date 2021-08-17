@@ -68,9 +68,15 @@ exports.inviteManagers = (params) => {
     return axios.post(url, formData, headers);
 };
 
-exports.acceptInvite = () => {
+exports.acceptInvite = (params) => {
     const url = routes.post.acceptInvite;
-    return axios.post(url, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param]) formData.append(param, params[param]);
+    });
+
+    return axios.post(url, formData, headers);
 };
 
 exports.cancelInvite = (params) => {

@@ -163,17 +163,13 @@
             }
 
             if (removed.length) {
-              const promises = removed.map(removedProperty => {
-                const managerParams = {
-                  OrganizationId: this.OrganizationId,
-                  PropertyId: removedProperty,
-                  UserId: this.MemberId,
-                };
+              const managerParams = {
+                OrganizationId: this.OrganizationId,
+                PropertyIds: removed,
+                UserIds: [this.MemberId],
+              };
 
-                return apiPropertyManagers.cancelInvite(managerParams);
-              });
-
-              Promise.all(promises)
+              apiPropertyManagers.cancelInvite(managerParams)
                 .then(res => {
                   this.handleSuccess('Member Has Been Updated');
                   this.$router.push({path: '/dashboard/account-members'});
