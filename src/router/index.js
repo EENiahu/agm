@@ -94,14 +94,14 @@ const routes = [
         })
       },
       {
-        path: 'forgot-password',
+        path: 'password-forgot',
         component: () => import('../components/ForgotPasswordForm.vue')
       },
       {
-        path: 'reset-password',
+        path: 'password-reset',
         component: () => import('../components/ResetPasswordForm.vue'),
         beforeEnter: ((to, from, next) => {
-          if (to.query.token) {
+          if (to.query.resetToken) {
             next();
           } else {
             next({path: '/'});

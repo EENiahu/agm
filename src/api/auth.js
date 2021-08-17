@@ -41,7 +41,13 @@ exports.resetPassword = (credentials) => {
     return axios.post(url, credentials);
 };
 
-exports.recoverPassword = (credentials) => {
-    const url = routes.post.passwordRecovery;
-    return axios.post(url, credentials);
+exports.recoverPassword = (token, params) => {
+    const url = routes.post.passwordRecovery + `?resetToken=${token}`;
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') formData.append(param, params[param]);
+    });
+
+    return axios.post(url, formData);
 };

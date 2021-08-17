@@ -9,7 +9,7 @@
           </div>
         </div>
 
-        <form action="" class="section-right__form form">
+        <form @submit.prevent="recoverPassword" :action="formAction" method="POST" class="section-right__form form">
           <div class="form__row">
             <div class="form__col">
                 <div class="input" :class="{'input__is-invalid': errors.has('Password')}">
@@ -31,9 +31,12 @@
 
           <div class="form__row">
             <div class="form__col">
-              <button type="button" class="btn btn--primary is-plain">
-                Submit
-              </button>
+              <btn-loader :disabled="disabled"
+                          :show-loader="loading"
+                          type="submit"
+                          btn-text="Submit"
+                          class="btn--primary is-plain">
+              </btn-loader>
             </div>
           </div>
         </form>
@@ -63,7 +66,8 @@
         disabled: false,
         loading: false,
 
-        formAction: apiAuth.getRoutes().post.login,
+        formAction: apiAuth.getRoutes().post.recoverPassword,
+        resetToken: this.$route.query.resetToken,
         inputs: {
           Password: "",
           ConfirmPassword: "",
@@ -82,8 +86,20 @@
         this.loading = false;
       },
 
-      resetPassword(e) {
+      recoverPassword(e) {
+        if (this.disabled) return;
+        this.deactivateSubmit();
 
+        apiAuth.recoverPassword(this.resetToken, this.inputs)
+          .then(res => {
+            this.activateSubmit();
+            this.$router.push({path: '/'});
+            console.log(res);
+          })
+          .catch(err => {
+            this.activateSubmit();
+            if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
+          })
       },
 
       handleInput(e) {
