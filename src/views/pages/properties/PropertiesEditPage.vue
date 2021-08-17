@@ -359,14 +359,13 @@
             let added = inputManagerIds.filter(x => managerIds.indexOf(x) < 0);
             let removed = managerIds.filter(x => inputManagerIds.indexOf(x) < 0);
 
-            console.log(this.property.propertyManagers);
             if (added.length) {
               const managerParams = {
                 OrganizationId: this.OrganizationId,
                 PropertyIds: [this.PropertyId],
                 UserIds: added,
               };
-              console.log('tyt1');
+
               apiPropertyManagers.inviteManagers(managerParams)
                 .then(res => {
                   this.handleSuccess('Property Has Been Updated');
@@ -388,15 +387,13 @@
 
               Promise.all(promises)
                 .then(res => {
-                  console.log(res);
-                  this.handleSuccess('Member Has Been Updated');
-                  this.$router.push({path: '/dashboard/account-members'});
+                  this.handleSuccess('Property Has Been Updated');
+                  this.$router.push({path: '/dashboard/properties'});
                 })
                 .catch(err => this.handleErrors(err))
             }
 
             if (!added.length && !removed.length) {
-              console.log('here');
               this.handleSuccess('Property Has Been Updated');
               this.$router.push({path: '/dashboard/properties'});
             }

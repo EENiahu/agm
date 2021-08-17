@@ -81,5 +81,5 @@ exports.cancelInvite = (params) => {
         if (params[param]) formData.append(param, params[param]);
     });
 
-    return axios.delete(url, headers);
+    return axios.delete(url, {...headers, data: formData});
 };

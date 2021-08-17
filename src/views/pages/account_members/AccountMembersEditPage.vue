@@ -141,72 +141,73 @@
         };
 
         apiUsers.updateById(this.MemberId, userParams)
-            .then(res => {
-              //send invite to new property if user sets new one
-              let memberPropertiesId = this.member.properties.map(x => x.id);
-              let added = this.inputs.PropertyIds.filter(x => memberPropertiesId.indexOf(x) < 0);
-              let removed = memberPropertiesId.filter(x => this.inputs.PropertyIds.indexOf(x) < 0);
+          .then(res => {
+            //send invite to new property if user sets new one
+            let memberPropertiesId = this.member.properties.map(x => x.id);
+            let added = this.inputs.PropertyIds.filter(x => memberPropertiesId.indexOf(x) < 0);
+            let removed = memberPropertiesId.filter(x => this.inputs.PropertyIds.indexOf(x) < 0);
 
-              console.log(memberPropertiesId, added, removed);
-              if (added.length) {
+            if (added.length) {
+              const managerParams = {
+                OrganizationId: this.OrganizationId,
+                PropertyIds: added,
+                UserIds: [this.MemberId],
+              };
+
+              apiPropertyManagers.inviteManagers(managerParams)
+                .then(res => {
+                  this.handleSuccess('Member Has Been Updated');
+                  this.$router.push({path: '/dashboard/account-members'});
+                })
+                .catch(err => this.handleErrors(err))
+            }
+
+            if (removed.length) {
+              const promises = removed.map(removedProperty => {
                 const managerParams = {
                   OrganizationId: this.OrganizationId,
-                  PropertyIds: added,
-                  UserIds: [this.MemberId],
+                  PropertyId: removedProperty,
+                  UserId: this.MemberId,
                 };
 
-                apiPropertyManagers.inviteManagers(managerParams)
-                    .then(res => {
-                      this.handleSuccess('Member Has Been Updated');
-                      this.$router.push({path: '/dashboard/account-members'});
-                    })
-                    .catch(err => this.handleErrors(err))
-              }
+                return apiPropertyManagers.cancelInvite(managerParams);
+              });
 
-              //TODO: remove property
-              if (removed.length) {
-                // const managerParams = {
-                //   OrganizationId: this.OrganizationId,
-                //   PropertyId: removed[0],
-                //   UserId: this.MemberId,
-                // };
-                //
-                // apiPropertyManagers.cancelInvite(managerParams)
-                //     .then(res => {
-                //       this.handleSuccess('Member Has Been Updated');
-                //       this.$router.push({path: '/dashboard/account-members'});
-                //     })
-                //     .catch(err => this.handleErrors(err))
-              }
+              Promise.all(promises)
+                .then(res => {
+                  this.handleSuccess('Member Has Been Updated');
+                  this.$router.push({path: '/dashboard/account-members'});
+                })
+                .catch(err => this.handleErrors(err))
+            }
 
-              if (!added.length && !removed.length) {
-                console.log('here');
-                this.handleSuccess('Member Has Been Updated');
-                this.$router.push({path: '/dashboard/account-members'});
-              }
-            })
-            .catch(err => this.handleErrors(err))
+            if (!added.length && !removed.length) {
+              this.handleSuccess('Member Has Been Updated');
+              this.$router.push({path: '/dashboard/account-members'});
+            }
+          })
+          .catch(err => this.handleErrors(err))
       },
 
       getProperties() {
         apiProperties.getAll()
-            .then(res => {
-              this.properties = res.data;
-            })
-            .catch(err => {
-              console.error(err);
-            })
+          .then(res => {
+            this.properties = res.data;
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       getMember() {
         apiUsers.getOne(this.MemberId, 'properties')
-            .then(res => {
-              this.member = res.data;
-              this.setMemberInputs();
-            })
-            .catch(err => {
-              console.error(err);
-            })
+          .then(res => {
+            this.member = res.data;
+            this.setMemberInputs();
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       setMemberInputs() {
