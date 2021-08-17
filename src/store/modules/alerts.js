@@ -15,6 +15,10 @@ const getters = {
 
 const mutations = {
     SET_ALERT(state, alert) {
+        //todo: clear before set new one (doesn't work properly now)
+        // state.alert = {};
+        // state.show = false;
+
         //defaults
         alert.timeout = alert.timeout || 5000;
         alert.type = alert.type || 'error';

@@ -65,7 +65,7 @@
                     color="red"
                     text
                     type="button"
-                    @click="removeProperty(property.id)"
+                    @click="removeProperty"
                 >
                   Remove
                 </v-btn>
@@ -80,9 +80,11 @@
 
 <script>
   import apiProperties from "@/api/properties";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "PropertyPanel",
+    mixins: [mixinForm],
     props: {
       property: {
         type: Object,
@@ -92,36 +94,22 @@
 
     data() {
       return {
-        disabled: false,
-        loading: false,
         menu: false,
       }
     },
 
     methods: {
-      deactivateSubmit() {
-        this.disabled = true;
-        this.loading = true;
-      },
-
-      activateSubmit() {
-        this.disabled = false;
-        this.loading = false;
-      },
-
-      removeProperty(id) {
+      removeProperty() {
         if (this.disabled) return;
         this.deactivateSubmit();
 
-        apiProperties.delete(id)
-            .then(res => {
-              this.$emit('remove-property', id);
-              this.menu = false;
-              this.activateSubmit();
-            })
-            .catch(err => {
-              console.error(err);
-            })
+        apiProperties.delete(this.property.id)
+          .then(res => {
+            this.menu = false;
+            this.$emit('remove-property', this.property.id);
+            this.handleSuccess('Property Has Been Removed');
+          })
+          .catch(err => this.handleErrors(err))
       },
     }
   }
