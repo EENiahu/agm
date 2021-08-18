@@ -76,7 +76,7 @@ exports.acceptInvite = (params) => {
         if (params[param]) formData.append(param, params[param]);
     });
 
-    return axios.post(url, formData, headers);
+    return axios.post(url, formData);
 };
 
 exports.cancelInvite = (params) => {
