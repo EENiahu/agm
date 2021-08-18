@@ -24,7 +24,7 @@
               <div class="input" :class="{'input__is-invalid': errors.has('Password')}">
                 <input @input="handleInput" :value="inputs.Password" type="password" name="Password" placeholder="Password" class="input__inner"/>
                 <span v-if="errors.has('Password')" v-text="errors.get('Password')" class="input__error-message"></span>
-                <span v-if="errors.has('message')" v-text="errors.get('message')" class="input__error-message"></span>
+                <span v-if="errors.has('Message')" v-text="errors.get('Message')" class="input__error-message"></span>
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@
             </div>
 
             <div class="form__col">
-              <router-link to="/forgot-password" class="section-right__message-link">Forgot Password?</router-link>
+              <router-link to="/password-forgot" class="section-right__message-link">Forgot Password?</router-link>
             </div>
           </div>
         </form>
@@ -104,8 +104,8 @@
                       this.$store.dispatch('auth/set_user', {user: res.data})
                           .then(() => {
                             if (this.$store.getters['auth/isVerified']) {
-                              this.$router.push({path: '/dashboard/meetings'});
-                              location.href = '/dashboard/meetings';
+                              this.$router.push({path: '/dashboard'});
+                              location.href = '/dashboard';
                             }
                             else {
                               this.$router.push({path: '/activate'});
@@ -135,7 +135,7 @@
       handleInput(e) {
         this.inputs[e.currentTarget.name] = e.currentTarget.value;
         if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
-        if (this.errors.has('message')) this.errors.clear('message');
+        if (this.errors.has('Message')) this.errors.clear('Message');
       }
     }
   }

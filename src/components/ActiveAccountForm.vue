@@ -15,6 +15,7 @@
               <div class="input" :class="{'input__is-invalid': errors.has('VerificationCode')}">
                 <input @input="handleInput" :value="inputs.VerificationCode" type="text" name="VerificationCode" placeholder="Enter Verification Code" class="input__inner"/>
                 <span v-if="errors.has('VerificationCode')" v-text="errors.get('VerificationCode')" class="input__error-message"></span>
+                <span v-if="errors.has('Message')" v-text="errors.get('Message')" class="input__error-message"></span>
               </div>
             </div>
           </div>
@@ -102,7 +103,7 @@
       handleInput(e) {
         this.inputs[e.currentTarget.name] = e.currentTarget.value;
         if (this.errors.has(e.currentTarget.name)) this.errors.clear(e.currentTarget.name);
-        if (this.errors.has('message')) this.errors.clear('message');
+        if (this.errors.has('Message')) this.errors.clear('Message');
       }
     }
 

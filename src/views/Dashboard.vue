@@ -32,12 +32,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer
-        app
-        clipped
-        left
-        color="blue-grey darken-4"
-    >
+    <v-navigation-drawer app clipped left color="blue-grey darken-4">
       <v-list nav>
         <v-list-item-group>
           <v-list-item v-for="(navLink, i) in navLinks" :key="i" :to="navLink.link">
@@ -52,21 +47,27 @@
         <router-view></router-view>
       </v-container>
     </v-main>
+
+    <AlertMessage/>
   </v-app>
 </template>
 
 <script>
   import vuetify from '@/plugins/vuetify';
+  import AlertMessage from "@/components/dashboard/AlertMessage";
 
   export default {
     vuetify,
+    components: {
+      AlertMessage
+    },
     data() {
       return {
         name: this.$store.getters["auth/user"].fullName.split(' ')[0],
         navLinks: [
           {
             title: 'Dashboard',
-            link: '/dashboard/meetings'
+            link: '/dashboard'
           },
 
           {

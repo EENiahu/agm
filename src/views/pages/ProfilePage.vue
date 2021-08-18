@@ -29,6 +29,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('FullName')"
+                  :error-messages="errors.get('FullName')"
                   v-model="inputs.user.FullName"
                   color="orange"
                   label="Name"
@@ -40,6 +42,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('Email')"
+                  :error-messages="errors.get('Email')"
                   v-model="inputs.user.Email"
                   name="Email"
                   type="email"
@@ -53,6 +57,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('Phone')"
+                  :error-messages="errors.get('Phone')"
                   v-mask="'+1-###-###-####'"
                   v-model="inputs.user.Phone"
                   color="orange"
@@ -65,6 +71,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('Title')"
+                  :error-messages="errors.get('Title')"
                   v-model="inputs.user.Title"
                   color="orange"
                   label="Title"
@@ -84,6 +92,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('Password')"
+                  :error-messages="errors.get('Password')"
                   v-model="inputs.auth.Password"
                   name="Password"
                   type="password"
@@ -97,6 +107,8 @@
           <v-row>
             <v-col cols="8">
               <v-text-field
+                  @input="handleInput('ConfirmPassword')"
+                  :error-messages="errors.get('ConfirmPassword')"
                   v-model="inputs.auth.ConfirmPassword"
                   name="ConfirmPassword"
                   type="password"
@@ -121,6 +133,8 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+                @input="handleInput('OrganizationName')"
+                :error-messages="errors.get('OrganizationName')"
                 v-model="inputs.organization.OrganizationName"
                 name="OrganizationName"
                 color="orange"
@@ -133,6 +147,8 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+                @input="handleInput('FirstAddress')"
+                :error-messages="errors.get('FirstAddress')"
                 v-model="inputs.organization.FirstAddress"
                 name="FirstAddress"
                 color="orange"
@@ -145,6 +161,8 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
+                @input="handleInput('SecondAddress')"
+                :error-messages="errors.get('SecondAddress')"
                 v-model="inputs.organization.SecondAddress"
                 name="SecondAddress"
                 color="orange"
@@ -157,6 +175,8 @@
         <v-row>
           <v-col cols="2">
             <v-text-field
+                @input="handleInput('City')"
+                :error-messages="errors.get('City')"
                 v-model="inputs.organization.City"
                 name="City"
                 color="orange"
@@ -167,6 +187,8 @@
 
           <v-col cols="2">
             <v-select
+                @change="handleInput('StateId')"
+                :error-messages="errors.get('StateId')"
                 v-model="inputs.organization.StateId"
                 name="StateId"
                 hide-details="auto"
@@ -174,6 +196,7 @@
                 item-text="name"
                 item-value="id"
                 color="orange"
+                item-color="orange"
                 label="State"
             ></v-select>
           </v-col>
@@ -182,6 +205,8 @@
         <v-row>
           <v-col cols="2">
             <v-text-field
+                @input="handleInput('Country')"
+                :error-messages="errors.get('Country')"
                 v-model="inputs.organization.Country"
                 name="Country"
                 color="orange"
@@ -192,6 +217,8 @@
 
           <v-col cols="2">
             <v-text-field
+                @input="handleInput('PostalCode')"
+                :error-messages="errors.get('PostalCode')"
                 v-model="inputs.organization.PostalCode"
                 name="PostalCode"
                 color="orange"
@@ -209,13 +236,13 @@
   import apiStates from "@/api/states";
   import apiUsers from "@/api/users";
   import apiOrganizations from "@/api/organizations";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "ProfilePage",
+    mixins: [mixinForm],
     data () {
       return {
-        disabled: false,
-        loading: false,
         formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
 
         organization: {},
@@ -257,16 +284,6 @@
     },
 
     methods: {
-      deactivateSubmit() {
-        this.disabled = true;
-        this.loading = true;
-      },
-
-      activateSubmit() {
-        this.disabled = false;
-        this.loading = false;
-      },
-
       sendSave() {
         if (this.disabled) return;
         this.deactivateSubmit();
@@ -285,7 +302,7 @@
             .then(res => {
               apiUsers.updateById(this.UserId, userParams)
                 .then(res => {
-                  this.activateSubmit();
+                  this.handleSuccess('Profile Has Been Updated');
 
                   if (changedPassword) {
                     this.$store.dispatch('auth/remove_token');
@@ -296,15 +313,9 @@
                     this.$store.dispatch('auth/set_user', {user: res.data});
                   }
                 })
-                .catch(err => {
-                  this.activateSubmit();
-                  console.error(err);
-                })
+                .catch(err => this.handleErrors(err))
             })
-            .catch(err => {
-              this.activateSubmit();
-              console.error(err);
-            })
+            .catch(err => this.handleErrors(err))
       },
 
       getStates() {
