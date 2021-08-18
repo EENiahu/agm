@@ -77,7 +77,7 @@
                     color="red"
                     text
                     type="button"
-                    @click="removeMeeting(meeting.id)"
+                    @click="removeMeeting"
                 >
                   Remove
                 </v-btn>
@@ -92,9 +92,11 @@
 
 <script>
   import apiMeetings from "@/api/meetings";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "MeetingPanel",
+    mixins: [mixinForm],
     props: {
       meeting: {
         type: Object,
@@ -104,36 +106,22 @@
 
     data() {
       return {
-        disabled: false,
-        loading: false,
         menu: false,
       }
     },
 
     methods: {
-      deactivateSubmit() {
-        this.disabled = true;
-        this.loading = true;
-      },
-
-      activateSubmit() {
-        this.disabled = false;
-        this.loading = false;
-      },
-
-      removeMeeting(id) {
+      removeMeeting() {
         if (this.disabled) return;
         this.deactivateSubmit();
 
-        apiMeetings.delete(id)
+        apiMeetings.delete(this.meeting.id)
           .then(res => {
-            this.$emit('remove-meeting', id);
             this.menu = false;
-            this.activateSubmit();
+            this.$emit('remove-meeting', this.meeting.id);
+            this.handleSuccess('Meeting Has Been Removed');
           })
-          .catch(err => {
-            console.error(err);
-          })
+          .catch(err => this.handleErrors(err))
       },
 
       dateTitleFormat(date = '') {

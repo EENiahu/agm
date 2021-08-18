@@ -32,12 +32,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer
-        app
-        clipped
-        left
-        color="blue-grey darken-4"
-    >
+    <v-navigation-drawer app clipped left color="blue-grey darken-4">
       <v-list nav>
         <v-list-item-group>
           <v-list-item v-for="(navLink, i) in navLinks" :key="i" :to="navLink.link">

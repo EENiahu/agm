@@ -40,6 +40,7 @@
               item-text="name"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Choose a Property"
           ></v-select>
         </v-col>
@@ -86,6 +87,7 @@
               item-text="title"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Time Zone"
           ></v-select>
         </v-col>
@@ -199,7 +201,7 @@
               @input="handleInput('MeetingRegistrationLink')"
               :error-messages="errors.get('MeetingRegistrationLink')"
               v-model="inputs.meeting.MeetingRegistrationLink"
-              name="TotalUnits"
+              name="MeetingRegistrationLink"
               type="text"
               color="orange"
               label="Meeting Registration Link"
@@ -298,7 +300,13 @@ export default {
   created() {
     this.getStates();
     this.getTimezones();
-    this.getProperties();
+    this.getProperties()
+      .then(res => {
+        if (this.$route.query.property) {
+          const property = this.properties.filter(x => x.id == this.$route.query.property);
+          if (property.length) this.inputs.meeting.PropertyId = property[0].id;
+        }
+      })
   },
 
   methods: {
@@ -317,13 +325,10 @@ export default {
 
       apiMeetings.create(meetingParams)
         .then(res => {
-          this.activateSubmit();
+          this.handleSuccess('Meeting Has Been Created');
           this.$router.push({path: '/dashboard'});
         })
-        .catch(err => {
-          this.activateSubmit();
-          this.handleErrors(err);
-        })
+        .catch(err => this.handleErrors(err))
     },
 
     getStates() {
@@ -347,13 +352,13 @@ export default {
     },
 
     getProperties() {
-      apiProperties.getAll()
-          .then(res => {
-            this.properties = res.data;
-          })
-          .catch(err => {
-            console.error(err);
-          })
+      return apiProperties.getAll()
+        .then(res => {
+          this.properties = res.data;
+        })
+        .catch(err => {
+          console.error(err);
+        })
     },
 
     timeTitleFormat(date) {

@@ -196,6 +196,7 @@
                 item-text="name"
                 item-value="id"
                 color="orange"
+                item-color="orange"
                 label="State"
             ></v-select>
           </v-col>
@@ -301,7 +302,7 @@
             .then(res => {
               apiUsers.updateById(this.UserId, userParams)
                 .then(res => {
-                  this.activateSubmit();
+                  this.handleSuccess('Profile Has Been Updated');
 
                   if (changedPassword) {
                     this.$store.dispatch('auth/remove_token');
@@ -312,15 +313,9 @@
                     this.$store.dispatch('auth/set_user', {user: res.data});
                   }
                 })
-                .catch(err => {
-                  this.activateSubmit();
-                  this.handleErrors(err);
-                })
+                .catch(err => this.handleErrors(err))
             })
-            .catch(err => {
-              this.activateSubmit();
-              this.handleErrors(err);
-            })
+            .catch(err => this.handleErrors(err))
       },
 
       getStates() {

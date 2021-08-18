@@ -40,6 +40,7 @@
               item-text="name"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Choose a Property"
           ></v-select>
         </v-col>
@@ -86,6 +87,7 @@
               item-text="title"
               item-value="id"
               color="orange"
+              item-color="orange"
               label="Time Zone"
           ></v-select>
         </v-col>
@@ -199,7 +201,7 @@
               @change="handleInput('MeetingRegistrationLink')"
               :error-messages="errors.get('MeetingRegistrationLink')"
               v-model="inputs.meeting.MeetingRegistrationLink"
-              name="TotalUnits"
+              name="MeetingRegistrationLink"
               type="text"
               color="orange"
               label="Meeting Registration Link"
@@ -322,13 +324,10 @@
 
         apiMeetings.updateById(this.meeting.id, meetingParams)
           .then(res => {
-            this.activateSubmit();
+            this.handleSuccess('Meeting Has Been Updated');
             this.$router.push({path: '/dashboard'});
           })
-          .catch(err => {
-            this.activateSubmit();
-            this.handleErrors(err);
-          })
+          .catch(err => this.handleErrors(err))
       },
 
       getStates() {

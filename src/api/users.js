@@ -32,18 +32,25 @@ exports.getRoutes = () => {
 };
 
 exports.getAll = () => {
-    const url = routes.get.users;
+    const url = routes.get.users + '?extensions=properties';
     return axios.get(url, headers);
 };
 
-exports.getOne = (id) => {
-    const url = routes.get.user.replace('{id}', id);
+exports.getOne = (id, extensions = '') => {
+    extensions = extensions ? `?extensions=${extensions}` : '';
+    const url = routes.get.user.replace('{id}', id) + extensions;
     return axios.get(url, headers);
 };
 
 exports.create = (params) => {
     const url = routes.post.create;
-    return axios.post(url, params, headers);
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') formData.append(param, params[param]);
+    });
+
+    return axios.post(url, formData, headers);
 };
 
 exports.updateByEmail = (params) => {

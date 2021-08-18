@@ -22,11 +22,15 @@ const routes = [
       },
       {
         path: '/dashboard/account-members',
-        component: () => import('../views/pages/AccountMembers.vue')
+        component: () => import('../views/pages/account_members/AccountMembersShowPage.vue')
       },
       {
-        path: '/dashboard/invite-property-manager',
-        component: () => import('../views/pages/InvitePropertyManager.vue')
+        path: '/dashboard/account-members/create',
+        component: () => import('../views/pages/account_members/AccountMembersCreatePage.vue')
+      },
+      {
+        path: '/dashboard/account-members/edit/:id',
+        component: () => import('../views/pages/account_members/AccountMembersEditPage.vue')
       },
       {
         path: '/dashboard/properties',
@@ -90,14 +94,25 @@ const routes = [
         })
       },
       {
-        path: 'forgot-password',
+        path: 'password-forgot',
         component: () => import('../components/ForgotPasswordForm.vue')
       },
       {
-        path: 'reset-password',
+        path: 'password-reset',
         component: () => import('../components/ResetPasswordForm.vue'),
         beforeEnter: ((to, from, next) => {
-          if (to.query.token) {
+          if (to.query.resetToken) {
+            next();
+          } else {
+            next({path: '/'});
+          }
+        })
+      },
+      {
+        path: 'accept-invite',
+        component: () => import('../components/AcceptInviteForm.vue'),
+        beforeEnter: ((to, from, next) => {
+          if (to.query.userEmail && to.query.organizationInviteId) {
             next();
           } else {
             next({path: '/'});
