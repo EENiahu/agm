@@ -18,7 +18,8 @@ const routes = [
     children: [
       {
         path: '/dashboard/profile',
-        component: () => import('../views/pages/ProfilePage.vue')
+        component: () => import('../views/pages/profiles/ProfilesEditPage.vue')
+        // component: () => import('../views/pages/profiles/loaders/ProfilesEditPageSkeleton.vue')
       },
       {
         path: '/dashboard/account-members',
