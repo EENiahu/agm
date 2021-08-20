@@ -259,7 +259,7 @@
               <v-btn
                   link
                   download="AGM Online - Condo Owners Template.csv"
-                  :href="`blob:${downloadFileLink}`"
+                  :href="downloadFileLink"
                   class="px-10"
                   color="blue-grey darken-4 white--text"
                   depressed
@@ -295,7 +295,7 @@
     },
     data () {
       return {
-        downloadFileLink: apiCondoOwners.getRoutes().get.downloadFileTemplate,
+        downloadFileLink: '',
         formAction: apiProperties.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
         dialogs: {
           propertyManagerAddDialog: false,
@@ -336,19 +336,20 @@
       this.getStates();
       this.getProperty();
       this.getUsers();
-      // this.downloadOwnerTemplate();
+      this.setTemplateCsv();
     },
 
     methods: {
-      // downloadOwnerTemplate() {
-      //   apiCondoOwners.downloadFileTemplate()
-      //   .then(res => {
-      //     console.log(res);
-      //   })
-      //   .catch(err => {
-      //     console.error(err);
-      //   })
-      // },
+      setTemplateCsv() {
+        apiCondoOwners.downloadFileTemplate()
+        .then(res => {
+          const blob = new Blob([res.data], { type: res.headers['content-type'] })
+          this.downloadFileLink = window.URL.createObjectURL(blob);
+        })
+        .catch(err => {
+          console.error(err);
+        })
+      },
 
       handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
