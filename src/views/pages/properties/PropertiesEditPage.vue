@@ -258,8 +258,8 @@
               <p class="mb-5 subtitle-2 font-weight-regular font-italic">Please indicate in column <strong>Ownership</strong> whether an owner is an Owner Occupant or Offsite Owner.</p>
               <v-btn
                   link
-                  target="_blank"
-                  :href="downloadFileLink"
+                  download="AGM Online - Condo Owners Template.csv"
+                  :href="`blob:${downloadFileLink}`"
                   class="px-10"
                   color="blue-grey darken-4 white--text"
                   depressed
@@ -336,18 +336,19 @@
       this.getStates();
       this.getProperty();
       this.getUsers();
+      // this.downloadOwnerTemplate();
     },
 
     methods: {
-      downloadOwnerTemplate() {
-        apiCondoOwners.downloadFileTemplate()
-        .then(res => {
-
-        })
-        .catch(err => {
-          console.error(err);
-        })
-      },
+      // downloadOwnerTemplate() {
+      //   apiCondoOwners.downloadFileTemplate()
+      //   .then(res => {
+      //     console.log(res);
+      //   })
+      //   .catch(err => {
+      //     console.error(err);
+      //   })
+      // },
 
       handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
