@@ -55,6 +55,14 @@ const routes = [
         component: () => import('../views/pages/meetings/MeetingsEditPage.vue')
       },
       {
+        path: '/dashboard/polls/create',
+        component: () => import('../views/pages/polls/PollsCreatePage.vue')
+      },
+      {
+        path: '/dashboard/polls/edit/:id',
+        component: () => import('../views/pages/polls/PollsEditPage.vue')
+      },
+      {
         path: '',
         component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },
