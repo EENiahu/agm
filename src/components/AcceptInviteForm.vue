@@ -53,6 +53,7 @@
   import BtnLoader from "@/components/common/BtnLoader";
   import errorHandler from "@/lib/ErrorHandler";
   import apiPropertyManagers from "@/api/propertyManagers";
+  import apiUsers from "@/api/users";
 
   export default {
     name: "AcceptInviteForm",
@@ -73,6 +74,10 @@
           ConfirmPassword: "",
         }
       }
+    },
+
+    created() {
+      this.checkEmailVerification();
     },
 
     methods: {
@@ -111,6 +116,16 @@
               this.activateSubmit();
               if (err.response && err.response.data.errors) this.errors.record(err.response.data.errors);
             })
+      },
+
+      checkEmailVerification() {
+        apiUsers.checkEmailVerification(this.UserEmail)
+          .then(res => {
+            if (res.data.emailVerificationStatus) this.$router.replace({path: '/'});
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
     }
   }

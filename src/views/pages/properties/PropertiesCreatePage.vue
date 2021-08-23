@@ -257,7 +257,9 @@
               <p class="subtitle-1">Please use AGM Online's template before uploading Condo Owners to your profile.</p>
               <p class="mb-5 subtitle-2 font-weight-regular font-italic">Please indicate in column <strong>Ownership</strong> whether an owner is an Owner Occupant or Offsite Owner.</p>
               <v-btn
-                  type="button"
+                  link
+                  download="AGM Online - Condo Owners Template.csv"
+                  :href="downloadFileLink"
                   class="px-10"
                   color="blue-grey darken-4 white--text"
                   depressed
@@ -283,6 +285,7 @@
   import apiUsers from "@/api/users";
   import PropertyManagerAddDialog from "@/components/dialogs/PropertyManagerAddDialog";
   import apiPropertyManagers from "@/api/propertyManagers";
+  import apiCondoOwners from "@/api/condoOwners";
 
   export default {
     name: "PropertiesCreatePage",
@@ -292,6 +295,7 @@
     },
     data () {
       return {
+        downloadFileLink: '',
         formAction: apiProperties.getRoutes().post.create,
         dialogs: {
           propertyManagerAddDialog: false,
@@ -329,9 +333,21 @@
     created() {
       this.getStates();
       this.getUsers();
+      this.setTemplateCsv();
     },
 
     methods: {
+      setTemplateCsv() {
+        apiCondoOwners.downloadFileTemplate()
+            .then(res => {
+              const blob = new Blob([res.data], { type: res.headers['content-type'] })
+              this.downloadFileLink = window.URL.createObjectURL(blob);
+            })
+            .catch(err => {
+              console.error(err);
+            })
+      },
+
       handleManagerAddDialog(user) {
         this.dialogs.propertyManagerAddDialog = false;
         this.managers.push(user);

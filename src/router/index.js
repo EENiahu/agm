@@ -43,6 +43,7 @@ const routes = [
       },
       {
         path: '/dashboard/properties-edit/:id',
+        meta: {title: 'Update property'},
         component: () => import('../views/pages/properties/PropertiesEditPage.vue')
       },
       {
@@ -136,6 +137,10 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.afterEach((to, from) => {
+  if (to.meta.title) document.title = to.meta.title
 })
 
 export default router
