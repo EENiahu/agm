@@ -11,6 +11,7 @@ const routes = {
     get: {
         users: `${origin}/${apiVersion}/user`,
         user: `${origin}/${apiVersion}/user/{id}`,
+        checkEmailVerification: `${origin}/${apiVersion}/user/check-email-verification`
     },
 
     post: {
@@ -40,6 +41,12 @@ exports.getOne = (id, extensions = '') => {
     extensions = extensions ? `?extensions=${extensions}` : '';
     const url = routes.get.user.replace('{id}', id) + extensions;
     return axios.get(url, headers);
+};
+
+exports.checkEmailVerification = (email = '') => {
+    email = email ? `?email=${email}` : '';
+    const url = routes.get.checkEmailVerification + email;
+    return axios.get(url);
 };
 
 exports.create = (params) => {
