@@ -9,7 +9,7 @@
           </div>
 
           <div v-if="successMessages" class="section-right__subtitle">
-            An email will be sent with further instructions on how to reset your password if our records match an account with <strong>email@email.com</strong>. If you do not hear from us within 15 minutes, please double check that you entered the correct email address and check your spam folder.
+            An email will be sent with further instructions on how to reset your password if our records match an account with <strong>{{ inputs.Email }}</strong>. If you do not hear from us within 15 minutes, please double check that you entered the correct email address and check your spam folder.
           </div>
 
           <div v-else class="section-right__subtitle">

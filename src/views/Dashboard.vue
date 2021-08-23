@@ -66,6 +66,11 @@
         name: this.$store.getters["auth/user"].fullName.split(' ')[0],
         navLinks: [
           {
+            title: 'My account',
+            link: '/dashboard/profile'
+          },
+
+          {
             title: 'Dashboard',
             link: '/dashboard'
           },
@@ -73,11 +78,6 @@
           {
             title: 'Properties',
             link: '/dashboard/properties'
-          },
-
-          {
-            title: 'My account',
-            link: '/dashboard/profile'
           },
 
           {
