@@ -37,7 +37,7 @@
     </v-row>
 
     <div v-for="(question, index) in questions">
-      <question-panel></question-panel>
+      <question-panel :ref="`question-${index}`" :key="index"></question-panel>
       <v-divider v-if="questions.length-1 != index" color="orange" class="mt-12 mb-6"></v-divider>
     </div>
   </div>
@@ -45,9 +45,11 @@
 
 <script>
   import QuestionPanel from "@/components/dashboard/QuestionPanel";
+  import mixinForm from "@/mixins/form";
 
   export default {
     name: "PollsCreatePage",
+    mixins: [mixinForm],
     components: {
       QuestionPanel
     },
@@ -59,14 +61,26 @@
     },
 
     created() {
-      this.addQuestion();
+      this.addQuestion(false);
     },
 
     methods: {
-      addQuestion() {
+      addQuestion(scroll = true) {
         this.questions.push({});
+        if (scroll) this.$nextTick(() => this.scrollToQuestion());
       },
 
+      scrollToQuestion() {
+        const options = {
+          duration: 900,
+          offset: 0,
+          easing: 'easeInOutCubic',
+        };
+
+        const target = this.$refs[`question-${this.questions.length-1}`][0].$el;
+
+        this.$vuetify.goTo(target, options)
+      }
     }
   }
 </script>

@@ -19,11 +19,23 @@
                 item-value="id"
                 color="orange"
                 item-color="orange"
-                label="Choose a Range"
+                label="Choice Type"
             ></v-select>
           </v-col>
 
-          <template>
+          <template v-if="isExactNumberType">
+            <v-col cols="4">
+              <v-text-field
+                  v-model="inputs.Number"
+                  name="Number"
+                  color="orange"
+                  label="Number"
+                  hide-details="auto"
+              ></v-text-field>
+            </v-col>
+          </template>
+
+          <template v-if="isRangeType">
             <v-col cols="4">
               <v-text-field
                   v-model="inputs.Min"
@@ -89,7 +101,7 @@
       </v-col>
     </v-row>
 
-    <div v-for="(answer, index) in inputs.Answers" :key="index" :class="{'mb-4': inputs.Answers.length-1 != index}">
+    <div v-for="(answer, index) in inputs.Answers" :ref="`answer-${index}`" :key="index" :class="{'mb-4': inputs.Answers.length-1 != index}">
       <v-row align="baseline">
         <v-col cols="3">
           <v-text-field
@@ -101,11 +113,11 @@
         </v-col>
 
         <v-col cols="2">
-          <v-btn v-if="inputs.Answers.length-1 == index" @click="addQuestion(answer.id)" icon text color="orange darken-2" class="mr-4">
+          <v-btn v-if="inputs.Answers.length-1 == index" @click="addAnswer(answer.id)" icon text color="orange darken-2" class="mr-4">
             <v-icon large>mdi-plus</v-icon>
           </v-btn>
 
-          <v-btn v-if="inputs.Answers.length > 1" @click="removeQuestion(answer.id)" icon text color="orange darken-2">
+          <v-btn v-if="inputs.Answers.length > 1" @click="removeAnswer(answer.id)" icon text color="orange darken-2">
             <v-icon large>mdi-minus</v-icon>
           </v-btn>
         </v-col>
@@ -135,6 +147,7 @@
           Choice: 0,
           Section: '',
           Range: '',
+          Number: '',
           Min: '',
           Max: '',
           Question: '',
@@ -144,24 +157,52 @@
       }
     },
 
+    computed: {
+      isUnlimitedType() {
+        return this.inputs.Range === 1
+      },
+
+      isExactNumberType() {
+        return this.inputs.Range === 2
+      },
+
+      isRangeType() {
+        return this.inputs.Range === 3
+      },
+
+      isInOrderType() {
+        return this.inputs.Range === 4
+      }
+    },
+
     created() {
-      this.inputs.Answers.push({
-        text: '',
-        id: this.uuidv4(),
-      });
+      this.addAnswer();
     },
 
     methods: {
-      removeQuestion(id) {
+      scrollToAnswer() {
+        const options = {
+          duration: 900,
+          offset: 0,
+          easing: 'easeInOutCubic',
+        };
+
+        const target = this.$refs[`answer-${this.inputs.Answers.length-1}`][0];
+
+        this.$vuetify.goTo(target, options)
+      },
+
+      removeAnswer(id) {
         this.removeObjectById(this.inputs.Answers, id);
       },
 
-      addQuestion() {
-        //create uuid if no id
+      addAnswer(scroll = true) {
         this.inputs.Answers.push({
           text: '',
-          id: this.uuidv4(),
+          id: this.uuidv4(), //create uuid if no id
         });
+
+        if (scroll) this.$nextTick(() => this.scrollToAnswer());
       },
 
       removeObjectById(arr, id) {
