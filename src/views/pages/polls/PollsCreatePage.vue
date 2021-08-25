@@ -26,7 +26,8 @@
         >Add Question</v-btn>
 
         <v-btn
-            type="submit"
+            @click="sendSave"
+            type="button"
             :loading="loading"
             class="px-10"
             color="orange darken-2 white--text"
@@ -46,6 +47,8 @@
 <script>
   import QuestionPanel from "@/components/dashboard/QuestionPanel";
   import mixinForm from "@/mixins/form";
+  import apiQuestions from "@/api/questions";
+  import apiAnswers from "@/api/answers";
 
   export default {
     name: "PollsCreatePage",
@@ -66,7 +69,16 @@
 
     methods: {
       sendSave() {
-
+        console.log('save');
+        // apiQuestions.create()
+        //     .then(res => {
+        //       apiAnswers.create()
+        //           .then(res => {
+        //
+        //           })
+        //           .catch(err => {})
+        //     })
+        //     .catch(err => {})
       },
 
       addQuestion(scroll = true) {
