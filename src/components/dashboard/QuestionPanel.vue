@@ -113,7 +113,7 @@
         </v-col>
 
         <v-col cols="2">
-          <v-btn v-if="inputs.Answers.length-1 == index" @click="addAnswer(answer.id)" icon text color="orange darken-2" class="mr-4">
+          <v-btn v-if="inputs.Answers.length-1 == index" @click="addAnswer()" icon text color="orange darken-2" class="mr-4">
             <v-icon large>mdi-plus</v-icon>
           </v-btn>
 
@@ -180,29 +180,29 @@
     },
 
     methods: {
-      scrollToAnswer() {
-        const options = {
-          duration: 900,
-          offset: 0,
-          easing: 'easeInOutCubic',
-        };
-
-        const target = this.$refs[`answer-${this.inputs.Answers.length-1}`][0];
-
-        this.$vuetify.goTo(target, options)
-      },
+      // scrollToAnswer() {
+      //   const options = {
+      //     duration: 900,
+      //     offset: 0,
+      //     easing: 'easeInOutCubic',
+      //   };
+      //
+      //   const target = this.$refs[`answer-${this.inputs.Answers.length-1}`][0];
+      //
+      //   this.$vuetify.goTo(target, options)
+      // },
 
       removeAnswer(id) {
         this.removeObjectById(this.inputs.Answers, id);
       },
 
-      addAnswer(scroll = true) {
+      addAnswer() {
         this.inputs.Answers.push({
           text: '',
           id: this.uuidv4(), //create uuid if no id
         });
 
-        if (scroll) this.$nextTick(() => this.scrollToAnswer());
+        // if (scroll) this.$nextTick(() => this.scrollToAnswer());
       },
 
       removeObjectById(arr, id) {

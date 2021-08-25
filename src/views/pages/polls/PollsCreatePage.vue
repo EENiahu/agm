@@ -65,6 +65,10 @@
     },
 
     methods: {
+      sendSave() {
+
+      },
+
       addQuestion(scroll = true) {
         this.questions.push({});
         if (scroll) this.$nextTick(() => this.scrollToQuestion());
