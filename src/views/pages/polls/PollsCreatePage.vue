@@ -17,6 +17,7 @@
         </router-link>
 
         <v-btn
+            @click="addQuestion"
             type="button"
             class="px-10 mr-4"
             color="blue-grey darken-4 white--text"
@@ -35,28 +36,37 @@
       </v-col>
     </v-row>
 
-    <div>
+    <div v-for="(question, index) in questions">
       <question-panel></question-panel>
-
-      <v-divider color="orange" class="my-12"></v-divider>
-
-      <question-panel></question-panel>
+      <v-divider v-if="questions.length-1 != index" color="orange" class="mt-12 mb-6"></v-divider>
     </div>
   </div>
 </template>
 
 <script>
-import QuestionPanel from "@/components/dashboard/QuestionPanel";
+  import QuestionPanel from "@/components/dashboard/QuestionPanel";
 
-export default {
-  name: "PollsCreatePage",
-  components: {
-    QuestionPanel
-  },
-  data() {
-    return {
+  export default {
+    name: "PollsCreatePage",
+    components: {
+      QuestionPanel
+    },
+
+    data() {
+      return {
+        questions: [],
+      }
+    },
+
+    created() {
+      this.addQuestion();
+    },
+
+    methods: {
+      addQuestion() {
+        this.questions.push({});
+      },
 
     }
   }
-}
 </script>
