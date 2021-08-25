@@ -84,6 +84,11 @@
             title: 'Account Members',
             link: '/dashboard/account-members'
           },
+
+          {
+            title: 'Condo Owners',
+            link: '/dashboard/condo-owners'
+          },
         ]
       }
     },

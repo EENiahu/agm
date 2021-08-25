@@ -75,6 +75,11 @@ const routes = [
         component: () => import('../views/pages/polls/PollsEditPage.vue')
       },
       {
+        path: '/dashboard/condo-owners',
+        meta: {title: 'Condo Owners Dashboard'},
+        component: () => import('../views/pages/condo_owners/CondoOwnersShowPage.vue')
+      },
+      {
         path: '',
         meta: {title: 'Meetings Dashboard'},
         component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
