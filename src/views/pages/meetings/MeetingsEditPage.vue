@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link to="/dashboard/properties" class="mr-4">
+        <router-link :to="{name: 'pollsCreate'}" class="mr-4">
           <v-btn
               type="button"
               class="px-10"

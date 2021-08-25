@@ -52,14 +52,16 @@ const routes = [
       },
       {
         path: '/dashboard/meetings-edit/:id',
+        name: 'meetingEdit',
         component: () => import('../views/pages/meetings/MeetingsEditPage.vue')
       },
       {
-        path: '/dashboard/polls/create',
+        path: '/dashboard/meetings-edit/:id/polls/create',
+        name: 'pollsCreate',
         component: () => import('../views/pages/polls/PollsCreatePage.vue')
       },
       {
-        path: '/dashboard/polls/edit/:id',
+        path: '/dashboard/meetings-edit/:id/polls/edit/:id',
         component: () => import('../views/pages/polls/PollsEditPage.vue')
       },
       {
