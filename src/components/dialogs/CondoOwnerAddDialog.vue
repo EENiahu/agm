@@ -1,17 +1,17 @@
 <template>
   <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to this Property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to This Property</v-card-title>
 
       <v-card-text>
-        <form action="">
+        <form @submit.prevent="sendAdd" :action="formAction" method="POST">
           <v-row justify="center">
             <v-col cols="10">
               <v-text-field
-                  @input="handleInput('Name')"
-                  :error-messages="errors.get('Name')"
-                  v-model="inputs.Name"
-                  name="Name"
+                  @input="handleInput('FullName')"
+                  :error-messages="errors.get('FullName')"
+                  v-model="inputs.FullName"
+                  name="FullName"
                   color="orange"
                   label="Full Name"
                   hide-details="auto"
@@ -56,7 +56,7 @@
                   name="OwnerStatus"
                   hide-details="auto"
                   :items="ownerStatuses"
-                  item-text="name"
+                  item-text="title"
                   item-value="id"
                   color="orange"
                   item-color="orange"
@@ -93,21 +93,52 @@
 <script>
   import mixinForm from "@/mixins/form";
   import mixinDialog from "@/mixins/dialog";
+  import apiUsers from "@/api/users";
+  import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
 
   export default {
-    name: "PropertyCondoOwnerAddDialog",
+    name: "CondoOwnerAddDialog",
     mixins: [mixinForm, mixinDialog],
+    props: {
+      'propertyId': {
+        type: [String, Number],
+        required: true
+      }
+    },
 
     data() {
       return {
-        ownerStatuses: [],
+        formAction: apiUsers.getRoutes().post.create,
+
+        ownerStatuses: condoOwnerTypeEnum,
         inputs: {
-          Name: '',
+          FullName: '',
           Email: '',
           Unit: '',
           OwnerStatus: ''
         }
       }
     },
+
+    methods: {
+      sendAdd() {
+        if (this.disabled) return;
+        this.deactivateSubmit();
+
+        const userParams = {
+          ...this.inputs,
+          UserRoleId: 4, //CondoOwner
+          UserStatusId: 0, //Pending
+          PropertyId: this.propertyId
+        };
+
+        apiUsers.create(userParams)
+            .then(res => {
+              this.handleSuccess('Condo Owner Has Been Added');
+              this.$emit('add-success', res.data);
+            })
+            .catch(err => this.handleErrors(err))
+      }
+    }
   }
 </script>

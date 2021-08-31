@@ -1,7 +1,7 @@
 <template>
   <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite a new member to manage this property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Invite a New Member to Manage This Property</v-card-title>
 
       <v-card-text>
         <div class="text-center">
@@ -80,7 +80,6 @@
   import mixinForm from "@/mixins/form";
   import mixinDialog from "@/mixins/dialog";
   import apiUsers from "@/api/users";
-  import apiPropertyManagers from "@/api/propertyManagers";
 
   export default {
     name: "PropertyManagerAddDialog",

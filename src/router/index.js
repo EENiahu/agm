@@ -43,14 +43,19 @@ const routes = [
         component: () => import('../views/pages/properties/PropertiesShowPage.vue')
       },
       {
-        path: '/dashboard/properties-create',
+        path: '/dashboard/properties/create',
         meta: {title: 'Create Property'},
         component: () => import('../views/pages/properties/PropertiesCreatePage.vue')
       },
       {
-        path: '/dashboard/properties-edit/:id',
+        path: '/dashboard/properties/edit/:id',
         meta: {title: 'Update Property'},
         component: () => import('../views/pages/properties/PropertiesEditPage.vue')
+      },
+      {
+        path: '/dashboard/properties/:id/condo-owners',
+        meta: {title: 'Condo Owners Dashboard'},
+        component: () => import('../views/pages/condo_owners/CondoOwnersShowPage.vue')
       },
       {
         path: '/dashboard/meetings-create',
@@ -73,11 +78,6 @@ const routes = [
         path: '/dashboard/meetings-edit/:id/polls/edit/:id',
         meta: {title: 'Edit Poll'},
         component: () => import('../views/pages/polls/PollsEditPage.vue')
-      },
-      {
-        path: '/dashboard/condo-owners',
-        meta: {title: 'Condo Owners Dashboard'},
-        component: () => import('../views/pages/condo_owners/CondoOwnersShowPage.vue')
       },
       {
         path: '',
