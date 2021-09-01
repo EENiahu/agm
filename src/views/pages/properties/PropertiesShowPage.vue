@@ -6,7 +6,7 @@
         </v-col>
 
         <v-col cols="6" align="end">
-          <router-link to="/dashboard/properties-create">
+          <router-link to="/dashboard/properties/create">
             <v-btn
                 class="px-10"
                 color="orange darken-2 white--text"
@@ -27,7 +27,7 @@
         </v-col>
 
         <v-col>
-          <div class="font-weight-bold"># UNITS</div>
+          <div class="font-weight-bold">#UNITS</div>
         </v-col>
 
         <v-col>

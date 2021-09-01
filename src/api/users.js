@@ -32,8 +32,9 @@ exports.getRoutes = () => {
     return routes;
 };
 
-exports.getAll = () => {
-    const url = routes.get.users + '?extensions=properties';
+exports.getAll = (params = '') => {
+    params = params ? `&${params}` : '';
+    const url = routes.get.users + '?extensions=properties' + params;
     return axios.get(url, headers);
 };
 

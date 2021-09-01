@@ -55,7 +55,7 @@
                   :loading="loading"
                   rounded
                   class="px-5"
-                  color="red"
+                  color="red darken-2"
                   text
                   type="button"
                   @click="removeMember"
