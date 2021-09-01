@@ -82,7 +82,7 @@
 
         <v-col cols="2">
           <div class="d-flex align-center">
-            <div>{{ ownerStatuses[owner.isOffsiteOwner ? 1 : 2] }}</div>
+            <div>{{ ownerStatuses[owner.isOffsiteOwner ? 0 : 1].title }}</div>
           </div>
         </v-col>
       </v-row>

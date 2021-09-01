@@ -134,10 +134,20 @@
 
         apiUsers.create(userParams)
             .then(res => {
+              this.clearInputs();
               this.handleSuccess('Condo Owner Has Been Added');
               this.$emit('add-success', res.data);
             })
             .catch(err => this.handleErrors(err))
+      },
+
+      clearInputs() {
+        this.inputs = {
+          FullName: '',
+          Email: '',
+          Unit: '',
+          OwnerStatus: ''
+        };
       }
     }
   }
