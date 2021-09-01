@@ -90,7 +90,7 @@
 
     <v-slide-y-reverse-transition>
       <v-toolbar v-if="inputs.owners.length" absolute bottom max-width="100%" width="100%" class="d-flex justify-center" style="left: 0;">
-        <v-btn v-if="inputs.owners.length === 1" color="orange darken-2" class="mr-4" text rounded>
+        <v-btn v-if="inputs.owners.length === 1" @click="dialogs.condoOwnerEditDialog = true" color="orange darken-2" class="mr-4" text rounded>
           <span class="mr-1">Edit</span>
           <v-icon>mdi-square-edit-outline</v-icon>
         </v-btn>
@@ -107,6 +107,13 @@
                             @add-success="handleCondoOwnerAddDialog"
                             @close-dialog="dialogs.condoOwnerAddDialog = false">
     </condo-owner-add-dialog>
+
+    <condo-owner-edit-dialog :open="dialogs.condoOwnerEditDialog"
+                             :property-id="PropertyId"
+                             :owner="selectedOwner"
+                             @add-success="handleCondoOwnerEditDialog"
+                             @close-dialog="dialogs.condoOwnerEditDialog = false">
+    </condo-owner-edit-dialog>
   </div>
 </template>
 
@@ -114,6 +121,7 @@
   import mixinForm from "@/mixins/form";
   import MemberPanel from '@/components/dashboard/MemberPanel.vue';
   import CondoOwnerAddDialog from '@/components/dialogs/CondoOwnerAddDialog.vue';
+  import CondoOwnerEditDialog from '@/components/dialogs/CondoOwnerEditDialog.vue';
   import apiUsers from "@/api/users";
   import apiCondoOwners from "@/api/condoOwners";
   import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
@@ -123,15 +131,18 @@
     mixins: [mixinForm],
     components: {
       MemberPanel,
-      CondoOwnerAddDialog
+      CondoOwnerAddDialog,
+      CondoOwnerEditDialog
     },
+
     data() {
       return {
         PropertyId: this.$route.params.id,
         ownerStatuses: condoOwnerTypeEnum,
 
         dialogs: {
-          condoOwnerAddDialog: false
+          condoOwnerAddDialog: false,
+          condoOwnerEditDialog: false
         },
 
         owners: [],
@@ -142,12 +153,12 @@
         }
       }
     },
-    //
-    // computed: {
-    //   selectedOwnerIds() {
-    //     return this.inputs.owners.map(o => o.id);
-    //   }
-    // },
+
+    computed: {
+      selectedOwner() {
+        return this.owners.filter(o => o.id === this.inputs.owners[0])[0] || {};
+      }
+    },
 
     created() {
       this.getUsers();
@@ -176,12 +187,27 @@
         this.owners.push(user);
       },
 
+      handleCondoOwnerEditDialog(user) {
+        this.dialogs.condoOwnerEditDialog = false;
+        this.owners.push(user);
+      },
+
       removeOwners() {
-        this.inputs.owners.forEach(x => {
-          this.owners.forEach((y, i) => {
-            if (x === y.id) this.owners.splice(i, 1);
-          })
+        this.inputs.owners.forEach((x) => {
+          this.removeObjectById(this.owners, x);
         })
+
+        this.inputs.owners = [];
+      },
+
+      removeObjectById(arr, id) {
+        let index = null;
+
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].id === id) index = i;
+        }
+
+        if (index != null) arr.splice(index, 1);
       },
 
       selectAll(d) {
