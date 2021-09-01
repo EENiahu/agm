@@ -7,12 +7,15 @@
 
       <v-col cols="6" align="end">
         <v-btn
+            @click="onButtonClick"
             type="button"
             class="px-10 mr-4"
             color="blue-grey darken-4 white--text"
             depressed
             rounded
         >Upload Owners</v-btn>
+
+        <input ref="uploader" class="d-none" type="file" accept="text/csv" @change="onFileChanged">
 
         <v-btn
             @click="dialogs.condoOwnerAddDialog = true"
@@ -61,7 +64,7 @@
               class="mt-0 mr-2 pa-0"
               v-model="inputs.owners"
               color="orange darken-2"
-              :value="`owner-${owner.id}`"
+              :value="owner.id"
               hide-details
           ></v-checkbox>
           <div>{{ owner.fullName }}</div>
@@ -112,6 +115,7 @@
   import MemberPanel from '@/components/dashboard/MemberPanel.vue';
   import CondoOwnerAddDialog from '@/components/dialogs/CondoOwnerAddDialog.vue';
   import apiUsers from "@/api/users";
+  import apiCondoOwners from "@/api/condoOwners";
   import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
 
   export default {
@@ -138,27 +142,51 @@
         }
       }
     },
+    //
+    // computed: {
+    //   selectedOwnerIds() {
+    //     return this.inputs.owners.map(o => o.id);
+    //   }
+    // },
 
     created() {
       this.getUsers();
     },
 
     methods: {
+      onButtonClick() {
+        this.$refs.uploader.click();
+      },
+
+      onFileChanged(e) {
+        apiCondoOwners.uploadCondoOwners( {
+          File: e.target.files[0],
+          PropertyId: this.PropertyId
+        })
+            .then(res => {
+              console.log(res);
+            })
+            .catch(err => {
+              console.error(err);
+            })
+      },
+
       handleCondoOwnerAddDialog(user) {
-        console.log(user);
         this.dialogs.condoOwnerAddDialog = false;
         this.owners.push(user);
       },
 
-      removeOwners(ids = []) {
-        // this.inputs.owners.forEach((x, i) => {
-        //   if (x.id === id) this.inputs.owners.splice(i, 1);
-        // })
+      removeOwners() {
+        this.inputs.owners.forEach(x => {
+          this.owners.forEach((y, i) => {
+            if (x === y.id) this.owners.splice(i, 1);
+          })
+        })
       },
 
       selectAll(d) {
         if (d) {
-          this.inputs.owners = this.owners.map(o => `owner-${o.id}`);
+          this.inputs.owners = this.owners.map(o => o.id);
         }
         else {
           this.inputs.owners = [];

@@ -27,7 +27,7 @@
         </v-col>
 
         <v-col>
-          <div class="font-weight-bold"># UNITS</div>
+          <div class="font-weight-bold">#UNITS</div>
         </v-col>
 
         <v-col>
