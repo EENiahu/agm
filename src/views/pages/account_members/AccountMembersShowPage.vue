@@ -78,7 +78,9 @@
       },
 
       getUsers() {
-        apiUsers.getAll()
+        const params = 'userRoles=2&userRoles=3';
+
+        apiUsers.getAll(params)
           .then(res => {
             this.users = res.data;
           })
