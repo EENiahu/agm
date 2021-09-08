@@ -21,7 +21,7 @@
 
     <v-col>
       <div class="d-flex justify-end align-center">
-        <router-link :to="`/dashboard/account-members/edit/${user.id}`" class="mr-4">
+        <router-link :to="{name: 'accountMembersEdit', params: {id: user.id}}" class="mr-4">
           <v-btn icon color="orange darken-2"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
         </router-link>
 

@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link to="/dashboard/account-members/create">
+        <router-link :to="{name: 'accountMembersCreate'}">
           <v-btn
               class="px-10"
               color="orange darken-2 white--text"

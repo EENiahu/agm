@@ -18,69 +18,80 @@ const routes = [
     children: [
       {
         path: '/dashboard/profile',
+        name: 'profileEdit',
         meta: {title: 'Your Profile'},
         component: () => import('../views/pages/profiles/ProfilesEditPage.vue')
         // component: () => import('../views/pages/profiles/loaders/ProfilesEditPageSkeleton.vue')
       },
       {
         path: '/dashboard/account-members',
+        name: 'accountMembersShow',
         meta: {title: 'Members Dashboard'},
         component: () => import('../views/pages/account_members/AccountMembersShowPage.vue')
       },
       {
         path: '/dashboard/account-members/create',
+        name: 'accountMembersCreate',
         meta: {title: 'Create Member'},
         component: () => import('../views/pages/account_members/AccountMembersCreatePage.vue')
       },
       {
-        path: '/dashboard/account-members/edit/:id',
+        path: '/dashboard/account-members/:id/edit',
+        name: 'accountMembersEdit',
         meta: {title: 'Edit Member'},
         component: () => import('../views/pages/account_members/AccountMembersEditPage.vue')
       },
       {
         path: '/dashboard/properties',
+        name: 'propertiesShow',
         meta: {title: 'Properties Dashboard'},
         component: () => import('../views/pages/properties/PropertiesShowPage.vue')
       },
       {
         path: '/dashboard/properties/create',
+        name: 'propertiesCreate',
         meta: {title: 'Create Property'},
         component: () => import('../views/pages/properties/PropertiesCreatePage.vue')
       },
       {
-        path: '/dashboard/properties/edit/:id',
+        path: '/dashboard/properties/:id/edit',
+        name: 'propertiesEdit',
         meta: {title: 'Update Property'},
         component: () => import('../views/pages/properties/PropertiesEditPage.vue')
       },
       {
         path: '/dashboard/properties/:id/condo-owners',
+        name: 'condoOwnersShow',
         meta: {title: 'Condo Owners Dashboard'},
         component: () => import('../views/pages/condo_owners/CondoOwnersShowPage.vue')
       },
       {
-        path: '/dashboard/meetings-create',
+        path: '/dashboard/meetings/create',
+        name: 'meetingsCreate',
         meta: {title: 'Create Meeting'},
         component: () => import('../views/pages/meetings/MeetingsCreatePage.vue')
       },
       {
-        path: '/dashboard/meetings-edit/:id',
-        name: 'meetingEdit',
+        path: '/dashboard/meetings/:meetingId/edit',
+        name: 'meetingsEdit',
         meta: {title: 'Update Meeting'},
         component: () => import('../views/pages/meetings/MeetingsEditPage.vue')
       },
       {
-        path: '/dashboard/meetings-edit/:id/polls/create',
+        path: '/dashboard/meetings/:meetingId/polls/create',
         name: 'pollsCreate',
         meta: {title: 'Create Poll'},
         component: () => import('../views/pages/polls/PollsCreatePage.vue')
       },
       {
-        path: '/dashboard/meetings-edit/:id/polls/edit/:id',
+        path: '/dashboard/meetings/:meetingId/polls/:pollId/edit',
+        name: 'pollsEdit',
         meta: {title: 'Edit Poll'},
         component: () => import('../views/pages/polls/PollsEditPage.vue')
       },
       {
         path: '',
+        name: 'meetingsShow',
         meta: {title: 'Meetings Dashboard'},
         component: () => import('../views/pages/meetings/MeetingsShowPage.vue')
       },

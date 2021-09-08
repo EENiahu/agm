@@ -16,21 +16,21 @@
     <v-expansion-panel-content>
       <v-row justify="start">
         <v-col class="flex-grow-0">
-          <router-link :to="`/dashboard/meetings-create?property=${property.id}`" >
+          <router-link :to="{name: 'meetingsCreate', query: { property: property.id }}">
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Host a Meeting
             </v-btn>
           </router-link>
         </v-col>
         <v-col class="flex-grow-0">
-          <router-link :to="`/dashboard/properties/${property.id}/condo-owners`" >
+          <router-link :to="{name: 'condoOwnersShow', params: {id: property.id}}" >
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Manage Owners
             </v-btn>
           </router-link>
         </v-col>
         <v-col class="flex-grow-0">
-          <router-link :to="`/dashboard/properties/edit/${property.id}`">
+          <router-link :to="{name: 'propertiesEdit', params: {id: property.id}}">
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Update
             </v-btn>
