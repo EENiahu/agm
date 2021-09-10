@@ -112,7 +112,7 @@
     <condo-owner-edit-dialog :open="dialogs.condoOwnerEditDialog"
                              :property-id="PropertyId"
                              :owner="selectedOwner"
-                             @add-success="handleCondoOwnerEditDialog"
+                             @update-success="handleCondoOwnerEditDialog"
                              @close-dialog="dialogs.condoOwnerEditDialog = false">
     </condo-owner-edit-dialog>
   </div>
@@ -190,7 +190,7 @@
 
       handleCondoOwnerEditDialog(user) {
         this.dialogs.condoOwnerEditDialog = false;
-        this.owners.push(user);
+        this.replaceObjectById(this.owners, user.id, user);
       },
 
       removeOwners() {
@@ -199,6 +199,14 @@
         })
 
         this.inputs.owners = [];
+      },
+
+      replaceObjectById(arr, id, obj) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].id === id) arr[i] = obj;
+        }
+
+        return false;
       },
 
       removeObjectById(arr, id) {

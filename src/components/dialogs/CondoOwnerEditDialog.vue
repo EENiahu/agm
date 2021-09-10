@@ -4,7 +4,7 @@
       <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Update Condo Owner</v-card-title>
 
       <v-card-text>
-        <form @submit.prevent="sendAdd" :action="formAction" method="POST">
+        <form @submit.prevent="sendUpdate" :action="formAction" method="POST">
           <v-row justify="center">
             <v-col cols="10">
               <v-text-field
@@ -29,6 +29,9 @@
                   color="orange"
                   label="Email"
                   hide-details="auto"
+                  readonly
+                  disabled
+                  title="Email can`t be changed"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -117,19 +120,17 @@
 
         ownerStatuses: condoOwnerTypeEnum,
         inputs: {
-          FullName: this.owner.fullName,
-          Email: this.owner.email,
-          Unit: this.owner.unit,
+          FullName: '',
+          Email: '',
+          Unit: '',
           OwnerStatus: ''
         }
       }
     },
 
     watch: {
-      owner() {
-        this.inputs.FullName = this.owner.fullName || '';
-        this.inputs.Email = this.owner.email || '';
-        this.inputs.Unit = this.owner.unit || '';
+      open() {
+        this.open ? this.setInputs() : this.clearInputs();
       }
     },
 
@@ -142,16 +143,23 @@
           ...this.inputs,
           UserRoleId: 4, //CondoOwner
           UserStatusId: 0, //Pending
-          PropertyId: this.propertyId
+          PropertyId: this.propertyId,
+          IsOffsiteOwner: this.inputs.OwnerStatus == 1
         };
 
-        apiUsers.create(userParams)
+        apiUsers.updateById(this.owner.id, userParams)
             .then(res => {
-              this.clearInputs();
-              this.handleSuccess('Condo Owner Has Been Added');
-              this.$emit('add-success', res.data);
+              this.handleSuccess('Condo Owner Has Been Update');
+              this.$emit('update-success', res.data);
             })
             .catch(err => this.handleErrors(err))
+      },
+
+      setInputs() {
+        this.inputs.FullName = this.owner.fullName || '';
+        this.inputs.Email = this.owner.email || '';
+        this.inputs.Unit = this.owner.unit || '';
+        this.inputs.OwnerStatus = this.owner.isOffsiteOwner ? 1 : 2;
       },
 
       clearInputs() {
