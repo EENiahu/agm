@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link :to="{name: 'pollsCreate'}" class="mr-4">
+        <router-link :to="{name: 'pollsCreate', params: {meetingId: MeetingId}}" class="mr-4">
           <v-btn
               type="button"
               class="px-10"
@@ -230,8 +230,8 @@
         menuTimeFrom: false,
         menuTimeTo: false,
 
-        formAction: apiMeetings.getRoutes().put.updateById.replace('{id}', this.$route.params.id),
-        MeetingId: this.$route.params.id,
+        formAction: apiMeetings.getRoutes().put.updateById.replace('{id}', this.$route.params.meetingId),
+        MeetingId: this.$route.params.meetingId,
 
         meeting: {},
         states: [],
