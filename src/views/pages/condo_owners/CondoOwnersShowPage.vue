@@ -32,6 +32,7 @@
       <v-row style="border-bottom: 2px solid black;" class="mb-4 pb-4 px-6" no-gutters>
         <v-col cols="4" class="d-flex align-center">
           <v-checkbox
+              v-if="owners.length"
               @change="selectAll"
               class="mt-0 mr-2 pa-0"
               v-model="inputs.allOwners"

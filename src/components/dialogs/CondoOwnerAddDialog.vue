@@ -129,7 +129,8 @@
           ...this.inputs,
           UserRoleId: 4, //CondoOwner
           UserStatusId: 0, //Pending
-          PropertyId: this.propertyId
+          PropertyId: this.propertyId,
+          IsOffsiteOwner: this.inputs.OwnerStatus == 1
         };
 
         apiUsers.create(userParams)
