@@ -1,10 +1,10 @@
 <template>
   <div>
-    <template v-if="loading">
+    <template v-if="skeletonLoader">
       <ProfilesEditPageSkeleton/>
     </template>
 
-      <template v-if="!loading">
+      <template v-if="!skeletonLoader">
         <form @submit.prevent="sendSave" :action="formAction" method="PUT">
           <v-row class="mb-6">
             <v-col cols="6">
@@ -255,7 +255,7 @@
     },
     data () {
       return {
-        loading: true,
+        skeletonLoader: true,
         formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
 
         organization: {},
@@ -343,13 +343,16 @@
 
       getOrganization() {
         const hasOrganization = this.$store.getters["auth/user"].organization;
-        if (!hasOrganization) return;
+        if (!hasOrganization) {
+          this.skeletonLoader = false;
+          return;
+        }
 
         apiOrganizations.getOne(this.$store.getters["auth/user"].organization.id)
             .then(res => {
               this.organization = res.data;
               this.setOrganizationInputs();
-              this.loading = false;
+              this.skeletonLoader = false;
             })
             .catch(err => {
               console.error(err);
