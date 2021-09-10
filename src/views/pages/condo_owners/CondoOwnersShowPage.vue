@@ -124,7 +124,7 @@
   import CondoOwnerEditDialog from '@/components/dialogs/CondoOwnerEditDialog.vue';
   import apiUsers from "@/api/users";
   import apiCondoOwners from "@/api/condoOwners";
-  import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
+  import condoOwnerTypeEnum from '@/entities/condo_owners/condoOwnerTypeEnum';
 
   export default {
     name: "CondoOwnersShowPage",

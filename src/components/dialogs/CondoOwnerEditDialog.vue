@@ -94,7 +94,7 @@
   import mixinForm from "@/mixins/form";
   import mixinDialog from "@/mixins/dialog";
   import apiUsers from "@/api/users";
-  import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
+  import condoOwnerTypeEnum from '@/entities/condo_owners/condoOwnerTypeEnum';
 
   export default {
     name: "CondoOwnerEditDialog",
