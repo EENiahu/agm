@@ -343,7 +343,10 @@
 
       getOrganization() {
         const hasOrganization = this.$store.getters["auth/user"].organization;
-        if (!hasOrganization) return;
+        if (!hasOrganization) {
+          this.loading = false;
+          return;
+        }
 
         apiOrganizations.getOne(this.$store.getters["auth/user"].organization.id)
             .then(res => {
