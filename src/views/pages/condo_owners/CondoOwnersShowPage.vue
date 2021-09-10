@@ -195,10 +195,21 @@
 
       removeOwners() {
         this.inputs.owners.forEach((x) => {
-          this.removeObjectById(this.owners, x);
-        })
+          this.sendRemove(x);
+        });
 
         this.inputs.owners = [];
+      },
+
+      sendRemove(id) {
+        apiUsers.delete(id)
+          .then(res => {
+            this.removeObjectById(this.owners, id);
+            this.removeObjectById(this.inputs.owners, id);
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       replaceObjectById(arr, id, obj) {
