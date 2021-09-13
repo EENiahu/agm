@@ -44,7 +44,6 @@
           <div class="font-weight-bold">FULL NAME</div>
         </v-col>
 
-
         <v-col cols="3">
           <div class="font-weight-bold">EMAIL</div>
         </v-col>
@@ -96,10 +95,49 @@
           <v-icon>mdi-square-edit-outline</v-icon>
         </v-btn>
 
-        <v-btn @click="removeOwners" type="button" color="red darken-2" class="" text rounded>
-          <span class="mr-1">Remove</span>
-          <v-icon>mdi-delete-outline</v-icon>
-        </v-btn>
+        <v-menu
+            v-model="removeMenu"
+            :close-on-content-click="false"
+            offset-y
+            :nudge-bottom="8"
+            :offset-overflow="true"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-on="on" v-bind="attrs" type="button" color="red darken-2" text rounded>
+              <span class="mr-1">Remove</span>
+              <v-icon>mdi-delete-outline</v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title>
+              Are you sure?
+            </v-card-title>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn type="button" class="px-5" color="blue-grey darken-4 white--text" outlined depressed rounded
+                     @click="removeMenu = false"
+              >
+                No
+              </v-btn>
+              <v-btn
+                  :loading="removeLoading"
+                  rounded
+                  class="px-5"
+                  color="red"
+                  text
+                  type="button"
+                  @click="removeOwners"
+              >
+                Remove
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
       </v-toolbar>
     </v-slide-y-reverse-transition>
 
@@ -145,6 +183,9 @@
           condoOwnerAddDialog: false,
           condoOwnerEditDialog: false
         },
+
+        removeMenu: false,
+        removeLoading: false,
 
         owners: [],
 
@@ -194,18 +235,27 @@
       },
 
       removeOwners() {
-        this.inputs.owners.forEach((x) => {
-          this.sendRemove(x);
-        });
+        this.removeLoading = true;
 
-        this.inputs.owners = [];
+        Promise.all(this.inputs.owners.map(x => {
+          return this.sendRemove(x);
+        }))
+        .then(res => {
+          this.removeMenu = false;
+          this.removeLoading = false;
+        })
+        .catch(err => {
+          console.log(err);
+          this.removeMenu = false;
+          this.removeLoading = false;
+        })
       },
 
       sendRemove(id) {
         apiUsers.delete(id)
           .then(res => {
             this.removeObjectById(this.owners, id);
-            this.removeObjectById(this.inputs.owners, id);
+            this.inputs.owners.splice(this.inputs.owners.indexOf(id), 1);
           })
           .catch(err => {
             console.error(err);
