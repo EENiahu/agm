@@ -26,7 +26,7 @@
           </v-btn>
         </v-col>
         <v-col class="flex-grow-0">
-          <router-link :to="{name: 'meetingEdit', params: {id: meeting.id}}">
+          <router-link :to="{name: 'meetingsEdit', params: {meetingId: meeting.id}}">
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Update
             </v-btn>
@@ -34,7 +34,7 @@
         </v-col>
 
         <v-col class="flex-grow-0">
-          <router-link :to="{name: 'pollsCreate', params: {id: meeting.id}}">
+          <router-link :to="{name: 'pollsCreate', params: {meetingId: meeting.id}}">
             <v-btn type="button" class="px-10" color="blue-grey darken-4 white--text" depressed rounded>
               Poll
             </v-btn>

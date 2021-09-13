@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link :to="{ name: 'meetingEdit', params: { id: $route.params.id }}" class="mr-4">
+        <router-link :to="{ name: 'meetingsEdit', params: { id: $route.params.id }}" class="mr-4">
           <v-btn
               type="button"
               class="px-10"

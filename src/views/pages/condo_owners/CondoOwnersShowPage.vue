@@ -32,6 +32,7 @@
       <v-row style="border-bottom: 2px solid black;" class="mb-4 pb-4 px-6" no-gutters>
         <v-col cols="4" class="d-flex align-center">
           <v-checkbox
+              v-if="owners.length"
               @change="selectAll"
               class="mt-0 mr-2 pa-0"
               v-model="inputs.allOwners"
@@ -42,7 +43,6 @@
           ></v-checkbox>
           <div class="font-weight-bold">FULL NAME</div>
         </v-col>
-
 
         <v-col cols="3">
           <div class="font-weight-bold">EMAIL</div>
@@ -90,15 +90,54 @@
 
     <v-slide-y-reverse-transition>
       <v-toolbar v-if="inputs.owners.length" absolute bottom max-width="100%" width="100%" class="d-flex justify-center" style="left: 0;">
-        <v-btn v-if="inputs.owners.length === 1" color="orange darken-2" class="mr-4" text rounded>
+        <v-btn v-if="inputs.owners.length === 1" @click="dialogs.condoOwnerEditDialog = true" color="orange darken-2" class="mr-4" text rounded>
           <span class="mr-1">Edit</span>
           <v-icon>mdi-square-edit-outline</v-icon>
         </v-btn>
 
-        <v-btn @click="removeOwners" type="button" color="red darken-2" class="" text rounded>
-          <span class="mr-1">Remove</span>
-          <v-icon>mdi-delete-outline</v-icon>
-        </v-btn>
+        <v-menu
+            v-model="removeMenu"
+            :close-on-content-click="false"
+            offset-y
+            :nudge-bottom="8"
+            :offset-overflow="true"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-on="on" v-bind="attrs" type="button" color="red darken-2" text rounded>
+              <span class="mr-1">Remove</span>
+              <v-icon>mdi-delete-outline</v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title>
+              Are you sure?
+            </v-card-title>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn type="button" class="px-5" color="blue-grey darken-4 white--text" outlined depressed rounded
+                     @click="removeMenu = false"
+              >
+                No
+              </v-btn>
+              <v-btn
+                  :loading="removeLoading"
+                  rounded
+                  class="px-5"
+                  color="red"
+                  text
+                  type="button"
+                  @click="removeOwners"
+              >
+                Remove
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
       </v-toolbar>
     </v-slide-y-reverse-transition>
 
@@ -107,6 +146,13 @@
                             @add-success="handleCondoOwnerAddDialog"
                             @close-dialog="dialogs.condoOwnerAddDialog = false">
     </condo-owner-add-dialog>
+
+    <condo-owner-edit-dialog :open="dialogs.condoOwnerEditDialog"
+                             :property-id="PropertyId"
+                             :owner="selectedOwner"
+                             @update-success="handleCondoOwnerEditDialog"
+                             @close-dialog="dialogs.condoOwnerEditDialog = false">
+    </condo-owner-edit-dialog>
   </div>
 </template>
 
@@ -114,25 +160,32 @@
   import mixinForm from "@/mixins/form";
   import MemberPanel from '@/components/dashboard/MemberPanel.vue';
   import CondoOwnerAddDialog from '@/components/dialogs/CondoOwnerAddDialog.vue';
+  import CondoOwnerEditDialog from '@/components/dialogs/CondoOwnerEditDialog.vue';
   import apiUsers from "@/api/users";
   import apiCondoOwners from "@/api/condoOwners";
-  import condoOwnerTypeEnum from '@/entities/condoOwners/condoOwnerTypeEnum';
+  import condoOwnerTypeEnum from '@/entities/condo_owners/condoOwnerTypeEnum';
 
   export default {
     name: "CondoOwnersShowPage",
     mixins: [mixinForm],
     components: {
       MemberPanel,
-      CondoOwnerAddDialog
+      CondoOwnerAddDialog,
+      CondoOwnerEditDialog
     },
+
     data() {
       return {
         PropertyId: this.$route.params.id,
         ownerStatuses: condoOwnerTypeEnum,
 
         dialogs: {
-          condoOwnerAddDialog: false
+          condoOwnerAddDialog: false,
+          condoOwnerEditDialog: false
         },
+
+        removeMenu: false,
+        removeLoading: false,
 
         owners: [],
 
@@ -142,12 +195,12 @@
         }
       }
     },
-    //
-    // computed: {
-    //   selectedOwnerIds() {
-    //     return this.inputs.owners.map(o => o.id);
-    //   }
-    // },
+
+    computed: {
+      selectedOwner() {
+        return this.owners.filter(o => o.id === this.inputs.owners[0])[0] || {};
+      }
+    },
 
     created() {
       this.getUsers();
@@ -176,12 +229,55 @@
         this.owners.push(user);
       },
 
+      handleCondoOwnerEditDialog(user) {
+        this.dialogs.condoOwnerEditDialog = false;
+        this.replaceObjectById(this.owners, user.id, user);
+      },
+
       removeOwners() {
-        this.inputs.owners.forEach(x => {
-          this.owners.forEach((y, i) => {
-            if (x === y.id) this.owners.splice(i, 1);
-          })
+        this.removeLoading = true;
+
+        Promise.all(this.inputs.owners.map(x => {
+          return this.sendRemove(x);
+        }))
+        .then(res => {
+          this.removeMenu = false;
+          this.removeLoading = false;
         })
+        .catch(err => {
+          console.log(err);
+          this.removeMenu = false;
+          this.removeLoading = false;
+        })
+      },
+
+      sendRemove(id) {
+        apiUsers.delete(id)
+          .then(res => {
+            this.removeObjectById(this.owners, id);
+            this.inputs.owners.splice(this.inputs.owners.indexOf(id), 1);
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      },
+
+      replaceObjectById(arr, id, obj) {
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].id === id) arr[i] = obj;
+        }
+
+        return false;
+      },
+
+      removeObjectById(arr, id) {
+        let index = null;
+
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].id === id) index = i;
+        }
+
+        if (index != null) arr.splice(index, 1);
       },
 
       selectAll(d) {

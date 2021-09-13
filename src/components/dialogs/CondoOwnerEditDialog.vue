@@ -1,10 +1,10 @@
 <template>
   <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to This Property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Update Condo Owner</v-card-title>
 
       <v-card-text>
-        <form @submit.prevent="sendAdd" :action="formAction" method="POST">
+        <form @submit.prevent="sendUpdate" :action="formAction" method="POST">
           <v-row justify="center">
             <v-col cols="10">
               <v-text-field
@@ -29,6 +29,9 @@
                   color="orange"
                   label="Email"
                   hide-details="auto"
+                  readonly
+                  disabled
+                  title="Email can`t be changed"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -74,7 +77,7 @@
                   color="blue-grey darken-4 white--text"
                   depressed
                   rounded
-              >Add Condo Owner</v-btn>
+              >Update Condo Owner</v-btn>
             </v-col>
           </v-row>
         </form>
@@ -97,11 +100,16 @@
   import condoOwnerTypeEnum from '@/entities/condo_owners/condoOwnerTypeEnum';
 
   export default {
-    name: "CondoOwnerAddDialog",
+    name: "CondoOwnerEditDialog",
     mixins: [mixinForm, mixinDialog],
     props: {
       'propertyId': {
         type: [String, Number],
+        required: true
+      },
+
+      'owner': {
+        type: Object,
         required: true
       }
     },
@@ -120,8 +128,14 @@
       }
     },
 
+    watch: {
+      open() {
+        this.open ? this.setInputs() : this.clearInputs();
+      }
+    },
+
     methods: {
-      sendAdd() {
+      sendUpdate() {
         if (this.disabled) return;
         this.deactivateSubmit();
 
@@ -133,13 +147,19 @@
           IsOffsiteOwner: this.inputs.OwnerStatus == 1
         };
 
-        apiUsers.create(userParams)
+        apiUsers.updateById(this.owner.id, userParams)
             .then(res => {
-              this.clearInputs();
-              this.handleSuccess('Condo Owner Has Been Added');
-              this.$emit('add-success', res.data);
+              this.handleSuccess('Condo Owner Has Been Update');
+              this.$emit('update-success', res.data);
             })
             .catch(err => this.handleErrors(err))
+      },
+
+      setInputs() {
+        this.inputs.FullName = this.owner.fullName || '';
+        this.inputs.Email = this.owner.email || '';
+        this.inputs.Unit = this.owner.unit || '';
+        this.inputs.OwnerStatus = this.owner.isOffsiteOwner ? 1 : 2;
       },
 
       clearInputs() {
