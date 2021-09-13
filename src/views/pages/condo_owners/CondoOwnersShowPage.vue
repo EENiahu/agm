@@ -216,12 +216,12 @@
           File: e.target.files[0],
           PropertyId: this.PropertyId
         })
-            .then(res => {
-              console.log(res);
-            })
-            .catch(err => {
-              console.error(err);
-            })
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
 
       handleCondoOwnerAddDialog(user) {
@@ -245,14 +245,14 @@
           this.removeLoading = false;
         })
         .catch(err => {
-          console.log(err);
+          console.error(err);
           this.removeMenu = false;
           this.removeLoading = false;
         })
       },
 
       sendRemove(id) {
-        apiUsers.delete(id)
+        return apiUsers.delete(id)
           .then(res => {
             this.removeObjectById(this.owners, id);
             this.inputs.owners.splice(this.inputs.owners.indexOf(id), 1);
