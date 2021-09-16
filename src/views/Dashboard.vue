@@ -35,7 +35,7 @@
     <v-navigation-drawer app clipped left color="blue-grey darken-4">
       <v-list nav>
         <v-list-item-group>
-          <v-list-item v-for="(navLink, i) in navLinks" :key="i" :to="navLink.link">
+          <v-list-item v-for="(navLink, i) in navLinksByUserRole" :key="i" :to="navLink.link" exact>
             <v-list-item-title class="grey--text text--lighten-4 text-uppercase">{{ navLink.title }}</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
@@ -56,6 +56,7 @@
   import vuetify from '@/plugins/vuetify';
   import AlertMessage from "@/components/dashboard/AlertMessage";
 
+
   export default {
     vuetify,
     components: {
@@ -64,28 +65,40 @@
     data() {
       return {
         name: this.$store.getters["auth/user"].fullName.split(' ')[0],
+        userRole: this.$store.getters["auth/user"].role.id,
+
         navLinks: [
           {
             title: 'My account',
-            link: '/dashboard/profile'
+            link: '/dashboard/profile',
+            roles: [2, 3, 4]
           },
 
           {
             title: 'Dashboard',
-            link: '/dashboard'
+            link: '/dashboard',
+            roles: [2, 3, 4]
           },
 
           {
             title: 'Properties',
-            link: '/dashboard/properties'
+            link: '/dashboard/properties',
+            roles: [2]
           },
 
           {
             title: 'Account Members',
-            link: '/dashboard/account-members'
+            link: '/dashboard/account-members',
+            roles: [2]
           },
         ]
       }
+    },
+
+    computed: {
+      navLinksByUserRole() {
+        return this.navLinks.filter(link => link.roles.indexOf(this.userRole)>= 0);
+      },
     },
 
     methods: {
