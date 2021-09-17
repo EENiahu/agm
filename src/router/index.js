@@ -21,7 +21,6 @@ const routes = [
         name: 'profileEdit',
         meta: {title: 'Your Profile'},
         component: () => import('../views/pages/profiles/ProfilesEditPage.vue')
-        // component: () => import('../views/pages/profiles/loaders/ProfilesEditPageSkeleton.vue')
       },
       {
         path: '/dashboard/account-members',
