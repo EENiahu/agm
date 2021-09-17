@@ -70,11 +70,24 @@
         <v-row>
           <v-col cols="8">
             <v-text-field
-                @input="handleInput('Title')"
-                :error-messages="errors.get('Title')"
-                v-model="inputs.user.Title"
+                @input="handleInput('Address1')"
+                :error-messages="errors.get('Address1')"
+                v-model="inputs.user.Address1"
                 color="orange"
-                label="Title"
+                label="Address 1"
+                hide-details="auto"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="8">
+            <v-text-field
+                @input="handleInput('Address2')"
+                :error-messages="errors.get('Address2')"
+                v-model="inputs.user.Address2"
+                color="orange"
+                label="Address 2"
                 hide-details="auto"
             ></v-text-field>
           </v-col>
@@ -126,7 +139,6 @@
   import mixinForm from "@/mixins/form";
   import ProfilesEditPageSkeleton from "@/views/pages/profiles/loaders/ProfilesEditPageSkeleton";
   import apiUsers from "@/api/users";
-  import apiOrganizations from "@/api/organizations";
   import apiStates from "@/api/states";
 
   export default {
@@ -137,10 +149,8 @@
     },
     data () {
       return {
-        skeletonLoader: true,
         formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),
 
-        organization: {},
         states: [],
 
         UserId: this.$store.getters["auth/user"].id,
@@ -152,17 +162,8 @@
             FullName: this.$store.getters["auth/user"].fullName,
             Email: this.$store.getters["auth/user"].email,
             Phone: this.$store.getters["auth/user"].phone,
-            Title: this.$store.getters["auth/user"].title || '',
-          },
-
-          organization: {
-            OrganizationName: '',
-            FirstAddress: '',
-            SecondAddress: '',
-            Country: '',
-            City: '',
-            PostalCode: '',
-            StateId: '',
+            Address1: '',
+            Address2: ''
           },
 
           auth: {
@@ -175,7 +176,6 @@
 
     created() {
       this.getStates();
-      this.getOrganization();
     },
 
     methods: {
@@ -190,25 +190,19 @@
           UserRoleId: this.UserRoleId,
           UserStatusId: this.UserStatusId
         };
-        const organizationParams = {...this.inputs.organization, UserId: this.UserId};
-        const hasOrganization = this.$store.getters["auth/user"].organization;
 
-        (hasOrganization ? apiOrganizations.update(this.organization.id, organizationParams) : apiOrganizations.create(organizationParams))
+        apiUsers.updateById(this.UserId, userParams)
             .then(res => {
-              apiUsers.updateById(this.UserId, userParams)
-                  .then(res => {
-                    this.handleSuccess('Profile Has Been Updated');
+              this.handleSuccess('Profile Has Been Updated');
 
-                    if (changedPassword) {
-                      this.$store.dispatch('auth/remove_token');
-                      this.$store.dispatch('auth/remove_user');
-                      location.href = '/';
-                    }
-                    else {
-                      this.$store.dispatch('auth/set_user', {user: res.data});
-                    }
-                  })
-                  .catch(err => this.handleErrors(err))
+              if (changedPassword) {
+                this.$store.dispatch('auth/remove_token');
+                this.$store.dispatch('auth/remove_user');
+                location.href = '/';
+              }
+              else {
+                this.$store.dispatch('auth/set_user', {user: res.data});
+              }
             })
             .catch(err => this.handleErrors(err))
       },
@@ -221,36 +215,6 @@
             .catch(err => {
               console.error(err);
             })
-      },
-
-      getOrganization() {
-        const hasOrganization = this.$store.getters["auth/user"].organization;
-        if (!hasOrganization) {
-          this.skeletonLoader = false;
-          return;
-        }
-
-        apiOrganizations.getOne(this.$store.getters["auth/user"].organization.id)
-            .then(res => {
-              this.organization = res.data;
-              this.setOrganizationInputs();
-              this.skeletonLoader = false;
-            })
-            .catch(err => {
-              console.error(err);
-            })
-      },
-
-      setOrganizationInputs() {
-        this.inputs.organization = {
-          OrganizationName: this.organization.name,
-          FirstAddress: this.organization.address.firstAddress,
-          SecondAddress: this.organization.address.secondAddress,
-          Country: this.organization.address.country,
-          City: this.organization.address.city,
-          PostalCode: this.organization.address.postalCode,
-          StateId: this.organization.address.state.id,
-        }
       },
     }
   }

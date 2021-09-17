@@ -83,13 +83,13 @@
           {
             title: 'Properties',
             link: '/dashboard/properties',
-            roles: [2]
+            roles: [2, 3]
           },
 
           {
             title: 'Account Members',
             link: '/dashboard/account-members',
-            roles: [2]
+            roles: [2, 3]
           },
         ]
       }
