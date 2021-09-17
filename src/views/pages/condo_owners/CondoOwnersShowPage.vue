@@ -131,7 +131,7 @@
                   color="red"
                   text
                   type="button"
-                  @click="removeOwners"
+                  @click="sendRemoveOwners"
               >
                 Remove
               </v-btn>
@@ -234,32 +234,33 @@
         this.replaceObjectById(this.owners, user.id, user);
       },
 
-      removeOwners() {
+      sendRemoveOwners() {
         this.removeLoading = true;
 
-        Promise.all(this.inputs.owners.map(x => {
-          return this.sendRemove(x);
-        }))
-        .then(res => {
-          this.removeMenu = false;
-          this.removeLoading = false;
-        })
-        .catch(err => {
-          console.error(err);
-          this.removeMenu = false;
-          this.removeLoading = false;
-        })
-      },
+        let params = {
+          UserIds: this.inputs.owners
+        };
 
-      sendRemove(id) {
-        return apiUsers.delete(id)
+        apiUsers.deleteByIds(params)
           .then(res => {
-            this.removeObjectById(this.owners, id);
-            this.inputs.owners.splice(this.inputs.owners.indexOf(id), 1);
+            this.removeMenu = false;
+            this.removeLoading = false;
+            this.removeOwners();
           })
           .catch(err => {
             console.error(err);
+            this.removeMenu = false;
+            this.removeLoading = false;
           })
+      },
+
+      removeOwners() {
+        for (let i = this.inputs.owners.length-1; i >= 0; i--) {
+          let id = this.inputs.owners[i];
+
+          this.removeObjectById(this.owners, id);
+          this.inputs.owners.splice(this.inputs.owners.indexOf(id), 1);
+        }
       },
 
       replaceObjectById(arr, id, obj) {

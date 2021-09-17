@@ -24,7 +24,8 @@ const routes = {
     },
 
     delete: {
-        user: `${origin}/${apiVersion}/user/{id}`
+        user: `${origin}/${apiVersion}/user/{id}`,
+        users: `${origin}/${apiVersion}/user/delete-list-of-users`,
     }
 };
 
@@ -86,4 +87,24 @@ exports.updateById = (id, params) => {
 exports.delete = (id) => {
     const url = routes.delete.user.replace('{id}', id);
     return axios.delete(url, headers);
+};
+
+exports.deleteByIds = (params) => {
+    const url = routes.delete.users;
+    let formData = new FormData();
+
+    Object.keys(params).forEach(param => {
+        if (params[param] !== null && params[param] !== '') {
+            if (Array.isArray(params[param])) {
+                params[param].forEach(arrayValue => {
+                    formData.append(`${param}[]`, arrayValue);
+                });
+            }
+            else {
+                formData.append(param, params[param]);
+            }
+        }
+    });
+
+    return axios.delete(url, {...headers, data: formData});
 };
