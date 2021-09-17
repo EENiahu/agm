@@ -6,7 +6,7 @@
       </v-col>
 
       <v-col cols="6" align="end">
-        <router-link :to="{ name: 'meetingsEdit', params: { id: $route.params.id }}" class="mr-4">
+        <router-link :to="{ name: 'meetingsEdit', params: { id: MeetingId }}" class="mr-4">
           <v-btn
               type="button"
               class="px-10"
@@ -48,7 +48,6 @@
   import QuestionPanel from "@/components/dashboard/QuestionPanel";
   import mixinForm from "@/mixins/form";
   import apiQuestions from "@/api/questions";
-  import apiAnswers from "@/api/answers";
 
   export default {
     name: "PollsCreatePage",
@@ -59,26 +58,35 @@
 
     data() {
       return {
+        MeetingId: this.$route.params.meetingId,
         questions: [],
       }
     },
 
     created() {
       this.addQuestion(false);
+      this.getQuestions();
     },
 
     methods: {
       sendSave() {
-        console.log('save');
-        // apiQuestions.create()
-        //     .then(res => {
-        //       apiAnswers.create()
-        //           .then(res => {
-        //
-        //           })
-        //           .catch(err => {})
-        //     })
-        //     .catch(err => {})
+        let questions = Object.keys(this.$refs).map(questionKey => {
+          return {
+            ...this.$refs[questionKey][0].inputs,
+            Answers: this.$refs[questionKey][0].inputs.Answers.map(answer => answer.text),
+            MeetingId: this.MeetingId
+          }
+        });
+
+        let params = {
+          questions: questions
+        };
+        console.log(params);
+        apiQuestions.createQuestionsWithAnswers(params)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => console.error(err))
       },
 
       addQuestion(scroll = true) {
@@ -96,7 +104,17 @@
         const target = this.$refs[`question-${this.questions.length-1}`][0].$el;
 
         this.$vuetify.goTo(target, options)
-      }
+      },
+
+      getQuestions() {
+        apiQuestions.getAll()
+            .then(res => {
+              this.questions = res.data;
+            })
+            .catch(err => {
+              console.error(err);
+            })
+      },
     }
   }
 </script>

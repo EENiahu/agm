@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-row>
-      <v-col :class="[inputs.Choice == 1 ? 'col-12': 'col-6']">
-        <v-radio-group v-model="inputs.Choice" row hide-details="auto" class="d-flex align-center">
+      <v-col :class="[inputs.Type == 1 ? 'col-12': 'col-6']">
+        <v-radio-group v-model="inputs.Type" row hide-details="auto" class="d-flex align-center">
           <v-radio v-for="(type, index) in types" :key="index" :label="type.title" color="orange darken-2" :value="type.id"></v-radio>
         </v-radio-group>
       </v-col>
 
-      <v-col v-if="inputs.Choice == 1" cols="4">
+      <v-col v-if="inputs.Type == 1" cols="4">
         <v-row>
           <v-col cols="4">
             <v-select
@@ -38,8 +38,8 @@
           <template v-if="isRangeType">
             <v-col cols="4">
               <v-text-field
-                  v-model="inputs.Min"
-                  name="Min"
+                  v-model="inputs.MinimumAnswers"
+                  name="MinimumAnswers"
                   color="orange"
                   label="Min"
                   hide-details="auto"
@@ -48,8 +48,8 @@
 
             <v-col cols="4">
               <v-text-field
-                  v-model="inputs.Max"
-                  name="Max"
+                  v-model="inputs.MaximumAnswers"
+                  name="MaximumAnswers"
                   color="orange"
                   label="Max"
                   hide-details="auto"
@@ -79,8 +79,8 @@
     <v-row>
       <v-col cols="4">
         <v-text-field
-            v-model="inputs.Question"
-            name="Question"
+            v-model="inputs.Title"
+            name="Title"
             color="orange"
             label="Enter Question"
             hide-details="auto"
@@ -91,8 +91,8 @@
     <v-row>
       <v-col cols="4">
         <v-textarea
-            v-model="inputs.QuestionDescription"
-            name="QuestionDescription"
+            v-model="inputs.Description"
+            name="Description"
             color="orange"
             label="Add description to your question"
             hide-details="auto"
@@ -105,7 +105,7 @@
       <v-row align="baseline">
         <v-col cols="3">
           <v-text-field
-              :value="answer.text"
+              v-model="inputs.Answers[index].text"
               color="orange"
               label="Add Answer"
               hide-details="auto"
@@ -144,14 +144,14 @@
         multipleTypeTypes: questionTypeEnum.filter(t => t.id === 1)[0].types,
 
         inputs: {
-          Choice: 0,
+          Type: 0,
           Section: '',
           Range: '',
           Number: '',
-          Min: '',
-          Max: '',
-          Question: '',
-          QuestionDescription: '',
+          MinimumAnswers: '',
+          MaximumAnswers: '',
+          Title: '',
+          Description: '',
           Answers: []
         }
       }

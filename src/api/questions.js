@@ -15,6 +15,7 @@ const routes = {
 
     post: {
         createQuestion: `${origin}/${apiVersion}/question`,
+        createQuestionsWithAnswers: `${origin}/${apiVersion}/question/create-questions-with-answers`,
     },
 
     put: {
@@ -30,8 +31,9 @@ exports.getRoutes = () => {
     return routes;
 };
 
-exports.getAll = () => {
-    const url = routes.get.getQuestions;
+exports.getAll = (params = '') => {
+    params = params ? `&${params}` : '';
+    const url = routes.get.getQuestions + '?extensions=answers' + params;
     return axios.get(url, headers);
 };
 
@@ -49,6 +51,11 @@ exports.create = (params) => {
     });
 
     return axios.post(url, formData, headers);
+};
+
+exports.createQuestionsWithAnswers = (params) => {
+    const url = routes.post.createQuestionsWithAnswers;
+    return axios.post(url, params, headers);
 };
 
 exports.updateById = (id, params) => {
