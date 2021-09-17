@@ -299,7 +299,7 @@
       },
 
       getUsers() {
-        const params = 'userRoles=4';
+        const params = 'userRoles=4' + `&propertyIds=${this.PropertyId}`;
 
         apiUsers.getAll(params)
             .then(res => {

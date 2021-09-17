@@ -1,7 +1,7 @@
 <template>
   <v-dialog @click:outside="emitClose" v-model="open" width="500">
     <v-card>
-      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner to This Property</v-card-title>
+      <v-card-title class="mb-6 text-h5 orange--text text--darken-2 justify-center text-center text-break">Add a New Condo Owner</v-card-title>
 
       <v-card-text>
         <form @submit.prevent="sendAdd" :action="formAction" method="POST">
