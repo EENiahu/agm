@@ -70,6 +70,6 @@
 
 <script>
   export default {
-    name: "ProfileEditPageSkeleton",
+    name: "FormPageSkeletonLoader",
   }
 </script>

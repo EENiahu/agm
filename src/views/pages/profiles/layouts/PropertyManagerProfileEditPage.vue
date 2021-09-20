@@ -124,16 +124,12 @@
 
 <script>
   import mixinForm from "@/mixins/form";
-  import ProfilesEditPageSkeleton from "@/views/pages/profiles/loaders/ProfilesEditPageSkeleton";
   import apiUsers from "@/api/users";
   import apiStates from "@/api/states";
 
   export default {
     name: "PropertyManagerProfileEditPage",
     mixins: [mixinForm],
-    components: {
-      ProfilesEditPageSkeleton
-    },
     data () {
       return {
         formAction: apiUsers.getRoutes().put.updateById.replace('{id}', this.$store.getters["auth/user"].id),

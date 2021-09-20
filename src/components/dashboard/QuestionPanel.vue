@@ -1,17 +1,27 @@
 <template>
   <div>
     <v-row>
-      <v-col :class="[inputs.Type == 1 ? 'col-12': 'col-6']">
-        <v-radio-group v-model="inputs.Type" row hide-details="auto" class="d-flex align-center">
+      <v-col :class="[question.type == 1 ? 'col-12': 'col-6']">
+        <v-radio-group @change="updateQuestion('type', $event)" :value="question.type" row hide-details="auto" class="d-flex align-center">
           <v-radio v-for="(type, index) in types" :key="index" :label="type.title" color="orange darken-2" :value="type.id"></v-radio>
         </v-radio-group>
+
+        <v-btn
+            @click="removeQuestion"
+            type="button"
+            class="px-10"
+            color="blue-grey darken-4 white--text"
+            depressed
+            rounded
+        >Remove</v-btn>
       </v-col>
 
-      <v-col v-if="inputs.Type == 1" cols="4">
+      <v-col v-if="question.type == 1" cols="4">
         <v-row>
           <v-col cols="4">
             <v-select
-                v-model="inputs.Range"
+                :value="question.range"
+                @change="updateQuestion('range', $event)"
                 name="RangeId"
                 hide-details="auto"
                 :items="multipleTypeTypes"
@@ -26,7 +36,8 @@
           <template v-if="isExactNumberType">
             <v-col cols="4">
               <v-text-field
-                  v-model="inputs.Number"
+                  @change="updateQuestion('number', $event)"
+                  :value="question.number"
                   name="Number"
                   color="orange"
                   label="Number"
@@ -38,7 +49,8 @@
           <template v-if="isRangeType">
             <v-col cols="4">
               <v-text-field
-                  v-model="inputs.MinimumAnswers"
+                  @change="updateQuestion('minimumAnswers', $event)"
+                  :value="question.minimumAnswers"
                   name="MinimumAnswers"
                   color="orange"
                   label="Min"
@@ -48,7 +60,8 @@
 
             <v-col cols="4">
               <v-text-field
-                  v-model="inputs.MaximumAnswers"
+                  @change="updateQuestion('maximumAnswers', $event)"
+                  :value="question.maximumAnswers"
                   name="MaximumAnswers"
                   color="orange"
                   label="Max"
@@ -63,7 +76,8 @@
     <v-row>
       <v-col cols="4">
         <v-select
-            v-model="inputs.Section"
+            @change="updateQuestion('section', $event)"
+            :value="question.section"
             name="SectionId"
             hide-details="auto"
             :items="sections"
@@ -79,7 +93,8 @@
     <v-row>
       <v-col cols="4">
         <v-text-field
-            v-model="inputs.Title"
+            @input="updateQuestion('title', $event)"
+            :value="question.title"
             name="Title"
             color="orange"
             label="Enter Question"
@@ -91,7 +106,8 @@
     <v-row>
       <v-col cols="4">
         <v-textarea
-            v-model="inputs.Description"
+            @input="updateQuestion('description', $event)"
+            :value="question.description"
             name="Description"
             color="orange"
             label="Add description to your question"
@@ -101,11 +117,12 @@
       </v-col>
     </v-row>
 
-    <div v-for="(answer, index) in inputs.Answers" :ref="`answer-${index}`" :key="index" :class="{'mb-4': inputs.Answers.length-1 != index}">
+    <div v-for="(answer, index) in question.answers" :ref="`answer-${index}`" :key="index" :class="{'mb-4': question.answers.length-1 != index}">
       <v-row align="baseline">
         <v-col cols="3">
           <v-text-field
-              v-model="inputs.Answers[index].text"
+              @input="updateAnswer(answer.id, $event)"
+              :value="question.answers[index].text"
               color="orange"
               label="Add Answer"
               hide-details="auto"
@@ -113,11 +130,11 @@
         </v-col>
 
         <v-col cols="2">
-          <v-btn v-if="inputs.Answers.length-1 == index" @click="addAnswer()" icon text color="orange darken-2" class="mr-4">
+          <v-btn v-if="question.answers.length-1 == index" @click="addAnswer()" icon text color="orange darken-2" class="mr-4">
             <v-icon large>mdi-plus</v-icon>
           </v-btn>
 
-          <v-btn v-if="inputs.Answers.length > 1" @click="removeAnswer(answer.id)" icon text color="orange darken-2">
+          <v-btn v-if="question.answers.length > 1" @click="removeAnswer(answer.id)" icon text color="orange darken-2">
             <v-icon large>mdi-minus</v-icon>
           </v-btn>
         </v-col>
@@ -132,6 +149,13 @@
 
   export default {
     name: "QuestionPanel",
+    props: {
+      question: {
+        type: Object,
+        required: true
+      }
+    },
+
     data() {
       return {
         sections: questionSectionEnum.map(s => {
@@ -142,36 +166,24 @@
 
         types: questionTypeEnum,
         multipleTypeTypes: questionTypeEnum.filter(t => t.id === 1)[0].types,
-
-        inputs: {
-          Type: 0,
-          Section: '',
-          Range: '',
-          Number: '',
-          MinimumAnswers: '',
-          MaximumAnswers: '',
-          Title: '',
-          Description: '',
-          Answers: []
-        }
       }
     },
 
     computed: {
       isUnlimitedType() {
-        return this.inputs.Range === 1
+        return this.question.range === 1
       },
 
       isExactNumberType() {
-        return this.inputs.Range === 2
+        return this.question.range === 2
       },
 
       isRangeType() {
-        return this.inputs.Range === 3
+        return this.question.range === 3
       },
 
       isInOrderType() {
-        return this.inputs.Range === 4
+        return this.question.range === 4
       }
     },
 
@@ -180,48 +192,36 @@
     },
 
     methods: {
-      // scrollToAnswer() {
-      //   const options = {
-      //     duration: 900,
-      //     offset: 0,
-      //     easing: 'easeInOutCubic',
-      //   };
-      //
-      //   const target = this.$refs[`answer-${this.inputs.Answers.length-1}`][0];
-      //
-      //   this.$vuetify.goTo(target, options)
-      // },
-
-      removeAnswer(id) {
-        this.removeObjectById(this.inputs.Answers, id);
-      },
-
       addAnswer() {
-        this.inputs.Answers.push({
-          text: '',
-          id: this.uuidv4(), //create uuid if no id
-        });
-
-        // if (scroll) this.$nextTick(() => this.scrollToAnswer());
+        this.$store.dispatch('questions/add_answer', this.question.id);
       },
 
-      removeObjectById(arr, id) {
-        let index = null;
-
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i].id === id) index = i;
-        }
-
-        if (index != null) arr.splice(index, 1);
+      removeQuestion() {
+        this.$store.dispatch('questions/remove_question', this.question.id);
       },
 
-      uuidv4() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-          let r = Math.random() * 16 | 0,
-              v = c === 'x' ? r : r & 0x3 | 0x8;
-          return v.toString(16);
+      removeAnswer(answerId) {
+        this.$store.dispatch('questions/remove_answer', {
+          questionId: this.question.id,
+          answerId
         });
-      }
+      },
+
+      updateQuestion(fieldName, fieldValue) {
+        this.$store.dispatch('questions/update_question', {
+          fieldName,
+          fieldValue,
+          questionId: this.question.id
+        });
+      },
+
+      updateAnswer(answerId, fieldValue) {
+        this.$store.dispatch('questions/update_answer', {
+          answerId,
+          fieldValue,
+          questionId: this.question.id
+        });
+      },
     }
   }
 </script>

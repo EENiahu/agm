@@ -83,7 +83,7 @@ const routes = [
         component: () => import('../views/pages/polls/PollsCreatePage.vue')
       },
       {
-        path: '/dashboard/meetings/:meetingId/polls/:pollId/edit',
+        path: '/dashboard/meetings/:meetingId/polls/edit',
         name: 'pollsEdit',
         meta: {title: 'Edit Poll'},
         component: () => import('../views/pages/polls/PollsEditPage.vue')

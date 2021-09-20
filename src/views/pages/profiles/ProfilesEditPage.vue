@@ -6,7 +6,6 @@
 
 <script>
   import mixinForm from "@/mixins/form";
-  import ProfilesEditPageSkeleton from '@/views/pages/profiles/loaders/ProfilesEditPageSkeleton';
   import PropertyManagerProfileEditPage from '@/views/pages/profiles/layouts/PropertyManagerProfileEditPage';
   import PropertyOwnerProfileEditPage from '@/views/pages/profiles/layouts/PropertyOwnerProfileEditPage';
   import CondoOwnerProfileEditPage from '@/views/pages/profiles/layouts/CondoOwnerProfileEditPage';
@@ -15,7 +14,6 @@
     name: "ProfilesEditPage",
     mixins: [mixinForm],
     components: {
-      ProfilesEditPageSkeleton,
       PropertyManagerProfileEditPage,
       PropertyOwnerProfileEditPage,
       CondoOwnerProfileEditPage

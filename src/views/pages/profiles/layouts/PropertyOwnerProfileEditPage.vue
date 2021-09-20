@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="skeletonLoader">
-      <ProfilesEditPageSkeleton/>
+      <FormPageSkeletonLoader/>
     </template>
 
     <template v-if="!skeletonLoader">
@@ -242,7 +242,7 @@
 
 <script>
   import mixinForm from "@/mixins/form";
-  import ProfilesEditPageSkeleton from "@/views/pages/profiles/loaders/ProfilesEditPageSkeleton";
+  import FormPageSkeletonLoader from "@/views/loaders/FormPageSkeletonLoader";
   import apiUsers from "@/api/users";
   import apiOrganizations from "@/api/organizations";
   import apiStates from "@/api/states";
@@ -251,7 +251,7 @@
     name: "PropertyOwnerProfileEditPage",
     mixins: [mixinForm],
     components: {
-      ProfilesEditPageSkeleton
+      FormPageSkeletonLoader
     },
     data () {
       return {

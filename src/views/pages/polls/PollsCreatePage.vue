@@ -2,7 +2,7 @@
   <div>
     <v-row class="mb-6">
       <v-col cols="6">
-        <h1>CREATE POLL</h1>
+        <h1>CREATE POLLS</h1>
       </v-col>
 
       <v-col cols="6" align="end">
@@ -38,7 +38,7 @@
     </v-row>
 
     <div v-for="(question, index) in questions">
-      <question-panel :ref="`question-${index}`" :key="index"></question-panel>
+      <question-panel :ref="`question-${index}`" :question="question" :key="index"></question-panel>
       <v-divider v-if="questions.length-1 != index" color="orange" class="mt-12 mb-6"></v-divider>
     </div>
   </div>
@@ -64,7 +64,6 @@
     },
 
     created() {
-      this.addQuestion(false);
       this.getQuestions();
     },
 
@@ -81,7 +80,7 @@
         let params = {
           questions: questions
         };
-        console.log(params);
+
         apiQuestions.createQuestionsWithAnswers(params)
           .then(res => {
             console.log(res);
@@ -109,7 +108,7 @@
       getQuestions() {
         apiQuestions.getAll()
             .then(res => {
-              this.questions = res.data;
+              this.questions = res.data.length ? res.data : this.addQuestion(false);
             })
             .catch(err => {
               console.error(err);
